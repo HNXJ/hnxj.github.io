@@ -298,7 +298,7 @@ CircleAudioPlayer.prototype = {
 
 // now init one as an example
 var cap1 = new CircleAudioPlayer({
-	audio: 'musics/RV297 Winter.mp3',
+	audio: 'https://www.wga.hu/music1/18_cent/vivaldi_rv297_winter.mp3',
   size: 120,
   borderWidth: 4
 });
@@ -312,7 +312,7 @@ var cap2 = new CircleAudioPlayer({
 cap2.appendTo(playerContainer2);
 
 var cap3 = new CircleAudioPlayer({
-	audio: 'musics/Walts of Flower.mp3',
+	audio: 'https://www.wga.hu/music1/19_cent/tchaikovsky_nutcracker_waltz.mp3',
   size: 120,
   borderWidth: 4
 });
