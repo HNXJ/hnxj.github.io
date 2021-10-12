@@ -1,6 +1,6 @@
 # Welcome!
 
-## My page: https://hnxj.github.io
+## My personal webpage: https://hnxj.github.io
 
 <!--
 **HNXJ/HNXJ** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
