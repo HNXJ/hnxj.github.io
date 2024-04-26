@@ -8,10 +8,10 @@ import numpy as np
 
 # Create random 3D shapes
 def create_random_shape():
-    x = np.random.rand(10)
-    y = np.random.rand(10)
-    z = np.random.rand(10)
-    return go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=12, color=np.random.randn(10), colorscale='Viridis', opacity=0.8))
+    x = np.random.rand(100)
+    y = np.random.rand(100)
+    z = np.random.rand(100)
+    return go.Scatter3d(x=x, y=y, z=z, mode='markers', marker=dict(size=1, color=np.random.randn(100), colorscale='Viridis', opacity=0.8))
 
 # Create Dash app
 app = dash.Dash(__name__)
@@ -32,7 +32,7 @@ def update_plot(n_clicks):
         return go.Figure()
     else:
         fig = go.Figure(data=[create_random_shape() for _ in range(3)], layout=go.Layout(title='Example'))
-        fig.write_html("mind1.html")
+        fig.write_html("mind3.html")
         return fig
 
 # Run the app
