@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<style>
+    body {
+        background-color: #000000;
+        color: #CFB87C;
+        font-family: 'Nunito Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .mllm-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    .header-mllm {
+        border-bottom: 2px solid #CFB87C;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    h1.mllm-title {
+        color: #00FFFF;
+        margin: 0;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    .status-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        border: 1px solid #CFB87C;
+        background: rgba(207, 184, 124, 0.05);
+        padding: 20px;
+        text-align: center;
+    }
+    .stat-val {
+        font-size: 2rem;
+        color: #00FFFF;
+        display: block;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        opacity: 0.7;
+    }
+    .log-window {
+        background: #080808;
+        border: 1px solid #333;
+        padding: 15px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.85rem;
+        height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        margin-bottom: 30px;
+        color: #aaa;
+    }
+    .chart-container {
+        border: 1px solid #CFB87C;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+    }
+    .last-updated {
+        font-size: 0.7rem;
+        text-align: right;
+        opacity: 0.5;
+    }
+</style>
+
+<html lang="en">
+<head>
+    <title>MLLM Research Monitor | Hamed Nejat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/madelane-theme.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <div class="mllm-container">
+        <header class="header-mllm">
+            <h1 class="mllm-title">MLLM Scientific Reasoning Dashboard</h1>
+            <a href="index.html" style="color: #CFB87C; text-decoration: none; font-size: 0.8rem;">&larr; Back to Home</a>
+        </header>
+
+        <div class="status-grid">
+            <div class="stat-card">
+                <span class="stat-label">Active Subject</span>
+                <span id="stat-subject" class="stat-val">...</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Pipeline Progress</span>
+                <span id="stat-progress" class="stat-val">0%</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Hardware Load</span>
+                <span id="stat-hw" class="stat-val">0%</span>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #00FFFF;">REAL-TIME PIPELINE LOGS</h3>
+        <div id="log-window" class="log-window">Loading snapshot from Office M3 Max...</div>
+
+        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #00FFFF;">CROSS-MODEL CONSENSUS ANALYSIS</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <div id="plot-heatmap" style="height: 400px;"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <div id="plot-deviation" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-container">
+            <div id="plot-factors" style="height: 400px;"></div>
+        </div>
+
+        <div class="last-updated">Snapshot Taken: <span id="ts-val">...</span></div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('mllm_data.json');
+                const data = await response.json();
+                
+                // Update basic stats
+                document.getElementById('stat-subject').textContent = data.status.subject || "IDLE";
+                document.getElementById('stat-progress').textContent = data.status.progress || "0%";
+                document.getElementById('stat-hw').textContent = data.hardware.cpu_percent + "%";
+                document.getElementById('log-window').textContent = data.status.log;
+                document.getElementById('ts-val').textContent = data.timestamp;
+
+                // Render Plots
+                const plotData = data.analysis;
+                const models = [...new Set(plotData.map(d => d.model))];
+                const papers = [...new Set(plotData.map(d => d.paper))];
+                
+                // Heatmap
+                const zValues = models.map(m => {
+                    return papers.map(p => {
+                        const scores = plotData.filter(d => d.model === m && d.paper === p).map(d => d.score);
+                        return scores.length ? scores.reduce((a,b) => a+b, 0) / scores.length : null;
+                    });
+                });
+                Plotly.newPlot('plot-heatmap', [{
+                    z: zValues, x: papers, y: models, type: 'heatmap', colorscale: 'YlGnBu'
+                }], { 
+                    title: 'Avg Score Heatmap', 
+                    paper_bgcolor: 'rgba(0,0,0,0)', 
+                    plot_bgcolor: 'rgba(0,0,0,0)', 
+                    font: { color: '#CFB87C', size: 10 },
+                    margin: { t: 40, b: 80, l: 80, r: 20 }
+                });
+
+                // Deviation
+                const paperAvg = {};
+                papers.forEach(p => {
+                    const scores = plotData.filter(d => d.paper === p).map(d => d.score);
+                    paperAvg[p] = scores.reduce((a,b) => a+b, 0) / scores.length;
+                });
+                const modelDev = models.map(m => {
+                    const diffs = plotData.filter(d => d.model === m).map(d => Math.abs(d.score - paperAvg[d.paper]));
+                    return diffs.length ? diffs.reduce((a,b) => a+b, 0) / diffs.length : 0;
+                });
+                Plotly.newPlot('plot-deviation', [{
+                    x: models, y: modelDev, type: 'bar', marker: { color: '#00FFFF' }
+                }], { 
+                    title: 'Model Deviation from Mean', 
+                    paper_bgcolor: 'rgba(0,0,0,0)', 
+                    plot_bgcolor: 'rgba(0,0,0,0)', 
+                    font: { color: '#CFB87C', size: 10 }
+                });
+
+                // Factor Agreement
+                const factors = [...new Set(plotData.map(d => d.factor_id))].sort((a,b) => parseInt(a) - parseInt(b));
+                const factorAgreement = factors.map(f => {
+                    const scores = plotData.filter(d => d.factor_id === f).map(d => d.score);
+                    if (scores.length < 2) return 0;
+                    const mean = scores.reduce((a,b) => a+b, 0) / scores.length;
+                    const variance = scores.reduce((a,b) => a + Math.pow(b - mean, 2), 0) / scores.length;
+                    return 1 - Math.sqrt(variance);
+                });
+                Plotly.newPlot('plot-factors', [{
+                    x: factors, y: factorAgreement, type: 'scatter', mode: 'lines+markers', line: { color: '#CFB87C' }
+                }], { 
+                    title: 'Cross-Factor Consensus (1.0 = Perfect Agreement)', 
+                    paper_bgcolor: 'rgba(0,0,0,0)', 
+                    plot_bgcolor: 'rgba(0,0,0,0)', 
+                    font: { color: '#CFB87C', size: 10 }
+                });
+
+            } catch (e) {
+                document.getElementById('log-window').textContent = "Error loading data snapshot. The Office M3 Max might be offline or syncing.";
+            }
+        }
+        loadData();
+    </script>
+</body>
+</html>
