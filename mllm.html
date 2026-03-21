@@ -21,7 +21,7 @@
         align-items: center;
     }
     h1.mllm-title {
-        color: #00FFFF;
+        color: #9400D3;
         margin: 0;
         font-size: 1.5rem;
         text-transform: uppercase;
@@ -35,13 +35,13 @@
     }
     .stat-card {
         border: 1px solid #CFB87C;
-        background: rgba(207, 184, 124, 0.05);
+        background: rgba(148, 0, 211, 0.05);
         padding: 20px;
         text-align: center;
     }
     .stat-val {
         font-size: 2rem;
-        color: #00FFFF;
+        color: #9400D3;
         display: block;
     }
     .stat-label {
@@ -55,7 +55,7 @@
         padding: 15px;
         font-family: 'Roboto Mono', monospace;
         font-size: 0.85rem;
-        height: 300px;
+        height: 400px;
         overflow-y: auto;
         white-space: pre-wrap;
         margin-bottom: 30px;
@@ -107,10 +107,10 @@
             </div>
         </div>
 
-        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #00FFFF;">REAL-TIME PIPELINE LOGS</h3>
+        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #9400D3;">REAL-TIME PIPELINE LOGS</h3>
         <div id="log-window" class="log-window">Loading snapshot from Office M3 Max...</div>
 
-        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #00FFFF;">CROSS-MODEL CONSENSUS ANALYSIS</h3>
+        <h3 style="font-size: 1rem; margin-bottom: 10px; color: #9400D3;">CROSS-MODEL CONSENSUS ANALYSIS</h3>
         <div class="row">
             <div class="col-md-6">
                 <div class="chart-container">
@@ -140,7 +140,12 @@
                 document.getElementById('stat-subject').textContent = data.status.subject || "IDLE";
                 document.getElementById('stat-progress').textContent = data.status.progress || "0%";
                 document.getElementById('stat-hw').textContent = data.hardware.cpu_percent + "%";
-                document.getElementById('log-window').textContent = data.status.log;
+                
+                // Update log with auto-scroll
+                const logWindow = document.getElementById('log-window');
+                logWindow.textContent = data.status.log;
+                logWindow.scrollTop = logWindow.scrollHeight;
+
                 document.getElementById('ts-val').textContent = data.timestamp;
 
                 // Render Plots
@@ -156,7 +161,7 @@
                     });
                 });
                 Plotly.newPlot('plot-heatmap', [{
-                    z: zValues, x: papers, y: models, type: 'heatmap', colorscale: 'YlGnBu'
+                    z: zValues, x: papers, y: models, type: 'heatmap', colorscale: [[0, '#000000'], [1, '#9400D3']]
                 }], { 
                     title: 'Avg Score Heatmap', 
                     paper_bgcolor: 'rgba(0,0,0,0)', 
@@ -176,7 +181,7 @@
                     return diffs.length ? diffs.reduce((a,b) => a+b, 0) / diffs.length : 0;
                 });
                 Plotly.newPlot('plot-deviation', [{
-                    x: models, y: modelDev, type: 'bar', marker: { color: '#00FFFF' }
+                    x: models, y: modelDev, type: 'bar', marker: { color: '#9400D3' }
                 }], { 
                     title: 'Model Deviation from Mean', 
                     paper_bgcolor: 'rgba(0,0,0,0)', 
@@ -194,7 +199,7 @@
                     return 1 - Math.sqrt(variance);
                 });
                 Plotly.newPlot('plot-factors', [{
-                    x: factors, y: factorAgreement, type: 'scatter', mode: 'lines+markers', line: { color: '#CFB87C' }
+                    x: factors, y: factorAgreement, type: 'scatter', mode: 'lines+markers', line: { color: '#9400D3' }
                 }], { 
                     title: 'Cross-Factor Consensus (1.0 = Perfect Agreement)', 
                     paper_bgcolor: 'rgba(0,0,0,0)', 
