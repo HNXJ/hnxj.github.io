@@ -215,6 +215,62 @@
 
             </div>
 
+            <div class="container mt-5" id="scores-section">
+                <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+                    <h2 class="gold"> MLLM Study Scoring Matrix </h2>
+                    <p> Real-time factor scores for the HPC, ADB, and SCZ glossary groups. </p>
+                </div>
+                <div class="row">
+                    <div class="col-12" style="background: rgba(207, 184, 124, 0.05); border: 1px solid #CFB87C; padding: 20px;">
+                        <table class="table table-dark table-hover" style="font-family: 'Roboto Mono', monospace; font-size: 0.8em; color: #CFB87C;">
+                            <thead>
+                                <tr style="color: #00FFFF;">
+                                    <th>Paper</th>
+                                    <th>Glossary</th>
+                                    <th>Rigor</th>
+                                    <th>Theoretical</th>
+                                    <th>Novelty</th>
+                                    <th>Implications</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scores-body">
+                                <tr><td colspan="6">Loading analysis results...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                async function loadScores() {
+                    const body = document.getElementById('scores-body');
+                    try {
+                        // Assuming the server provides this endpoint or we parse local outputs if running in a node environment
+                        // For a static site, this might be a pre-generated JSON. 
+                        // I will add a script to bundle_presentation.py to generate this summary.json
+                        const response = await fetch('../outputs/summary_scores.json'); 
+                        const data = await response.json();
+                        body.innerHTML = "";
+                        data.forEach(s => {
+                            const tr = document.createElement('tr');
+                            const getCls = (v) => v >= 0.8 ? 'text-success' : (v >= 0.5 ? 'text-warning' : 'text-danger');
+                            tr.innerHTML = `
+                                <td>${s.paper}</td>
+                                <td style="color: #00FFFF;">${s.glossary}</td>
+                                <td class="${getCls(s.scores.rigor)}">${(s.scores.rigor || 0).toFixed(2)}</td>
+                                <td class="${getCls(s.scores.theory)}">${(s.scores.theory || 0).toFixed(2)}</td>
+                                <td class="${getCls(s.scores.novelty)}">${(s.scores.novelty || 0).toFixed(2)}</td>
+                                <td class="${getCls(s.scores.impact)}">${(s.scores.impact || 0).toFixed(2)}</td>
+                            `;
+                            body.appendChild(tr);
+                        });
+                    } catch (e) { 
+                        body.innerHTML = "<tr><td colspan='6' class='text-muted'>Aggregating batch results... (Refresh in a moment)</td></tr>";
+                    }
+                }
+                document.addEventListener('DOMContentLoaded', loadScores);
+            </script>
+
         </div>
 
         <footer class="site-footer">
