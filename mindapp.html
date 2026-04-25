@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-
-<style>
-    h2.red-text
-    {
-        color: #ffa5a5;
-    }
-</style>
-
 <html lang="en">
 
     <head>
 
         <link rel="icon" href="ico1.jpg">
-        <title> Hamed Nejat's Personal website </title>
+        <title> GLLLM | Research Dashboards | Hamed Nejat </title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <style>
+            h2.red-text { color: #ffa5a5; }
+            .gold { color: #CFB87C; }
+            .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; }
+            .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+            .card { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(207, 184, 124, 0.2); margin-bottom: 10px; }
+            .card-header { cursor: pointer; transition: background 0.3s; }
+            .card-header:hover { background: rgba(207, 184, 124, 0.1); }
+            .card-header h5 { margin-bottom: 0; color: #CFB87C; font-family: 'Roboto Mono', monospace; }
+        </style>
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
         <link rel="stylesheet" href="fonts/icomoon/style.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -51,7 +54,7 @@
 
                                     <strong>
 
-                                        MindApp <span class="text-primary">.</span>
+                                        GLLLM <span class="text-primary">.</span>
 
                                     </strong>
 
@@ -85,7 +88,7 @@
 
                                     <li  class="active">
 
-                                        <a href="mindapp.html"> MindApp </a>
+                                        <a href="mindapp.html"> GLLLM </a>
 
                                     </li>
 
@@ -139,7 +142,7 @@
 
                     <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
 
-                        <h2 class="red-text"> MindApp </h2>
+                        <h2 class="red-text"> GLLLM </h2>
 
                     </div>
 
@@ -151,69 +154,85 @@
 
         <div class="site-section bg-light">
 
-            <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+            <div class="container">
+                <div class="site-section-heading text-center mb-5 w-border col-md-8 mx-auto">
+                    <h2> About GLLLM </h2>
+                    <p class="lead">
+                        GLLLM is an interactive research interface for exploring the semantic and structural landscape of neuroscience publications. 
+                        This dashboard summarizes a high-dimensional analysis of Hippocampal (HPC) research using Multi-modal Large Language Models (MLLMs), 
+                        mapping theoretical agreement, trend predictions, and study shifts across the canonical literature.
+                    </p>
+                </div>
 
-                <h2> About MindApp </h2>
+                <div class="accordion" id="dashboardAccordion">
+                    
+                    <!-- Panel 1 -->
+                    <div class="card">
+                        <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
+                            <h5> 1. HPC Hypothesis Space (Global & Local) </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse show" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="MindApp/HPC/1_hpc_space_GO_HPC_Hypothesis_Space.html" title="HPC Hypothesis Space (Global)" width="100%" height="800" loading="lazy"></iframe>
+                                <iframe src="MindApp/HPC/1_hpc_space_LO_HPC_Hypothesis_Space.html" title="HPC Hypothesis Space (Local)" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
 
-                <p>
-                    Soon!
-                </p>
+                    <!-- Panel 2 -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
+                            <h5> 2. HPC Space Vectors & Trends </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="MindApp/HPC/2_hpc_space_vectors_LO_to_GO.html" title="HPC Space Vectors" width="100%" height="800" loading="lazy"></iframe>
+                                <iframe src="MindApp/HPC/3_hpc_space_trend_prediction.html" title="HPC Space Trend Prediction" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
 
-            </div>
+                    <!-- Panel 3 -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
+                            <h5> 3. Agent Agreement & LAC Distribution </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="MindApp/HPC/4_agent_agreement_summary_dashboard.html" title="Agent Agreement Summary" width="100%" height="900" loading="lazy"></iframe>
+                                <iframe src="MindApp/HPC/5_lac_scatter_distribution.html" title="LAC Scatter Distribution" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 1. HPC Hypothesis Space (Global) </h3>
-                <iframe src="MindApp/HPC/1_hpc_space_GO_HPC_Hypothesis_Space.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
+                    <!-- Panel 4 -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingFour" data-toggle="collapse" data-target="#collapseFour">
+                            <h5> 4. LOO-LC Dual Panel & Scores </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="MindApp/HPC/6_loo_lc_dual_panel.html" title="LOO-LC Dual Panel" width="100%" height="800" loading="lazy"></iframe>
+                                <iframe src="MindApp/HPC/7_raw_score_distribution.html" title="Raw Score Distribution" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 1. HPC Hypothesis Space (Local) </h3>
-                <iframe src="MindApp/HPC/1_hpc_space_LO_HPC_Hypothesis_Space.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
+                    <!-- Panel 5 -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingFive" data-toggle="collapse" data-target="#collapseFive">
+                            <h5> 5. Context Comparisons & Study Shifts </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="MindApp/HPC/8_hpc_context_comparison_subplots.html" title="HPC Context Comparison" width="100%" height="900" loading="lazy"></iframe>
+                                <iframe src="MindApp/HPC/9_average_paper_msd_comparison.html" title="Average Paper MSD Comparison" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                                <iframe src="MindApp/HPC/10_study_shift_horizontal_bars.html" title="Study Shift Horizontal Bars" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 2. HPC Space Vectors (LO to GO) </h3>
-                <iframe src="MindApp/HPC/2_hpc_space_vectors_LO_to_GO.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 3. HPC Space Trend Prediction </h3>
-                <iframe src="MindApp/HPC/3_hpc_space_trend_prediction.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 4. Agent Agreement Summary </h3>
-                <iframe src="MindApp/HPC/4_agent_agreement_summary_dashboard.html" width="100%" height="900" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 5. LAC Scatter Distribution </h3>
-                <iframe src="MindApp/HPC/5_lac_scatter_distribution.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 6. LOO-LC Dual Panel </h3>
-                <iframe src="MindApp/HPC/6_loo_lc_dual_panel.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 7. Raw Score Distribution </h3>
-                <iframe src="MindApp/HPC/7_raw_score_distribution.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 8. HPC Context Comparison Subplots </h3>
-                <iframe src="MindApp/HPC/8_hpc_context_comparison_subplots.html" width="100%" height="900" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 9. Average Paper MSD Comparison </h3>
-                <iframe src="MindApp/HPC/9_average_paper_msd_comparison.html" width="100%" height="800" frameborder="0"></iframe>
-            </div>
-
-            <div class="row">
-                <h3 class="text-center w-100 gold mt-5"> 10. Study Shift Horizontal Bars </h3>
-                <iframe src="MindApp/HPC/10_study_shift_horizontal_bars.html" width="100%" height="800" frameborder="0"></iframe>
+                </div>
             </div>
 
             <div class="container mt-5" id="scores-section">
@@ -246,11 +265,15 @@
                 async function loadScores() {
                     const body = document.getElementById('scores-body');
                     try {
-                        // Assuming the server provides this endpoint or we parse local outputs if running in a node environment
-                        // For a static site, this might be a pre-generated JSON. 
-                        // I will add a script to bundle_presentation.py to generate this summary.json
                         const response = await fetch('outputs/summary_scores.json'); 
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        
                         const data = await response.json();
+                        if (!data || data.length === 0) {
+                            body.innerHTML = "<tr><td colspan='6' class='text-muted'>No analysis records found.</td></tr>";
+                            return;
+                        }
+
                         body.innerHTML = "";
                         data.forEach(s => {
                             const tr = document.createElement('tr');
@@ -266,7 +289,7 @@
                             body.appendChild(tr);
                         });
                     } catch (e) { 
-                        body.innerHTML = "<tr><td colspan='6' class='text-muted'>Aggregating batch results... (Refresh in a moment)</td></tr>";
+                        body.innerHTML = "<tr><td colspan='6' class='text-muted'>Aggregating batch results... (Analysis in progress)</td></tr>";
                     }
                 }
                 document.addEventListener('DOMContentLoaded', loadScores);
@@ -308,11 +331,11 @@
 
                                 <li>
 
-                                    <a href="#"> Home | </a>
+                                    <a href="index.html"> Home | </a>
 
-                                    <a href="#"> About | </a>
+                                    <a href="about.html"> About | </a>
 
-                                    <a href="#"> Contact </a>
+                                    <a href="contact.html"> Contact </a>
 
                                 </li>
 
