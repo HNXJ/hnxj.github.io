@@ -1,0 +1,122 @@
+/* Madelane Golden Dark Theme for hnxj.github.io */
+
+:root {
+  --vandy-gold: #CFB87C;
+  --vandy-gold-dark: #866D4B;
+  --vandy-black: #000000;
+  --vandy-dark-gray: #1A1A1A;
+  --vandy-light-gray: #F8F9FA;
+}
+
+body {
+  background-color: var(--vandy-black) !important;
+  color: #E0E0E0 !important;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.site-wrap {
+  background-color: var(--vandy-black) !important;
+}
+
+.site-navbar {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border-bottom: 1px solid var(--vandy-gold-dark);
+}
+
+.site-navbar .site-menu > li > a {
+  color: #FFFFFF !important;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.site-navbar .site-menu > li > a:hover {
+  color: var(--vandy-gold) !important;
+}
+
+.site-navbar .site-menu > li.active > a {
+  color: var(--vandy-gold) !important;
+}
+
+.text-primary {
+  color: var(--vandy-gold) !important;
+}
+
+.site-section {
+  background-color: var(--vandy-black) !important;
+}
+
+h1, h2, h3, .footer-heading {
+  color: var(--vandy-gold) !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700 !important;
+}
+
+.site-section-heading h2 {
+  border-bottom: 2px solid var(--vandy-gold-dark);
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.site-footer {
+  background-color: var(--vandy-black) !important;
+  border-top: 1px solid var(--vandy-gold-dark);
+  padding: 5em 0;
+}
+
+a {
+  color: var(--vandy-gold);
+  text-decoration: none;
+  transition: .3s all ease;
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+.btn-primary {
+  background-color: var(--vandy-gold) !important;
+  border-color: var(--vandy-gold) !important;
+  color: var(--vandy-black) !important;
+  border-radius: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 12px 30px;
+}
+
+.btn-primary:hover {
+  background-color: var(--vandy-gold-dark) !important;
+  border-color: var(--vandy-gold-dark) !important;
+  color: #FFFFFF !important;
+}
+
+/* Red text override from existing styles */
+.red-text {
+  color: var(--vandy-gold) !important;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+/* Navigation Links in sections */
+.site-section a {
+    display: inline-block;
+    padding: 5px 0;
+    font-size: 1.1rem;
+}
+
+/* Mobile Menu */
+.site-mobile-menu {
+  background-color: var(--vandy-dark-gray) !important;
+}
+.site-mobile-menu .site-nav-wrap li a {
+  color: #FFFFFF !important;
+}
+.site-mobile-menu .site-nav-wrap li.active a {
+  color: var(--vandy-gold) !important;
+}
+
+/* Overlay adjustments for better readability on images */
+.overlay:before {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
