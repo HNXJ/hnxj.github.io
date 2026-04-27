@@ -16,6 +16,12 @@
             .card-header { cursor: pointer; transition: background 0.3s; }
             .card-header:hover { background: rgba(207, 184, 124, 0.1); }
             .card-header h5 { margin-bottom: 0; color: #CFB87C; font-family: 'Roboto Mono', monospace; }
+            
+            /* Moved from inline styles for better hygiene */
+            .mind-cover { background-image: url('../assets/images/mind.jpg'); }
+            .matrix-container { background: rgba(207, 184, 124, 0.05); border: 1px solid #CFB87C; padding: 20px; }
+            .matrix-table { font-family: 'Roboto Mono', monospace; font-size: 0.8em; color: #CFB87C; }
+            .matrix-header { color: #00FFFF; }
         </style>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
@@ -70,7 +76,7 @@
 
                                 <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3">
 
-                                    <a href="#" class="site-menu-toggle js-menu-toggle text-white">
+                                    <a href="#" class="site-menu-toggle js-menu-toggle text-white" aria-label="Toggle Menu">
 
                                         <span class="icon-menu h3"></span>
 
@@ -134,7 +140,7 @@
 
         </div> <!-- .site-mobile-menu -->
 
-        <div class="site-blocks-cover overlay" style="background-image: url('../assets/images/mind.jpg');"  data-stellar-background-ratio="0.5" data-aos="fade">
+        <div class="site-blocks-cover overlay mind-cover"  data-stellar-background-ratio="0.5" data-aos="fade">
 
             <div class="container">
 
@@ -224,6 +230,34 @@
                         </div>
                     </div>
 
+                    <!-- Panel 6: Neural Dynamics & Hierarchy -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingSix" data-toggle="collapse" data-target="#collapseSix">
+                            <h5> 6. Neural Dynamics & Variability </h5>
+                        </div>
+                        <div id="collapseSix" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="figures/FIG_04A_MMFF_Hierarchy.html" title="MMFF Hierarchy" width="100%" height="800" loading="lazy"></iframe>
+                                <iframe src="figures/FIG_04A_Variability_Hierarchy.html" title="Variability Hierarchy" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                                <iframe src="figures/FIG_04B_Post_Omission_Scaling.html" title="Post-Omission Scaling" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 7: Decoding & Behavioral Control -->
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingSeven" data-toggle="collapse" data-target="#collapseSeven">
+                            <h5> 7. Decoding & Behavioral Control </h5>
+                        </div>
+                        <div id="collapseSeven" class="collapse" data-parent="#dashboardAccordion">
+                            <div class="card-body">
+                                <iframe src="figures/FIG_05A_Identity_Decoding.html" title="Identity Decoding" width="100%" height="800" loading="lazy"></iframe>
+                                <iframe src="figures/FIG_05B_Behavioral_Control.html" title="Behavioral Control" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                                <iframe src="figures/FIG_06A_V1_PFC_Spike_Lag.html" title="V1-PFC Spike Lag" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -233,10 +267,10 @@
                     <p> Real-time factor scores for the HPC, ADB, and SCZ glossary groups. </p>
                 </div>
                 <div class="row">
-                    <div class="col-12" style="background: rgba(207, 184, 124, 0.05); border: 1px solid #CFB87C; padding: 20px;">
-                        <table class="table table-dark table-hover" style="font-family: 'Roboto Mono', monospace; font-size: 0.8em; color: #CFB87C;">
+                    <div class="col-12 matrix-container">
+                        <table class="table table-dark table-hover matrix-table">
                             <thead>
-                                <tr style="color: #00FFFF;">
+                                <tr class="matrix-header">
                                     <th>Paper</th>
                                     <th>Glossary</th>
                                     <th>Rigor</th>
@@ -334,9 +368,9 @@
 
                             <div>
 
-                                <a href="https://twitter.com/HNyXJ" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                                <a href="https://www.instagram.com/hamednejat/?hl=en" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                                <a href="https://ir.linkedin.com/in/hamednejat" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                                <a href="https://twitter.com/HNyXJ" class="pl-3 pr-3" aria-label="Twitter"><span class="icon-twitter"></span></a>
+                                <a href="https://www.instagram.com/hamednejat/?hl=en" class="pl-3 pr-3" aria-label="Instagram"><span class="icon-instagram"></span></a>
+                                <a href="https://ir.linkedin.com/in/hamednejat" class="pl-3 pr-3" aria-label="LinkedIn"><span class="icon-linkedin"></span></a>
 
                             </div>
 
