@@ -502,6 +502,13 @@ a {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top; }
+  .index-cover {
+    background-image: url("../images/winter.jpg"); }
+  .about-cover {
+    background-image: url("../images/yellow.jpg"); }
+  .contact-cover {
+    background-image: url("../images/purple.jpg"); }
+
   .site-blocks-cover.overlay {
     position: relative; }
     .site-blocks-cover.overlay:before {
