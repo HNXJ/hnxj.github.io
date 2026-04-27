@@ -1,0 +1,17 @@
+# Local Backend Staging
+glllmx_backend/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Development artifacts
+*.log
+.tempmediaStorage/
+scratch/
+implementation_plan.md
+task.md
+walkthrough.md
+analysis_results.md
+research_notes.md
+experiment_results.md

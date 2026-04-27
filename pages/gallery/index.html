@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="../../ico1.jpg">
+    <title> GLLLM Gallery | Research Assets | Hamed Nejat </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
+    <link rel="stylesheet" href="../../assets/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../assets/css/aos.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/madelane-theme.css">
+
+    <style>
+        .gallery-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(207, 184, 124, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            height: 100%;
+        }
+        .gallery-item:hover {
+            border-color: #CFB87C;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(207, 184, 124, 0.1);
+        }
+        .gallery-card-body {
+            padding: 20px;
+        }
+        .gallery-category {
+            color: #CFB87C;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .gallery-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .iframe-preview {
+            width: 100%;
+            height: 300px;
+            border: none;
+            pointer-events: none; /* Only for preview */
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover .iframe-preview {
+            opacity: 1;
+        }
+        #gallery-grid {
+            margin-top: 50px;
+        }
+        .modal-content {
+            background: #1a1a1a;
+            border: 1px solid #CFB87C;
+        }
+        .modal-header {
+            border-bottom: 1px solid rgba(207, 184, 124, 0.2);
+        }
+        .modal-title {
+            color: #CFB87C;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="site-wrap">
+        <div class="site-navbar mt-4">
+            <div class="container py-1">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-8 col-lg-4">
+                        <h1 class="mb-0">
+                            <a href="../../index.html" class="text-white h2 mb-0"><strong>GLLLM Gallery<span class="text-primary">.</span></strong></a>
+                        </h1>
+                    </div>
+                    <div class="col-4 col-md-4 col-lg-8">
+                        <nav class="site-navigation text-right text-md-right" role="navigation">
+                            <ul class="site-menu js-clone-nav d-none d-lg-block">
+                                <li><a href="../../index.html"> Home </a></li>
+                                <li><a href="../../mindapp/"> Dashboard </a></li>
+                                <li class="active"><a href="index.html"> Gallery </a></li>
+                                <li><a href="../about/"> About </a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-blocks-cover overlay" style="background-image: url('../../assets/images/purple.jpg'); height: 300px; min-height: 300px;" data-aos="fade">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-md-7 text-center">
+                        <h2 class="text-white" style="font-family: 'Roboto Mono', monospace;"> Research Asset Gallery </h2>
+                        <p class="text-white-50"> High-fidelity visualizations from the GLLLM project. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-section bg-dark">
+            <div class="container">
+                <div id="gallery-loader" class="text-center">
+                    <p class="text-muted">Fetching assets from Vercel backend...</p>
+                </div>
+                <div class="row" id="gallery-grid"></div>
+            </div>
+        </div>
+
+        <!-- Modal for Full View -->
+        <div class="modal fade" id="figureModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Figure View</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0" id="modalBody">
+                        <!-- Full iframe will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../../assets/js/jquery-3.3.1.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/aos.js"></script>
+
+    <script>
+        const API_BASE = 'https://glllmx.vercel.app';
+
+        async function initGallery() {
+            const grid = document.getElementById('gallery-grid');
+            const loader = document.getElementById('gallery-loader');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/research-map`);
+                if (!response.ok) throw new Error('API Sync Failed');
+                const data = await response.json();
+                
+                loader.style.display = 'none';
+                grid.innerHTML = "";
+
+                Object.keys(data).forEach(catKey => {
+                    const group = data[catKey];
+                    group.figures.forEach(fig => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-6 col-lg-4 mb-4';
+                        col.innerHTML = `
+                            <div class="gallery-item" onclick="openFigure('${API_BASE}${fig.url}', '${fig.title}')">
+                                <iframe class="iframe-preview" src="${API_BASE}${fig.url}"></iframe>
+                                <div class="gallery-card-body">
+                                    <div class="gallery-category">${group.category}</div>
+                                    <div class="gallery-title">${fig.title}</div>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(col);
+                    });
+                });
+            } catch (e) {
+                loader.innerHTML = `<p class="text-danger">Failed to load gallery. Error: ${e.message}</p>`;
+            }
+        }
+
+        function openFigure(url, title) {
+            document.getElementById('modalLabel').innerText = title;
+            document.getElementById('modalBody').innerHTML = `<iframe src="${url}" width="100%" height="80vh" style="border:none; height: 80vh;"></iframe>`;
+            $('#figureModal').modal('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+</html>

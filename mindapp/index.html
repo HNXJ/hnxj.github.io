@@ -18,7 +18,7 @@
             .card-header h5 { margin-bottom: 0; color: #CFB87C; font-family: 'Roboto Mono', monospace; }
             
             /* Moved from inline styles for better hygiene */
-            .mind-cover { background-image: url('../assets/images/mind.jpg'); }
+            .mind-cover { background-image: url('../assets/images/mind_opt.png'); }
             .matrix-container { background: rgba(207, 184, 124, 0.05); border: 1px solid #CFB87C; padding: 20px; }
             .matrix-table { font-family: 'Roboto Mono', monospace; font-size: 0.8em; color: #CFB87C; }
             .matrix-header { color: #00FFFF; }
@@ -92,9 +92,15 @@
 
                                     </li>
 
-                                    <li  class="active">
+                                    <li class="active">
 
-                                        <a href="index.html"> GLLLM </a>
+                                        <a href="index.html"> Dashboard </a>
+
+                                    </li>
+
+                                    <li>
+
+                                        <a href="../pages/gallery/"> Gallery </a>
 
                                     </li>
 
@@ -163,101 +169,7 @@
             <div class="container">
 
                 <div class="accordion" id="dashboardAccordion">
-                    
-                    <!-- Panel 1 -->
-                    <div class="card">
-                        <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
-                            <h5> 1. HPC Hypothesis Space (Global & Local) </h5>
-                        </div>
-                        <div id="collapseOne" class="collapse show" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/1_hpc_space_GO_HPC_Hypothesis_Space.html" title="HPC Hypothesis Space (Global)" width="100%" height="800" loading="lazy"></iframe>
-                                <iframe src="figures/1_hpc_space_LO_HPC_Hypothesis_Space.html" title="HPC Hypothesis Space (Local)" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 2 -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
-                            <h5> 2. HPC Space Vectors & Trends </h5>
-                        </div>
-                        <div id="collapseTwo" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/2_hpc_space_vectors_LO_to_GO.html" title="HPC Space Vectors" width="100%" height="800" loading="lazy"></iframe>
-                                <iframe src="figures/3_hpc_space_trend_prediction.html" title="HPC Space Trend Prediction" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 3 -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
-                            <h5> 3. Agent Agreement & LAC Distribution </h5>
-                        </div>
-                        <div id="collapseThree" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/4_agent_agreement_summary_dashboard.html" title="Agent Agreement Summary" width="100%" height="900" loading="lazy"></iframe>
-                                <iframe src="figures/5_lac_scatter_distribution.html" title="LAC Scatter Distribution" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 4 -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingFour" data-toggle="collapse" data-target="#collapseFour">
-                            <h5> 4. LOO-LC Dual Panel & Scores </h5>
-                        </div>
-                        <div id="collapseFour" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/6_loo_lc_dual_panel.html" title="LOO-LC Dual Panel" width="100%" height="800" loading="lazy"></iframe>
-                                <iframe src="figures/7_raw_score_distribution.html" title="Raw Score Distribution" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 5 -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingFive" data-toggle="collapse" data-target="#collapseFive">
-                            <h5> 5. Context Comparisons & Study Shifts </h5>
-                        </div>
-                        <div id="collapseFive" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/8_hpc_context_comparison_subplots.html" title="HPC Context Comparison" width="100%" height="900" loading="lazy"></iframe>
-                                <iframe src="figures/9_average_paper_msd_comparison.html" title="Average Paper MSD Comparison" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                                <iframe src="figures/10_study_shift_horizontal_bars.html" title="Study Shift Horizontal Bars" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 6: Neural Dynamics & Hierarchy -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingSix" data-toggle="collapse" data-target="#collapseSix">
-                            <h5> 6. Neural Dynamics & Variability </h5>
-                        </div>
-                        <div id="collapseSix" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/FIG_04A_MMFF_Hierarchy.html" title="MMFF Hierarchy" width="100%" height="800" loading="lazy"></iframe>
-                                <iframe src="figures/FIG_04A_Variability_Hierarchy.html" title="Variability Hierarchy" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                                <iframe src="figures/FIG_04B_Post_Omission_Scaling.html" title="Post-Omission Scaling" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Panel 7: Decoding & Behavioral Control -->
-                    <div class="card">
-                        <div class="card-header collapsed" id="headingSeven" data-toggle="collapse" data-target="#collapseSeven">
-                            <h5> 7. Decoding & Behavioral Control </h5>
-                        </div>
-                        <div id="collapseSeven" class="collapse" data-parent="#dashboardAccordion">
-                            <div class="card-body">
-                                <iframe src="figures/FIG_05A_Identity_Decoding.html" title="Identity Decoding" width="100%" height="800" loading="lazy"></iframe>
-                                <iframe src="figures/FIG_05B_Behavioral_Control.html" title="Behavioral Control" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                                <iframe src="figures/FIG_06A_V1_PFC_Spike_Lag.html" title="V1-PFC Spike Lag" width="100%" height="800" loading="lazy" class="mt-4"></iframe>
-                            </div>
-                        </div>
-                    </div>
-
+                    <p class="text-center text-muted">Synchronizing research assets with the backend...</p>
                 </div>
             </div>
 
@@ -289,37 +201,61 @@
 
             <script>
                 // ==========================================
-                // DECOUPLED BACKEND CONFIGURATION
+                // DYNAMIC RESEARCH CONFIGURATION
                 // ==========================================
-                // Set this to your CORS-enabled Vercel or Cloudflare R2 backend URL.
-                // Example: 'https://mllm-backend-hnxj.vercel.app'
-                // If left empty (''), the app will fall back to local relative paths.
-                const BACKEND_URL = 'https://glllmx.vercel.app/static'; 
+                const API_BASE = 'https://glllmx.vercel.app'; 
 
-                function routeIframes() {
-                    if (!BACKEND_URL) return;
-                    const iframes = document.querySelectorAll('#dashboardAccordion iframe');
-                    iframes.forEach(iframe => {
-                        const originalSrc = iframe.getAttribute('src');
-                        // Prepend the backend URL to local paths
-                        if (originalSrc && !originalSrc.startsWith('http')) {
-                            // Ensure there is no double slash if BACKEND_URL ends with one
-                            const cleanBase = BACKEND_URL.replace(/\/$/, '');
-                            iframe.setAttribute('src', `${cleanBase}/${originalSrc}`);
+                async function buildDynamicDashboard() {
+                    const accordion = document.getElementById('dashboardAccordion');
+                    try {
+                        const response = await fetch(`${API_BASE}/api/research-map`);
+                        if (!response.ok) throw new Error('API Map not available');
+                        const data = await response.json();
+                        
+                        if (Object.keys(data).length === 0) {
+                            accordion.innerHTML = "<p class='text-center text-muted'>No research assets found in mapping.</p>";
+                            return;
                         }
-                    });
+
+                        accordion.innerHTML = ""; // Clear placeholders
+                        
+                        Object.keys(data).forEach((key, index) => {
+                            const group = data[key];
+                            const collapseId = `collapse${index}`;
+                            const headingId = `heading${index}`;
+                            const isFirst = index === 0;
+
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            card.innerHTML = `
+                                <div class="card-header ${isFirst ? '' : 'collapsed'}" id="${headingId}" 
+                                     data-toggle="collapse" data-target="#${collapseId}">
+                                    <h5> ${index + 1}. ${group.category} </h5>
+                                </div>
+                                <div id="${collapseId}" class="collapse ${isFirst ? 'show' : ''}" data-parent="#dashboardAccordion">
+                                    <div class="card-body">
+                                        ${group.figures.map(fig => `
+                                            <div class="figure-wrapper mb-4">
+                                                <h6 class="text-muted mb-2">${fig.title}</h6>
+                                                <iframe src="${API_BASE}${fig.url}" title="${fig.title}" width="100%" height="800" loading="lazy"></iframe>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                            accordion.appendChild(card);
+                        });
+                    } catch (e) {
+                        console.error('Failed to load dynamic dashboard:', e);
+                        accordion.innerHTML = "<p class='text-center text-danger'>Failed to sync with research backend. Please check CORS settings.</p>";
+                    }
                 }
 
                 async function loadScores() {
                     const body = document.getElementById('scores-body');
                     try {
-                        // Fetch from backend if configured, otherwise use the local data/ folder.
-                        const dataUrl = BACKEND_URL 
-                            ? `${BACKEND_URL.replace(/\/$/, '')}/data/summary_scores.json` 
-                            : 'data/summary_scores.json';
-
-                        const response = await fetch(dataUrl); 
-                        if (!response.ok) throw new Error('Network response was not ok');
+                        const response = await fetch(`${API_BASE}/api/scores`); 
+                        if (!response.ok) throw new Error('Scores not available');
                         
                         const data = await response.json();
                         if (!data || data.length === 0) {
@@ -342,12 +278,12 @@
                             body.appendChild(tr);
                         });
                     } catch (e) { 
-                        body.innerHTML = "<tr><td colspan='6' class='text-muted'>Aggregating batch results... (Analysis in progress)</td></tr>";
+                        body.innerHTML = "<tr><td colspan='6' class='text-muted'>Syncing results from backend...</td></tr>";
                     }
                 }
 
                 document.addEventListener('DOMContentLoaded', () => {
-                    routeIframes();
+                    buildDynamicDashboard();
                     loadScores();
                 });
             </script>
