@@ -254,10 +254,37 @@
             </div>
 
             <script>
+                // ==========================================
+                // DECOUPLED BACKEND CONFIGURATION
+                // ==========================================
+                // Set this to your CORS-enabled Vercel or Cloudflare R2 backend URL.
+                // Example: 'https://mllm-backend-hnxj.vercel.app'
+                // If left empty (''), the app will fall back to local relative paths.
+                const BACKEND_URL = ''; 
+
+                function routeIframes() {
+                    if (!BACKEND_URL) return;
+                    const iframes = document.querySelectorAll('#dashboardAccordion iframe');
+                    iframes.forEach(iframe => {
+                        const originalSrc = iframe.getAttribute('src');
+                        // Prepend the backend URL to local paths
+                        if (originalSrc && !originalSrc.startsWith('http')) {
+                            // Ensure there is no double slash if BACKEND_URL ends with one
+                            const cleanBase = BACKEND_URL.replace(/\/$/, '');
+                            iframe.setAttribute('src', `${cleanBase}/${originalSrc}`);
+                        }
+                    });
+                }
+
                 async function loadScores() {
                     const body = document.getElementById('scores-body');
                     try {
-                        const response = await fetch('outputs/summary_scores.json'); 
+                        // Fetch from backend if configured, otherwise use the local data/ folder.
+                        const dataUrl = BACKEND_URL 
+                            ? `${BACKEND_URL.replace(/\/$/, '')}/data/summary_scores.json` 
+                            : 'data/summary_scores.json';
+
+                        const response = await fetch(dataUrl); 
                         if (!response.ok) throw new Error('Network response was not ok');
                         
                         const data = await response.json();
@@ -284,7 +311,11 @@
                         body.innerHTML = "<tr><td colspan='6' class='text-muted'>Aggregating batch results... (Analysis in progress)</td></tr>";
                     }
                 }
-                document.addEventListener('DOMContentLoaded', loadScores);
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    routeIframes();
+                    loadScores();
+                });
             </script>
 
         </div>
