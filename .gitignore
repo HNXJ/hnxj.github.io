@@ -4,7 +4,6 @@ glllmx_backend/
 # OS metadata
 .DS_Store
 Thumbs.db
-
 # Development artifacts
 *.log
 .tempmediaStorage/
