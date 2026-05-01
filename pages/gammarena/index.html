@@ -170,7 +170,8 @@
                 card.classList.add('card-danger');
                 const detailStr = data?.detail ? `<span>DETAIL:</span> ${data.detail}<br>` : '';
                 const sourceStr = data?.provenance?.source || 'unavailable';
-                elProv.innerHTML = `${detailStr}<span>SOURCE:</span> ${sourceStr}`;
+                const readOnlyStr = data?.provenance?.readonly !== undefined ? data.provenance.readonly : 'unknown';
+                elProv.innerHTML = `${detailStr}<span>SOURCE:</span> ${sourceStr} | <span>READONLY:</span> ${readOnlyStr}`;
             } else {
                 elValue.innerText = data[valueField] || 'UNKNOWN_STATE';
                 elValue.style.color = 'inherit';
