@@ -15,3 +15,5 @@ walkthrough.md
 analysis_results.md
 research_notes.md
 experiment_results.md
+.vercel
+.env*.local

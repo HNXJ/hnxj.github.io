@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena | Observation Surface</title>
+    <style>
+        :root {
+            --bg-base: #080808;
+            --text-primary: rgba(16, 185, 129, 0.8); /* emerald-500/80 */
+            --border-color: rgba(16, 185, 129, 0.2);
+            --danger-color: #f43f5e; /* rose-500 */
+            --warning-color: #f59e0b; /* amber-500 */
+        }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            margin: 0;
+            padding: 1rem;
+            font-size: 12px;
+            selection-background-color: rgba(16, 185, 129, 0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .title {
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .status-badge {
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .status-degraded { color: var(--danger-color); }
+        .status-connected { color: var(--text-primary); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .card {
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            background-color: rgba(16, 185, 129, 0.05);
+            border-radius: 4px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .card-danger {
+            border-color: rgba(244, 63, 94, 0.2);
+            background-color: rgba(244, 63, 94, 0.05);
+        }
+        .card-label {
+            opacity: 0.4;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            font-size: 10px;
+        }
+        .card-value {
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .provenance {
+            font-size: 9px;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+        .provenance span { font-weight: bold; }
+        .footer {
+            text-align: center;
+            padding-top: 1rem;
+            opacity: 0.2;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Terminal Header -->
+        <div class="header">
+            <div class="title">Gamma Safe-Base v1.0 (Hosted)</div>
+            <div class="status-bar">
+                <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
+                <span id="clock" style="opacity: 0.4;"></span>
+            </div>
+        </div>
+
+        <!-- Connectivity Detail -->
+        <div id="connectivity-detail" class="card card-danger" style="display: none;">
+            <div class="card-value" style="color: var(--danger-color); font-size: 12px;">LINK_FAILURE</div>
+            <div id="connectivity-msg" style="color: rgba(244, 63, 94, 0.6); font-size: 10px; font-weight: bold; text-transform: uppercase;"></div>
+            <div id="connectivity-prov" class="provenance"></div>
+        </div>
+
+        <!-- Compact Status Grid -->
+        <div class="grid">
+            <div class="card" id="card-system">
+                <div class="card-label">System State</div>
+                <div class="card-value" id="val-system">LOADING</div>
+                <div class="provenance" id="prov-system"></div>
+            </div>
+            <div class="card" id="card-agents">
+                <div class="card-label">Agent Roster</div>
+                <div class="card-value" id="val-agents">LOADING</div>
+                <div class="provenance" id="prov-agents"></div>
+            </div>
+            <div class="card" id="card-persistence">
+                <div class="card-label">Persistence</div>
+                <div class="card-value" id="val-persistence">LOADING</div>
+                <div class="provenance" id="prov-persistence"></div>
+            </div>
+            <div class="card" id="card-progression">
+                <div class="card-label">Progression</div>
+                <div class="card-value" id="val-progression">LOADING</div>
+                <div class="provenance" id="prov-progression"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            Operator Base-Layer :: BASTOS LAB / VANDERBILT
+        </footer>
+    </div>
+
+    <script>
+        // Update Clock
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        const API_BASE = '/api/v1'; // Hosted Vercel API
+
+        function updateCard(id, data, valueField) {
+            const elValue = document.getElementById(`val-${id}`);
+            const elProv = document.getElementById(`prov-${id}`);
+            const card = document.getElementById(`card-${id}`);
+
+            if (data.status === 'UNREACHABLE' || data.status === 'CRITICAL_FAILURE') {
+                elValue.innerText = 'UNREACHABLE';
+                elValue.style.color = 'var(--danger-color)';
+                card.classList.add('card-danger');
+                if(data.detail) {
+                    elValue.innerText = 'LINK_FAILURE';
+                    elProv.innerHTML = `<span>DETAIL:</span> ${data.detail}<br><span>SOURCE:</span> ${data.provenance?.source || 'unknown'}`;
+                } else {
+                    elProv.innerHTML = `<span>SOURCE:</span> ${data.provenance?.source || 'unknown'}`;
+                }
+            } else {
+                elValue.innerText = data[valueField] || 'ONLINE';
+                elValue.style.color = 'inherit';
+                card.classList.remove('card-danger');
+                elProv.innerHTML = `<span>SOURCE:</span> ${data.provenance?.source || 'unknown'} | <span>READONLY:</span> ${data.provenance?.readonly}`;
+            }
+        }
+
+        async function fetchEndpoint(endpoint, id, valueField) {
+            try {
+                const res = await fetch(`${API_BASE}/${endpoint}`);
+                const data = await res.json();
+                updateCard(id, data, valueField);
+                return data;
+            } catch (err) {
+                updateCard(id, { status: 'UNREACHABLE', detail: 'Network Error or CORS Blocked', provenance: { source: 'browser_fetch' } }, '');
+                return null;
+            }
+        }
+
+        async function pollData() {
+            try {
+                const manifestRes = await fetch(`${API_BASE}/manifest`);
+                const manifest = await manifestRes.json();
+                
+                const statusEl = document.getElementById('connection-status');
+                const connDetail = document.getElementById('connectivity-detail');
+                
+                if (manifest.degraded) {
+                    statusEl.innerText = 'DEGRADED OBSERVATION';
+                    statusEl.className = 'status-badge status-degraded';
+                    connDetail.style.display = 'flex';
+                    document.getElementById('connectivity-msg').innerText = "Live execution substrate detached. Showing committed truth only.";
+                    document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy}`;
+                } else {
+                    statusEl.innerText = 'GROUNDED';
+                    statusEl.className = 'status-badge status-connected';
+                    connDetail.style.display = 'none';
+                }
+
+                await Promise.all([
+                    fetchEndpoint('status', 'system', 'status'),
+                    fetchEndpoint('agents', 'agents', 'status'),
+                    fetchEndpoint('persistence', 'persistence', 'status'),
+                    fetchEndpoint('progression', 'progression', 'status')
+                ]);
+
+            } catch (err) {
+                const statusEl = document.getElementById('connection-status');
+                statusEl.innerText = 'UNREACHABLE';
+                statusEl.className = 'status-badge status-degraded';
+                
+                const connDetail = document.getElementById('connectivity-detail');
+                connDetail.style.display = 'flex';
+                document.getElementById('connectivity-msg').innerText = "Observation service unreachable.";
+                document.getElementById('connectivity-prov').innerHTML = "<span>SOURCE:</span> browser_fetch_failure";
+            }
+        }
+
+        pollData();
+        setInterval(pollData, 10000); // Poll every 10s
+    </script>
+</body>
+</html>

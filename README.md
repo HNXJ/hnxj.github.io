@@ -18,9 +18,16 @@
 ├── index.html
 ├── mindapp.html
 ├── about.html
-└── contact.html
+├── contact.html
+├── pages
+│   └── gammarena (Hosted Gamma Arena Observation Surface)
+└── glllmx_backend
+    ├── main.py (Vercel FastAPI Service)
+    └── static
 ```
 
 ## 🧠 Description
-This is the personal website of Hamed Nejat. 
-Recently updated to move website files from /misc/ to the root and add new HPC research figures to the MindApp section.
+This is the personal website of Hamed Nejat.
+It serves a dual purpose:
+1. **Public Static Site**: A portfolio and research showcase (including HPC research figures in the MindApp section).
+2. **Hosted Observation API**: A Vercel-hosted FastAPI service (`glllmx_backend/main.py`) providing a secure, versioned, read-only API and UI surface for the Gamma Arena project (`pages/gammarena/`).
