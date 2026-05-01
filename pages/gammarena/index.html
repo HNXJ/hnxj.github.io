@@ -150,8 +150,15 @@
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
         }, 1000);
 
-        const API_BASE = '/api/v1'; // Hosted Vercel API
-
+        // --- API CONFIGURATION ---
+        // If your page is hosted on GitHub Pages but the FastAPI backend is on Vercel,
+        // you MUST provide the absolute Vercel project domain here.
+        // Example: 'https://glllmx-yourhash.vercel.app'
+        // If they share the exact same origin, you can leave this as an empty string.
+        const API_ORIGIN = 'https://glllmx.vercel.app'; 
+        
+        // Compute the final API base path safely
+        const API_BASE = (API_ORIGIN ? API_ORIGIN.replace(/\/$/, '') : '') + '/api/v1';
         function updateCard(id, data, valueField) {
             const elValue = document.getElementById(`val-${id}`);
             const elProv = document.getElementById(`prov-${id}`);
