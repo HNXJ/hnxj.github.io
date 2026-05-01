@@ -164,32 +164,32 @@
             const elProv = document.getElementById(`prov-${id}`);
             const card = document.getElementById(`card-${id}`);
 
-            if (data.status === 'UNREACHABLE' || data.status === 'CRITICAL_FAILURE') {
+            if (!data || !data.status || data.status === 'UNREACHABLE' || data.status === 'CRITICAL_FAILURE') {
                 elValue.innerText = 'UNREACHABLE';
                 elValue.style.color = 'var(--danger-color)';
                 card.classList.add('card-danger');
-                if(data.detail) {
-                    elValue.innerText = 'LINK_FAILURE';
-                    elProv.innerHTML = `<span>DETAIL:</span> ${data.detail}<br><span>SOURCE:</span> ${data.provenance?.source || 'unknown'}`;
-                } else {
-                    elProv.innerHTML = `<span>SOURCE:</span> ${data.provenance?.source || 'unknown'}`;
-                }
+                const detailStr = data?.detail ? `<span>DETAIL:</span> ${data.detail}<br>` : '';
+                const sourceStr = data?.provenance?.source || 'unavailable';
+                elProv.innerHTML = `${detailStr}<span>SOURCE:</span> ${sourceStr}`;
             } else {
-                elValue.innerText = data[valueField] || 'ONLINE';
+                elValue.innerText = data[valueField] || 'UNKNOWN_STATE';
                 elValue.style.color = 'inherit';
                 card.classList.remove('card-danger');
-                elProv.innerHTML = `<span>SOURCE:</span> ${data.provenance?.source || 'unknown'} | <span>READONLY:</span> ${data.provenance?.readonly}`;
+                const sourceStr = data.provenance?.source || 'unavailable';
+                const readOnlyStr = data.provenance?.readonly !== undefined ? data.provenance.readonly : 'unknown';
+                elProv.innerHTML = `<span>SOURCE:</span> ${sourceStr} | <span>READONLY:</span> ${readOnlyStr}`;
             }
         }
 
         async function fetchEndpoint(endpoint, id, valueField) {
             try {
                 const res = await fetch(`${API_BASE}/${endpoint}`);
+                if (!res.ok) throw new Error('HTTP Error');
                 const data = await res.json();
                 updateCard(id, data, valueField);
                 return data;
             } catch (err) {
-                updateCard(id, { status: 'UNREACHABLE', detail: 'Network Error or CORS Blocked', provenance: { source: 'browser_fetch' } }, '');
+                updateCard(id, { status: 'UNREACHABLE', detail: 'Network/Protocol Error', provenance: { source: 'browser_fetch_failure' } }, '');
                 return null;
             }
         }
@@ -197,19 +197,24 @@
         async function pollData() {
             try {
                 const manifestRes = await fetch(`${API_BASE}/manifest`);
+                if (!manifestRes.ok) throw new Error('Manifest not reachable');
                 const manifest = await manifestRes.json();
                 
                 const statusEl = document.getElementById('connection-status');
                 const connDetail = document.getElementById('connectivity-detail');
                 
-                if (manifest.degraded) {
+                if (manifest.degraded === true) {
                     statusEl.innerText = 'DEGRADED OBSERVATION';
                     statusEl.className = 'status-badge status-degraded';
                     connDetail.style.display = 'flex';
                     document.getElementById('connectivity-msg').innerText = "Live execution substrate detached. Showing committed truth only.";
-                    document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy}`;
-                } else {
+                    document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy || 'unknown'}`;
+                } else if (manifest.degraded === false) {
                     statusEl.innerText = 'GROUNDED';
+                    statusEl.className = 'status-badge status-connected';
+                    connDetail.style.display = 'none';
+                } else {
+                    statusEl.innerText = 'REACHABLE_UNVERIFIED';
                     statusEl.className = 'status-badge status-connected';
                     connDetail.style.display = 'none';
                 }
@@ -228,7 +233,7 @@
                 
                 const connDetail = document.getElementById('connectivity-detail');
                 connDetail.style.display = 'flex';
-                document.getElementById('connectivity-msg').innerText = "Observation service unreachable.";
+                document.getElementById('connectivity-msg').innerText = "Observation service unreachable or contract mismatched.";
                 document.getElementById('connectivity-prov').innerHTML = "<span>SOURCE:</span> browser_fetch_failure";
             }
         }
