@@ -84,9 +84,10 @@
                         <nav class="site-navigation text-right text-md-right" role="navigation">
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
                                 <li><a href="../../index.html"> Home </a></li>
-                                <li><a href="../../mindapp/"> Dashboard </a></li>
                                 <li class="active"><a href="index.html"> Gallery </a></li>
+                                <li><a href="../../pages/gammarena/"> Gammarena </a></li>
                                 <li><a href="../about/"> About </a></li>
+                                <li><a href="../contact/"> Contact </a></li>
                             </ul>
                         </nav>
                     </div>
@@ -107,80 +108,15 @@
 
         <div class="site-section bg-dark">
             <div class="container">
-                <div id="gallery-loader" class="text-center">
-                    <p class="text-muted">Fetching research assets...</p>
-                </div>
-                <div class="row" id="gallery-grid"></div>
-            </div>
-        </div>
-
-        <!-- Modal for Full View -->
-        <div class="modal fade" id="figureModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Figure View</h5>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body p-0" id="modalBody">
-                        <!-- Full iframe will be injected here -->
-                    </div>
+                <div class="text-center">
+                    <p class="text-muted">Gallery empty for now.</p>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script src="../../assets/js/jquery-3.3.1.min.js"></script>
     <script src="../../assets/js/bootstrap.min.js"></script>
     <script src="../../assets/js/aos.js"></script>
-
-    <script>
-        const API_BASE = 'https://glllmx.vercel.app';
-
-        async function initGallery() {
-            const grid = document.getElementById('gallery-grid');
-            const loader = document.getElementById('gallery-loader');
-            
-            try {
-                const response = await fetch(`${API_BASE}/api/research-map`);
-                if (!response.ok) throw new Error('API Sync Failed');
-                const data = await response.json();
-                
-                loader.style.display = 'none';
-                grid.innerHTML = "";
-
-                Object.keys(data).forEach(catKey => {
-                    const group = data[catKey];
-                    group.figures.forEach(fig => {
-                        const col = document.createElement('div');
-                        col.className = 'col-md-6 col-lg-4 mb-4';
-                        col.innerHTML = `
-                            <div class="gallery-item" onclick="openFigure('${API_BASE}${fig.url}', '${fig.title}')">
-                                <iframe class="iframe-preview" src="${API_BASE}${fig.url}"></iframe>
-                                <div class="gallery-card-body">
-                                    <div class="gallery-category">${group.category}</div>
-                                    <div class="gallery-title">${fig.title}</div>
-                                </div>
-                            </div>
-                        `;
-                        grid.appendChild(col);
-                    });
-                });
-            } catch (e) {
-                loader.innerHTML = `<p class="text-danger">Failed to load gallery. Error: ${e.message}</p>`;
-            }
-        }
-
-        function openFigure(url, title) {
-            document.getElementById('modalLabel').innerText = title;
-            document.getElementById('modalBody').innerHTML = `<iframe src="${url}" width="100%" height="80vh" style="border:none; height: 80vh;"></iframe>`;
-            $('#figureModal').modal('show');
-        }
-
-        document.addEventListener('DOMContentLoaded', initGallery);
-    </script>
 </body>
 </html>
