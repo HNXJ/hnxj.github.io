@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena | Wiki Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --accent-gold: #eab308;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(168, 85, 247, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+            border-bottom: 1px solid var(--border-glow);
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero h2 {
+            font-size: 1.25rem;
+            color: var(--accent-gold);
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .hero-body {
+            max-width: 700px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-purple);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            border-color: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        .hero-caption {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            opacity: 0.8;
+            max-width: 600px;
+        }
+
+        /* --- Sections --- */
+        section {
+            margin-bottom: 6rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-intro {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        /* --- Card Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-5px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            opacity: 0.3;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- Architecture Section --- */
+        .architecture-img {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            background: rgba(168, 85, 247, 0.05);
+            border: 1px solid var(--border-glow);
+        }
+
+        .flow-text {
+            column-count: 2;
+            column-gap: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .flow-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-item h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* --- Wiki Index --- */
+        .wiki-index {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 1px solid var(--border-glow);
+            padding: 3rem;
+            border-radius: 12px;
+        }
+
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .wiki-link {
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .wiki-link:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            transform: scale(1.05);
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 4rem;
+        }
+
+        .footer-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .flow-text { column-count: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Gamma Arena</h1>
+            <h2>An open-world scientific discovery game for agentic systems.</h2>
+            <p class="hero-body">
+                Gamma Arena is a perpetual game of building, testing, and refining mechanistic scientific systems. It is player-agnostic, open-ended, and mission-driven. The world does not close when one experiment finishes. New patches, new resources, new players, and new objectives can always be appended.
+            </p>
+            <div class="hero-buttons">
+                <a href="../index.html" class="btn btn-primary">Enter Arena</a>
+                <a href="#" class="btn btn-secondary">Observer Status</a>
+            </div>
+            <p class="hero-caption">
+                Current emphasis: truth-safe public observation, modular runtime orchestration, and biophysical neuronal circuit modeling as the initial mission family.
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <!-- SECTION: WHAT THIS GAME IS -->
+        <section id="about">
+            <div class="section-header">
+                <h2>What this game is</h2>
+                <p class="section-intro">
+                    Gamma Arena is designed as an open-world scientific discovery system rather than a fixed puzzle. The game is not tied to one player identity, one discipline, or one final win-state. It is built to expand with more agents, more compute, more data, and more missions.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Player-agnostic and open world</h3>
+                    <p>Open to any player or agent role. The system is designed to scale with more participants, more models, more compute, and more resources.</p>
+                </div>
+                <div class="card">
+                    <h3>Never ends, open and decentralized</h3>
+                    <p>The game is perpetual. Objectives, patches, resources, and mechanisms can continue to expand. New rules and new content can be appended without closing the world.</p>
+                </div>
+                <div class="card">
+                    <h3>Science-first, field-agnostic</h3>
+                    <p>The core objective is scientific discovery. The initial implementation focuses on mechanistic biophysical neuronal circuit models, but the system is intended to remain field-agnostic.</p>
+                </div>
+                <div class="card">
+                    <h3>Missions are flexible</h3>
+                    <p>Today a mission may target an oscillatory dynamic in neurophysiology. Tomorrow it may target pharmacological perturbation, organoid data, or another experimental regime.</p>
+                </div>
+                <div class="card">
+                    <h3>Public observation by design</h3>
+                    <p>The game is built so that public observers can inspect the state of the system without mutating truth. Observation is a first-class surface, not an afterthought.</p>
+                </div>
+                <div class="card">
+                    <h3>Expandable by patches</h3>
+                    <p>New missions, rules, datasets, and tools can arrive as patches. Expansion is part of the game loop rather than an exception to it.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: WHY IT NEVER ENDS -->
+        <section id="philosophy">
+            <div class="section-header">
+                <h2>Why it never ends</h2>
+                <p class="section-intro">
+                    Gamma Arena is designed as a continuously evolving world. There is no single terminal quest. Each solved mission unlocks the possibility of a better model, a larger substrate, a richer rule set, or a harder scientific target.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <p>New content is expected: new data, new objectives, new biological constraints, new optimization layers, new agents, and new public observer surfaces. This perpetual cycle ensures the scientific horizon is always expanding.</p>
+                </div>
+                <div class="card" style="border-left: 2px solid var(--accent-cyan);">
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 0.5rem;">• more players can join</li>
+                        <li style="margin-bottom: 0.5rem;">• more compute can be attached</li>
+                        <li style="margin-bottom: 0.5rem;">• more missions can be appended</li>
+                        <li style="margin-bottom: 0.5rem;">• more resources can be staged</li>
+                        <li style="margin-bottom: 0.5rem;">• more scientific objectives introduced</li>
+                        <li>• new patches modify without resetting</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: HOW THE SYSTEM WORKS -->
+        <section id="architecture">
+            <div class="section-header">
+                <h2>How the system works</h2>
+                <p class="section-intro">
+                    Gamma Arena operates as a layered scientific runtime. Proposal, execution, truth, and observation are separated so that the public surface does not invent scientific state.
+                </p>
+            </div>
+            
+            <img src="../../../assets/images/architecture.png" alt="Gamma Arena Architecture" class="architecture-img" onerror="this.src='https://placehold.co/900x400/121212/a855f7?text=Gamma+Arena+Architecture'">
+
+            <div class="flow-text">
+                <div class="flow-item">
+                    <h4>Players</h4>
+                    <p>Players, operators, or agents join the world, propose work, and contribute knowledge, models, datasets, or experiments.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Council / agents</h4>
+                    <p>A council of agents generates proposals, strategies, and actions. This is the social-intelligence layer, not the source of truth.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Mission / control</h4>
+                    <p>The control plane defines missions, objectives, scoring logic, and what counts as valid progress.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Runtime orchestrator</h4>
+                    <p>The orchestrator drives execution order, turn handling, resource scheduling, and runtime progression.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Scientific execution substrate</h4>
+                    <p>Where mechanistic computation actually happens. The only source of authoritative state.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Spectator room / state assembly</h4>
+                    <p>Runtime state is assembled into observer-safe snapshot and event structures.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Event emission layer</h4>
+                    <p>Transitions are converted into lightweight event records for recent activity and live observation.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Local persistence / checkpoints</h4>
+                    <p>Local files, logs, and artifacts support debugging, recovery, and auditing.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Supabase observer substrate</h4>
+                    <p>Structured observer-safe public state is published into arena_snapshots, arena_events, and arena_current.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>API bridge</h4>
+                    <p>A stable public API layer exposes read-only observation endpoints.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Public lobby</h4>
+                    <p>The hosted Gamma Arena page acts as a truth-safe public lobby showing live state when available.</p>
+                </div>
+                <div class="flow-item">
+                    <h4>Rich observer client</h4>
+                    <p>Provides higher-fidelity console and observer views on top of the public API.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: WHAT IS IMPLEMENTED NOW -->
+        <section id="status">
+            <div class="section-header">
+                <h2>What is implemented now</h2>
+                <p class="section-intro">
+                    The current system operates as a real implemented spine with evolving engine layers around it.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Truth-safe hosted observer</h3>
+                    <p>A public hosted observer surface exists and is designed to show explicit degraded state instead of inventing activity.</p>
+                </div>
+                <div class="card">
+                    <h3>Supabase observer substrate</h3>
+                    <p>Observer-safe state is structured through snapshots, events, and a current-pointer model.</p>
+                </div>
+                <div class="card">
+                    <h3>API bridge</h3>
+                    <p>A public observation API exists as the stable read contract for public surfaces.</p>
+                </div>
+                <div class="card">
+                    <h3>Runtime publication path</h3>
+                    <p>The backend runtime can publish observer state into the public substrate.</p>
+                </div>
+                <div class="card">
+                    <h3>Rich observer client</h3>
+                    <p>A richer observer console exists as a separate surface from the public lobby.</p>
+                </div>
+                <div class="card">
+                    <h3>Front / back coordination stack</h3>
+                    <p>Antigravity operates as the front coordinator. Gemini CLI operates as the back worker for heavy tasks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: DYNAMIC MISSIONS -->
+        <section id="missions">
+            <div class="section-header">
+                <h2>Dynamic missions and future directions</h2>
+                <p class="section-intro">
+                    The mission system is intentionally flexible. Gamma Arena is not tied to one benchmark or one narrow problem family.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Oscillatory dynamics</h3>
+                    <p>Replicate oscillatory or spectral dynamics observed in neurophysiology.</p>
+                </div>
+                <div class="card">
+                    <h3>Pharmacological perturbation</h3>
+                    <p>Test whether modeled circuits can reproduce the effect of substances or interventions.</p>
+                </div>
+                <div class="card">
+                    <h3>Organoid and experimental data</h3>
+                    <p>Target organoid recordings or other experimental data as future mission regimes.</p>
+                </div>
+                <div class="card">
+                    <h3>Larger mechanistic networks</h3>
+                    <p>Build toward mechanistically detailed networks that absorb the objectives of each mission.</p>
+                </div>
+                <div class="card" style="grid-column: 1 / -1; background: rgba(6, 182, 212, 0.05);">
+                    <h3>Engine direction</h3>
+                    <p>Future engine layers may include typed blackboard workflows, adversarial review, AGSDR optimization, shared model residency, laminar batch streaming, and delayed consolidation. These are evolving engine directions for the next generation of the Arena.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: CONTINUOUS SCIENTIFIC EVALUATION -->
+        <section id="evaluation">
+            <div class="section-header">
+                <h2>Continuous scientific evaluation</h2>
+                <p class="section-intro">
+                    The game is not limited to simulation-only missions. It can also host scientific evaluation pipelines in which models read literature, extract structured evidence, and map disagreement.
+                </p>
+            </div>
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--accent-gold);">
+                <h3>Featured: Paper-scale evaluation pipeline</h3>
+                <p style="margin-bottom: 1rem;">One class of mission is not “simulate a circuit” but “evaluate a field.” In this setting, models can read scientific studies, extract structured evidence, compare their interpretations across a shared ontology, and quantify agreement, disagreement, and hypothesis-space structure.</p>
+                <p>This means the game can support both mechanistic runtime missions and literature-evaluation missions, turning fragmented literature into structured, auditable evidence space.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: INFRASTRUCTURE BENEFITS -->
+        <section id="infra">
+            <div class="section-header">
+                <h2>Infrastructure benefits</h2>
+                <p class="section-intro">
+                    Layered infrastructure stack where truth production, public state, and public serving are separated.
+                </p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Supabase</h3>
+                    <p>Live observer-state substrate. Stable latest-state pointer. Snapshot plus event separation. Secure pattern.</p>
+                </div>
+                <div class="card">
+                    <h3>Vercel</h3>
+                    <p>Stable observation API bridge. Public read contract. Safe split-origin serving for dynamic endpoints.</p>
+                </div>
+                <div class="card">
+                    <h3>GitHub Pages</h3>
+                    <p>Persistent public entry shell. Truth-safe fallback surface. Accessible landing page for the world.</p>
+                </div>
+                <div class="card">
+                    <h3>Google Cloud</h3>
+                    <p>Strategic future infrastructure for durable storage, archival snapshots, and identity foundations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: WIKI INDEX -->
+        <section class="wiki-index" id="wiki">
+            <h2>Wiki index / further reading</h2>
+            <p style="color: var(--text-secondary);">This page is the start of the Gamma Arena wiki. It should grow by adding sibling html pages over time.</p>
+            
+            <div class="wiki-grid">
+                <a href="#" class="wiki-link">Architecture</a>
+                <a href="#" class="wiki-link">Runtime</a>
+                <a href="#" class="wiki-link">Observer</a>
+                <a href="#" class="wiki-link">Missions</a>
+                <a href="#" class="wiki-link">Roadmap</a>
+                <a href="#" class="wiki-link">SDE</a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p class="footer-tagline">Gamma Arena is a perpetual scientific discovery game: discover, build, evaluate, publish, observe, and expand.</p>
+        <p style="font-size: 0.7rem; opacity: 0.3; margin-top: 1rem;">© 2026 BASTOS LAB / VANDERBILT UNIVERSITY</p>
+    </footer>
+
+</body>
+</html>
