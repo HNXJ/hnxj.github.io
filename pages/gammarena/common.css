@@ -155,6 +155,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     position: sticky;
     top: 0;

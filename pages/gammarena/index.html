@@ -146,6 +146,14 @@
         .hero-logo { width: 120px; height: 120px; }
         .hero-logo .g-bg { font-size: 7rem; }
         .hero-logo .g-fg { font-size: 8rem; }
+        
+        /* Inline style refactors */
+        .hero-subtitle { margin-bottom: 1rem; }
+        #clock { opacity: 0.4; font-family: monospace; font-size: 0.8rem; }
+        .container-flush { margin-top: 0; }
+        #connectivity-detail { display: none; }
+        .card-value-danger { color: var(--danger-color); }
+        #connectivity-msg { color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -171,20 +179,20 @@
                 <span class="g-fg">Γ</span>
             </div>
         </div>
-        <h1 class="hero-subtitle" style="margin-bottom: 1rem;">Observation Surface</h1>
+        <h1 class="hero-subtitle">Observation Surface</h1>
         <div class="status-bar">
             <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
-            <span id="clock" style="opacity: 0.4; font-family: monospace; font-size: 0.8rem;"></span>
+            <span id="clock"></span>
         </div>
     </div>
 
-    <div class="container" style="margin-top: 0;">
+    <div class="container container-flush">
 
         <!-- Connectivity Detail -->
-        <div id="connectivity-detail" class="card card-danger" style="display: none;">
+        <div id="connectivity-detail" class="card card-danger">
             <div class="card-label">Link Status</div>
-            <div class="card-value" style="color: var(--danger-color);">DETACHED</div>
-            <div id="connectivity-msg" style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;"></div>
+            <div class="card-value card-value-danger">DETACHED</div>
+            <div id="connectivity-msg"></div>
             <div id="connectivity-prov" class="provenance"></div>
         </div>
 

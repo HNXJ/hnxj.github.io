@@ -55,6 +55,12 @@
         .topology-item { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.85rem; }
         .topology-label { color: var(--text-secondary); }
         .topology-value { font-family: ui-monospace, monospace; color: var(--accent-cyan); font-weight: 600; }
+        
+        /* Inline style refactors */
+        .section-intro-text { margin-bottom: 2rem; }
+        .coordination-list { margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        .coordination-list li { margin-bottom: 1rem; }
+        .coordination-list strong { color: var(--text-primary); }
     </style>
 </head>
 <body>
@@ -86,7 +92,7 @@
 
         <section class="content-section">
             <h2>The Layered Architecture</h2>
-            <p style="margin-bottom: 2rem;">
+            <p class="section-intro-text">
                 Gamma Arena is built on a modular four-plane architecture that separates high-level strategy from low-level execution. This ensures that truth production is decoupled from public observation, preventing "stale data invention" on the frontend.
             </p>
 
@@ -142,10 +148,10 @@
             <p>
                 The system relies on a strictly defined coordination protocol:
             </p>
-            <ul style="margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary);">
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Front Coordination:</strong> Handled by Antigravity. Owns the UI, public surfaces, and visual truth.</li>
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Back Execution:</strong> Handled by Gemini CLI. Owns the runtime logic, persistence, and repo-level operations.</li>
-                <li><strong style="color: var(--text-primary);">World Ontology:</strong> Anchored by the <a href="roadmap.html#genesis-tree" style="color: var(--accent-gold); text-decoration: none;">Genesis Tree</a>.</li>
+            <ul class="coordination-list">
+                <li><strong>Front Coordination:</strong> Handled by Antigravity. Owns the UI, public surfaces, and visual truth.</li>
+                <li><strong>Back Execution:</strong> Handled by Gemini CLI. Owns the runtime logic, persistence, and repo-level operations.</li>
+                <li><strong>World Ontology:</strong> Anchored by the <a href="roadmap.html#genesis-tree" style="color: var(--accent-gold); text-decoration: none;">Genesis Tree</a>.</li>
             </ul>
         </section>
     </div>
