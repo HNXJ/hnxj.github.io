@@ -36,6 +36,11 @@
         }
         .runtime-card h3 { color: var(--text-primary); font-size: 1rem; margin-bottom: 0.75rem; }
         .runtime-card p { font-size: 0.9rem; color: var(--text-secondary); }
+        
+        /* Inline style refactors */
+        .persistence-list { margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        .persistence-list li { margin-bottom: 1rem; }
+        .persistence-list strong { color: var(--text-primary); }
     </style>
 </head>
 <body>
@@ -125,9 +130,9 @@
             <p>
                 Runtime state is persisted across two layers:
             </p>
-            <ul style="margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary);">
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Local Checkpoints:</strong> High-frequency JSON dumps in <code>local/run/</code> for sub-second recovery.</li>
-                <li><strong style="color: var(--text-primary);">Remote Truth:</strong> Laminar snapshots in Supabase for public observation and archival integrity.</li>
+            <ul class="persistence-list">
+                <li><strong>Local Checkpoints:</strong> High-frequency JSON dumps in <code>local/run/</code> for sub-second recovery.</li>
+                <li><strong>Remote Truth:</strong> Laminar snapshots in Supabase for public observation and archival integrity.</li>
             </ul>
         </section>
     </div>

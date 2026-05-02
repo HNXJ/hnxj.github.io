@@ -35,6 +35,13 @@
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; }
         .feature-item h4 { font-size: 0.9rem; color: var(--accent-gold); margin-bottom: 0.75rem; }
         .feature-item p { font-size: 0.85rem; color: var(--text-secondary); }
+        
+        /* Inline style refactors */
+        .genesis-link { color: var(--accent-gold); text-decoration: none; }
+        .section-desc { color: var(--text-secondary); margin-bottom: 2rem; }
+        .tech-list { padding-left: 1.5rem; color: var(--text-secondary); }
+        .tech-list li { margin-bottom: 1rem; }
+        .tech-list strong { color: var(--text-primary); }
     </style>
 </head>
 <body>
@@ -67,7 +74,7 @@
             <div class="sde-card">
                 <h3>Shared Dependency Execution (SDE)</h3>
                 <p>
-                    The SDE Engine is the core scheduling and dependency management backbone of Gamma Arena. It is designed to handle non-overlapping model dependency trees, ensuring that complex scientific workflows can be parallelized without race conditions on the truth plane. SDE primitives are defined in the <a href="roadmap.html#genesis-tree" style="color: var(--accent-gold); text-decoration: none;">Genesis Tree</a>.
+                    The SDE Engine is the core scheduling and dependency management backbone of Gamma Arena. It is designed to handle non-overlapping model dependency trees, ensuring that complex scientific workflows can be parallelized without race conditions on the truth plane. SDE primitives are defined in the <a href="roadmap.html#genesis-tree" class="genesis-link">Genesis Tree</a>.
                 </p>
                 <div class="feature-grid">
                     <div class="feature-item">
@@ -84,13 +91,13 @@
 
         <section class="content-section">
             <h2>Technical Specifications</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            <p class="section-desc">
                 The SDE backbone operates as a typed blackboard system where each dependency node is tagged with its mechanistic provenance.
             </p>
-            <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Dependency Locking:</strong> Prevents multiple models from claiming the same biophysical parameter space within a single turn.</li>
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Laminar Batching:</strong> Groups scientific events into coherent batches for efficient truth-plane publication.</li>
-                <li><strong style="color: var(--text-primary);">Delayed Consolidation:</strong> Allows speculative execution to happen in the foreground while truth-plane commits happen asynchronously.</li>
+            <ul class="tech-list">
+                <li><strong>Dependency Locking:</strong> Prevents multiple models from claiming the same biophysical parameter space within a single turn.</li>
+                <li><strong>Laminar Batching:</strong> Groups scientific events into coherent batches for efficient truth-plane publication.</li>
+                <li><strong>Delayed Consolidation:</strong> Allows speculative execution to happen in the foreground while truth-plane commits happen asynchronously.</li>
             </ul>
         </section>
     </div>
