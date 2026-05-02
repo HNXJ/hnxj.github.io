@@ -1,0 +1,167 @@
+/* 
+    Gamma Arena Shared Design System (v1.0)
+    Theme: Gold / Purple / Cyan Dashboard
+*/
+
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-card: #121212;
+    --accent-gold: #eab308;
+    --accent-purple: #a855f7;
+    --accent-cyan: #06b6d4;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-glow: rgba(168, 85, 247, 0.2);
+    --glass-bg: rgba(18, 18, 18, 0.8);
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* --- Navigation --- */
+nav {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border-glow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+}
+
+.nav-logo-text {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+}
+
+.nav-links { display: flex; gap: 2rem; }
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+.nav-link:hover { color: var(--accent-gold); }
+.nav-link.active { color: var(--accent-gold); }
+
+/* --- Official Logo System --- */
+.gamma-mark {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.gamma-mark .g-bg {
+    position: absolute;
+    font-size: 1.8rem;
+    color: var(--accent-cyan);
+    opacity: 0.3;
+    transform: translate(2px, 2px);
+    font-family: serif;
+}
+
+.gamma-mark .g-fg {
+    position: relative;
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    font-weight: 900;
+    font-family: serif;
+    text-shadow: 0 0 8px rgba(234, 179, 8, 0.4);
+}
+
+/* --- Components --- */
+.card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-2px);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+    opacity: 0.2;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--accent-purple);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-glow);
+    padding-bottom: 0.5rem;
+}
+
+.accent-text { color: var(--accent-cyan); font-weight: 600; }
+.gold-text { color: var(--accent-gold); }
+
+footer {
+    text-align: center;
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border-glow);
+    margin-top: 4rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+/* --- Layout Utils --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .container { padding: 1rem; }
+}

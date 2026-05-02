@@ -7,48 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="common.css">
     <style>
-        :root {
-            --bg-dark: #0a0a0a;
-            --bg-card: #121212;
-            --accent-gold: #eab308;
-            --accent-purple: #a855f7;
-            --accent-cyan: #06b6d4;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: rgba(168, 85, 247, 0.2);
-            --glass-bg: rgba(18, 18, 18, 0.8);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Outfit', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* --- Hero Section --- */
+        /* Page-specific hero styles */
         .hero {
-            min-height: 70vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -60,7 +24,7 @@
         }
 
         .hero h1 {
-            font-size: 5rem;
+            font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 900;
             background: linear-gradient(to bottom, #fff, var(--accent-purple));
             -webkit-background-clip: text;
@@ -73,6 +37,7 @@
             color: var(--accent-gold);
             font-weight: 400;
             margin-bottom: 2rem;
+            letter-spacing: 0.4em;
         }
 
         .hero-body {
@@ -80,6 +45,7 @@
             color: var(--text-secondary);
             font-size: 1.1rem;
             margin-bottom: 3rem;
+            padding: 0 1rem;
         }
 
         .hero-buttons {
@@ -94,191 +60,53 @@
             text-decoration: none;
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
             border: 1px solid transparent;
         }
 
-        .btn-primary {
-            background-color: var(--accent-purple);
-            color: #fff;
-        }
+        .btn-primary { background: var(--accent-gold); color: #000; }
+        .btn-primary:hover { background: #fff; transform: scale(1.05); }
+        .btn-secondary { border-color: var(--accent-purple); color: var(--accent-purple); }
+        .btn-secondary:hover { background: var(--accent-purple); color: #fff; }
 
-        .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-            transform: translateY(-2px);
-        }
+        .wiki-card { height: 100%; display: flex; flex-direction: column; }
+        .wiki-card h3 { color: var(--accent-gold); margin-bottom: 1rem; font-size: 1rem; }
+        .wiki-card p { font-size: 0.85rem; color: var(--text-secondary); flex-grow: 1; margin-bottom: 1.5rem; }
+        .wiki-card .link { color: var(--accent-cyan); text-decoration: none; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .wiki-card .link:hover { color: #fff; }
 
-        .btn-secondary {
-            border-color: rgba(255,255,255,0.1);
-            color: var(--text-primary);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--accent-cyan);
-        }
-
-        .hero-caption {
-            font-size: 0.8rem;
+        .status-pill {
+            background: rgba(6, 182, 212, 0.1);
             color: var(--accent-cyan);
-            opacity: 0.8;
-            max-width: 600px;
-        }
-
-        /* --- Sections --- */
-        section {
-            margin-bottom: 6rem;
-        }
-
-        .section-header {
-            margin-bottom: 3rem;
-        }
-
-        .section-header h2 {
-            font-size: 2rem;
-            border-left: 4px solid var(--accent-purple);
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .section-intro {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 800px;
-        }
-
-        /* --- Card Grid --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 2rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: var(--border-glow);
-            transform: translateY(-5px);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
-            opacity: 0.3;
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* --- Architecture Section --- */
-        .architecture-img {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto 3rem;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-            background: rgba(168, 85, 247, 0.05);
-            border: 1px solid var(--border-glow);
-        }
-
-        .flow-text {
-            column-count: 2;
-            column-gap: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .flow-item {
-            break-inside: avoid;
-            margin-bottom: 1.5rem;
-        }
-
-        .flow-item h4 {
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        /* --- Wiki Index --- */
-        .wiki-index {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
-            border: 1px solid var(--border-glow);
-            padding: 3rem;
-            border-radius: 12px;
-        }
-
-        .wiki-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .wiki-link {
-            padding: 1rem;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-            color: var(--text-primary);
-            text-decoration: none;
+            padding: 0.2rem 0.6rem;
             border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .wiki-link:hover {
-            background: var(--accent-purple);
-            border-color: var(--accent-purple);
-            transform: scale(1.05);
-        }
-
-        /* --- Footer --- */
-        footer {
-            padding: 4rem 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border-glow);
-            margin-top: 4rem;
-        }
-
-        .footer-tagline {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .flow-text { column-count: 1; }
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
+
+    <nav>
+        <a href="readme.html" class="nav-brand">
+            <div class="gamma-mark">
+                <span class="g-bg">γ</span>
+                <span class="g-fg">Γ</span>
+            </div>
+            <span class="nav-logo-text">GAMMA ARENA</span>
+        </a>
+        <div class="nav-links">
+            <a href="readme.html" class="nav-link active">Home</a>
+            <a href="architecture.html" class="nav-link">Architecture</a>
+            <a href="runtime.html" class="nav-link">Runtime</a>
+            <a href="observer.html" class="nav-link">Observer</a>
+            <a href="roadmap.html" class="nav-link">Roadmap</a>
+            <a href="../index.html" class="nav-link">Live Status</a>
+        </div>
+    </nav>
 
     <div class="hero">
         <div class="container">
