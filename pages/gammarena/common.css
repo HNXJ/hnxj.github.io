@@ -11,6 +11,8 @@
     --glass-bg: rgba(18, 18, 18, 0.8);
     --neural-cyan: rgba(6, 182, 212, 0.4);
     --neural-gold: rgba(234, 179, 8, 0.3);
+    --danger-color: #f43f5e;
+    --success-color: #22c55e;
 }
 
 /* --- Animated Neural Background --- */
@@ -342,4 +344,269 @@ footer {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
+}
+
+/* --- Player Roster & Entity Cards --- */
+.roster-header {
+    margin-bottom: 3rem;
+    border-left: 4px solid var(--accent-gold);
+    padding-left: 1.5rem;
+}
+
+.roster-header h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.roster-header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.player-card {
+    background: var(--glass-bg);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.player-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+.player-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.02) 50%);
+    pointer-events: none;
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.player-identity {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-id {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.player-name {
+    font-size: 1.4rem;
+    font-weight: 900;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.player-role {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.player-status-tag {
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-active { background: rgba(34, 197, 94, 0.1); color: var(--success-color); border: 1px solid rgba(34, 197, 94, 0.2); }
+.status-exploratory { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.2); }
+.status-pending { background: rgba(244, 63, 94, 0.1); color: var(--danger-color); border: 1px solid rgba(244, 63, 94, 0.2); }
+
+.player-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.55rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.detail-value {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.player-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.player-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.badge {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+}
+
+.badge-core { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.badge-guest { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+/* Provenance Legend */
+.provenance-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2rem;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.legend-label {
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'Outfit', sans-serif;
+}
+
+.legend-label.core { color: var(--accent-cyan); }
+.legend-label.persisted { color: var(--accent-purple); }
+.legend-label.pending { color: var(--accent-gold); }
+
+.legend-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Teaser Section */
+.teaser-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.teaser-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.teaser-header h2 {
+    font-size: 1.25rem;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+}
+
+.teaser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.teaser-mini-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.mini-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.mini-role {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.btn-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(191, 163, 110, 0.1);
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s ease;
+}
+
+.btn-cta:hover {
+    background: var(--accent-gold);
+    color: #000;
 }

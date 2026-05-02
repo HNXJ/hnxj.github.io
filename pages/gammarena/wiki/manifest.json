@@ -41,6 +41,13 @@
             "description": "Technical specs for the Shared Dependency Execution engine backbone.",
             "url": "sde.html",
             "tags": ["technical", "core"]
+        },
+        {
+            "id": "roster",
+            "title": "Player Roster",
+            "description": "Index of core exploratory actors and guest presences in the world.",
+            "url": "../roster.html",
+            "tags": ["social", "entities"]
         }
     ]
 }
