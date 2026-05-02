@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena Wiki | Genesis Tree</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <style>
+        /* Page-specific graph styles */
+        .main-wrapper {
+            display: flex;
+            height: calc(100vh - 70px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #cy {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: grab;
+        }
+
+        #cy:active { cursor: grabbing; }
+
+        /* Filter Controls */
+        .graph-controls {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        .filter-group {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            pointer-events: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .filter-title {
+            font-size: 0.6rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            max-width: 250px;
+        }
+
+        .filter-chip {
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .filter-chip.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+        }
+
+        /* Side Panel */
+        .side-panel {
+            width: 400px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-glow);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .side-panel.active {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .panel-type {
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .panel-body {
+            padding: 2rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 2rem;
+        }
+
+        .panel-section label {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.75rem;
+        }
+
+        .panel-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .rel-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rel-list li {
+            padding: 0.75rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rel-type {
+            color: var(--accent-purple);
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .panel-footer {
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .panel-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-gold);
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .panel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
+        }
+
+        /* Responsive Mobile Tweak */
+        @media (max-width: 768px) {
+            .side-panel {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 60vh;
+                transform: translateY(100%);
+                border-left: none;
+                border-top: 1px solid var(--border-glow);
+            }
+            .side-panel.active { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-overlay"></div>
+
+    <nav>
+        <a href="readme.html" class="nav-brand">
+            <div class="gamma-mark">
+                <span class="g-bg">γ</span>
+                <span class="g-fg">Γ</span>
+            </div>
+            <span class="nav-logo-text">GAMMA ARENA</span>
+        </a>
+        <div class="nav-links">
+            <a href="readme.html" class="nav-link">Home</a>
+            <a href="architecture.html" class="nav-link">Architecture</a>
+            <a href="runtime.html" class="nav-link">Runtime</a>
+            <a href="observer.html" class="nav-link">Observer</a>
+            <a href="roadmap.html" class="nav-link">Roadmap</a>
+            <a href="genesis-tree.html" class="nav-link active">Genesis Tree</a>
+            <a href="../index.html" class="nav-link">Live Status</a>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="graph-controls">
+            <div class="filter-group">
+                <span class="filter-title">Filter Ontology</span>
+                <div class="filter-chips">
+                    <div class="filter-chip active" onclick="applyFilter('all', this)">All</div>
+                    <div class="filter-chip" onclick="applyFilter('world', this)">Worlds</div>
+                    <div class="filter-chip" onclick="applyFilter('concept', this)">Concepts</div>
+                    <div class="filter-chip" onclick="applyFilter('substrate', this)">Substrates</div>
+                    <div class="filter-chip" onclick="applyFilter('circuit', this)">Circuits</div>
+                    <div class="filter-chip" onclick="applyFilter('mission', this)">Missions</div>
+                    <div class="filter-chip" onclick="applyFilter('paper', this)">Papers</div>
+                    <div class="filter-chip" onclick="applyFilter('tool', this)">Tools</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cy"></div>
+
+        <div id="side-panel" class="side-panel">
+            <div class="panel-header">
+                <div class="panel-type" id="panel-type">Node Type</div>
+                <h2 id="panel-title">Node Title</h2>
+                <button class="close-panel" onclick="closePanel()">&times;</button>
+            </div>
+            <div class="panel-body">
+                <div class="panel-section">
+                    <label>Description</label>
+                    <p id="panel-desc">Select a node to view details.</p>
+                </div>
+                <div id="panel-evidence" class="panel-section" style="display: none;">
+                    <label>Credibility Anchors</label>
+                    <div id="evidence-container" class="chip-group"></div>
+                </div>
+                <div class="panel-section">
+                    <label>Interconnections</label>
+                    <ul id="panel-rel" class="rel-list"></ul>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <a id="panel-link" href="#" target="_blank" class="panel-btn">Open Documentation</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cy;
+        const panel = document.getElementById('side-panel');
+
+        async function initGraph() {
+            try {
+                const response = await fetch('genesis-tree.json');
+                const data = await response.json();
+
+                cy = cytoscape({
+                    container: document.getElementById('cy'),
+                    elements: data,
+                    style: [
+                        {
+                            selector: 'node',
+                            style: {
+                                'background-color': 'data(color)',
+                                'label': 'data(label)',
+                                'color': '#fff',
+                                'text-valign': 'center',
+                                'text-halign': 'center',
+                                'font-family': 'Outfit, sans-serif',
+                                'font-size': '10px',
+                                'width': 60,
+                                'height': 60,
+                                'border-width': 2,
+                                'border-color': 'rgba(255,255,255,0.1)',
+                                'text-outline-width': 2,
+                                'text-outline-color': '#0a0a0a',
+                                'transition-property': 'background-color, line-color, target-arrow-color, width, height',
+                                'transition-duration': '0.3s'
+                            }
+                        },
+                        {
+                            selector: 'node[type="world"]',
+                            style: { 'shape': 'star', 'width': 80, 'height': 80, 'border-color': 'var(--accent-gold)' }
+                        },
+                        {
+                            selector: 'node[type="concept"]',
+                            style: { 'shape': 'hexagon' }
+                        },
+                        {
+                            selector: 'node[type="substrate"]',
+                            style: { 'shape': 'rectangle' }
+                        },
+                        {
+                            selector: 'node[type="paper"]',
+                            style: { 'shape': 'ellipse', 'border-color': '#fff', 'background-color': 'rgba(255,255,255,0.05)' }
+                        },
+                        {
+                            selector: 'node[type="tool"], node[type="repo"]',
+                            style: { 'shape': 'diamond' }
+                        },
+                        {
+                            selector: 'edge',
+                            style: {
+                                'width': 2,
+                                'line-color': 'rgba(255,255,255,0.1)',
+                                'target-arrow-color': 'rgba(255,255,255,0.1)',
+                                'target-arrow-shape': 'triangle',
+                                'curve-style': 'bezier',
+                                'label': 'data(type)',
+                                'font-size': '7px',
+                                'color': 'rgba(255,255,255,0.4)',
+                                'text-rotation': 'autorotate',
+                                'text-background-opacity': 1,
+                                'text-background-color': '#0a0a0a',
+                                'text-background-padding': '2px',
+                                'opacity': 0.6
+                            }
+                        },
+                        {
+                            selector: 'edge[type="supports"]',
+                            style: { 'line-color': 'var(--accent-cyan)', 'target-arrow-color': 'var(--accent-cyan)', 'opacity': 1 }
+                        },
+                        {
+                            selector: 'edge[type="uses"]',
+                            style: { 'line-color': 'var(--accent-purple)', 'target-arrow-color': 'var(--accent-purple)', 'opacity': 1 }
+                        },
+                        {
+                            selector: 'node:selected',
+                            style: {
+                                'border-width': 4,
+                                'border-color': '#fff',
+                                'shadow-blur': 20,
+                                'shadow-color': '#fff',
+                                'shadow-opacity': 0.5
+                            }
+                        }
+                    ],
+                    layout: {
+                        name: 'cose',
+                        animate: true,
+                        padding: 100,
+                        componentSpacing: 100,
+                        nodeRepulsion: 4000
+                    }
+                });
+
+                cy.on('tap', 'node', function(evt){
+                    const node = evt.target;
+                    showPanel(node.data());
+                });
+
+                cy.on('tap', function(evt){
+                    if(evt.target === cy) {
+                        closePanel();
+                    }
+                });
+
+                // Initial layout run
+                cy.layout({ name: 'cose' }).run();
+
+            } catch (err) {
+                console.error("Failed to load Genesis Tree graph:", err);
+            }
+        }
+
+        function showPanel(data) {
+            document.getElementById('panel-type').innerText = data.type;
+            document.getElementById('panel-title').innerText = data.label;
+            document.getElementById('panel-desc').innerText = data.description || "No specific metadata recorded for this entity.";
+            
+            const evidence = document.getElementById('panel-evidence');
+            const evidenceContainer = document.getElementById('evidence-container');
+            evidenceContainer.innerHTML = '';
+            
+            let hasEvidence = false;
+            if (data.doi) {
+                evidenceContainer.innerHTML += `<span class="chip chip-doi">DOI: ${data.doi}</span>`;
+                hasEvidence = true;
+            }
+            if (data.tool) {
+                evidenceContainer.innerHTML += `<span class="chip chip-tool">Tool: ${data.tool}</span>`;
+                hasEvidence = true;
+            }
+            if (data.guarantee) {
+                evidenceContainer.innerHTML += `<span class="chip chip-guarantee">Guarantee: ${data.guarantee}</span>`;
+                hasEvidence = true;
+            }
+
+            evidence.style.display = hasEvidence ? 'block' : 'none';
+
+            const relList = document.getElementById('panel-rel');
+            relList.innerHTML = '';
+            const edges = cy.getElementById(data.id).connectedEdges();
+            edges.forEach(edge => {
+                const isSource = edge.source().id() === data.id;
+                const otherNode = isSource ? edge.target() : edge.source();
+                const type = edge.data('type');
+                const dir = isSource ? '➜' : '⬅';
+                relList.innerHTML += `<li><span class="rel-type">${type}</span> <span>${dir} ${otherNode.data('label')}</span></li>`;
+            });
+
+            const link = document.getElementById('panel-link');
+            if (data.url) {
+                link.href = data.url;
+                link.style.display = 'block';
+            } else {
+                link.style.display = 'none';
+            }
+
+            panel.classList.add('active');
+        }
+
+        function closePanel() {
+            panel.classList.remove('active');
+            cy.nodes().unselect();
+        }
+
+        function applyFilter(type, el) {
+            // Update UI
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+
+            if (type === 'all') {
+                cy.nodes().show();
+                cy.edges().show();
+            } else {
+                cy.nodes().hide();
+                cy.edges().hide();
+                const filteredNodes = cy.nodes(`[type="${type}"]`);
+                filteredNodes.show();
+                // Show connected edges if both source and target are visible
+                // Actually, let's show all connected nodes to keep context
+                const neighborhood = filteredNodes.neighborhood();
+                neighborhood.show();
+                filteredNodes.connectedEdges().show();
+            }
+            
+            cy.layout({ name: 'cose', animate: true }).run();
+        }
+
+        initGraph();
+    </script>
+</body>
+</html>

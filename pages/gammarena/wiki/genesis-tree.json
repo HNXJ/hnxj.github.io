@@ -1,0 +1,36 @@
+{
+    "nodes": [
+        { "data": { "id": "gamma_arena", "label": "Gamma Arena", "type": "world", "description": "A perpetual scientific discovery game: discover, build, evaluate, publish, observe, and expand.", "color": "#eab308", "guarantee": "Live public system" } },
+        { "data": { "id": "genesis_tree", "label": "Genesis Tree", "type": "concept", "description": "The canonical glossary, ontology, and evidence graph of Gamma Arena.", "color": "#a855f7", "doi": "10.1038/s41586-023-06673-y" } },
+        { "data": { "id": "telemetry_pipeline", "label": "Telemetry Pipeline", "type": "substrate", "description": "Ground-truth publication layer ensuring auditable research dispatches.", "color": "#06b6d4", "guarantee": "Truth-safe observation" } },
+        { "data": { "id": "gamma_runtime", "label": "Gamma Runtime", "type": "circuit", "description": "Execution orchestrator for mechanistic neuronal simulations and missions.", "color": "#a855f7", "tool": "FastAPI / Python" } },
+        { "data": { "id": "spectator_room", "label": "Spectator Room", "type": "observer", "description": "Real-time state residency for council members and spectator agents.", "color": "#06b6d4", "guarantee": "Multi-agent residency" } },
+        { "data": { "id": "supabase_substrate", "label": "Supabase Substrate", "type": "substrate", "description": "Persistent truth plane for snapshots, events, and current system state.", "color": "#06b6d4", "tool": "Supabase" } },
+        { "data": { "id": "arena_snapshots", "label": "arena_snapshots", "type": "table", "description": "Relational storage for high-fidelity state snapshots.", "color": "#06b6d4", "belongs_to": "supabase_substrate" } },
+        { "data": { "id": "arena_events", "label": "arena_events", "type": "table", "description": "Immutable event log for turn-based state transitions.", "color": "#06b6d4", "belongs_to": "supabase_substrate" } },
+        { "data": { "id": "arena_current", "label": "arena_current", "type": "table", "description": "Atomic pointer to the most recent validated state.", "color": "#06b6d4", "belongs_to": "supabase_substrate" } },
+        { "data": { "id": "observation_api", "label": "Observation API", "type": "api", "description": "Public gateway to the truth plane, hosted on Vercel.", "color": "#06b6d4", "tool": "Vercel" } },
+        { "data": { "id": "hosted_observer", "label": "Hosted Observer", "type": "observer", "description": "Public-facing dashboard for real-time telemetry observation.", "color": "#eab308", "url": "../index.html" } },
+        { "data": { "id": "wiki", "label": "Arena Wiki", "type": "concept", "description": "Living research documentation and world strategy.", "color": "#a855f7", "url": "readme.html" } },
+        { "data": { "id": "roadmap", "label": "World Roadmap", "type": "concept", "description": "Sequence of strategic milestones and expansion phases.", "color": "#a855f7", "url": "roadmap.html" } },
+        { "data": { "id": "missions", "label": "Missions", "type": "mission", "description": "Active scientific objectives and research targets.", "color": "#a855f7", "url": "missions.html" } },
+        { "data": { "id": "predictive_processing", "label": "Predictive Processing", "type": "paper", "description": "Conceptual framework for literature-evaluation missions.", "color": "#fff", "doi": "10.1038/nrn3338" } },
+        { "data": { "id": "literature_eval", "label": "Literature Evaluation", "type": "claim", "description": "The claim that LLMs can derive structured evidence from fragmented papers.", "color": "#fff", "evaluated_by": "gamma_runtime" } },
+        { "data": { "id": "hnxj_gamma_repo", "label": "HNXJ/gamma", "type": "repo", "description": "Source code for the Gamma Runtime and SDE Engine.", "color": "#06b6d4", "tool": "GitHub" } }
+    ],
+    "edges": [
+        { "data": { "source": "gamma_arena", "target": "genesis_tree", "type": "belongs_to" } },
+        { "data": { "source": "gamma_arena", "target": "telemetry_pipeline", "type": "uses" } },
+        { "data": { "source": "telemetry_pipeline", "target": "supabase_substrate", "type": "publishes_to" } },
+        { "data": { "source": "gamma_runtime", "target": "supabase_substrate", "type": "publishes_to" } },
+        { "data": { "source": "gamma_runtime", "target": "spectator_room", "type": "observes" } },
+        { "data": { "source": "spectator_room", "target": "observation_api", "type": "reads_from" } },
+        { "data": { "source": "hosted_observer", "target": "observation_api", "type": "reads_from" } },
+        { "data": { "source": "wiki", "target": "genesis_tree", "type": "extends" } },
+        { "data": { "source": "roadmap", "target": "gamma_arena", "type": "belongs_to" } },
+        { "data": { "source": "missions", "target": "gamma_arena", "type": "belongs_to" } },
+        { "data": { "source": "predictive_processing", "target": "literature_eval", "type": "supports" } },
+        { "data": { "source": "literature_eval", "target": "missions", "type": "derives_from" } },
+        { "data": { "source": "hnxj_gamma_repo", "target": "gamma_runtime", "type": "uses" } }
+    ]
+}
