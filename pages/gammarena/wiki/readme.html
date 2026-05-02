@@ -537,15 +537,11 @@
         <!-- SECTION: WIKI INDEX -->
         <section class="wiki-index" id="wiki">
             <h2>Wiki index / further reading</h2>
-            <p style="color: var(--text-secondary);">This page is the start of the Gamma Arena wiki. It should grow by adding sibling html pages over time.</p>
+            <p style="color: var(--text-secondary);">This page is the start of the Gamma Arena wiki. It scales dynamically via manifest.json.</p>
             
-            <div class="wiki-grid">
-                <a href="#" class="wiki-link">Architecture</a>
-                <a href="#" class="wiki-link">Runtime</a>
-                <a href="#" class="wiki-link">Observer</a>
-                <a href="#" class="wiki-link">Missions</a>
-                <a href="#" class="wiki-link">Roadmap</a>
-                <a href="#" class="wiki-link">SDE</a>
+            <div class="wiki-grid" id="wiki-grid">
+                <!-- Dynamically populated -->
+                <div style="opacity: 0.5;">Loading index...</div>
             </div>
         </section>
 
@@ -555,6 +551,46 @@
         <p class="footer-tagline">Gamma Arena is a perpetual scientific discovery game: discover, build, evaluate, publish, observe, and expand.</p>
         <p style="font-size: 0.7rem; opacity: 0.3; margin-top: 1rem;">© 2026 BASTOS LAB / VANDERBILT UNIVERSITY</p>
     </footer>
+
+    <script>
+        // Dynamic Wiki Index
+        async function loadWikiIndex() {
+            const grid = document.getElementById('wiki-grid');
+            try {
+                const response = await fetch('manifest.json');
+                const data = await response.json();
+                
+                grid.innerHTML = '';
+                data.pages.forEach(page => {
+                    const card = document.createElement('a');
+                    card.href = page.url;
+                    card.className = 'wiki-link';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+                    card.style.alignItems = 'center';
+                    card.style.gap = '0.5rem';
+                    
+                    card.innerHTML = `
+                        <div style="font-weight: 800; color: var(--accent-gold);">${page.title}</div>
+                        <div style="font-size: 0.75rem; font-weight: 400; opacity: 0.7; line-height: 1.2;">${page.description}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                grid.innerHTML = '<div style="color: var(--accent-gold);">Index currently offline. Using hardcoded fallback.</div>';
+                // Fallback links if manifest fails
+                ['Architecture', 'Runtime', 'Observer', 'Missions', 'Roadmap', 'SDE'].forEach(title => {
+                    const link = document.createElement('a');
+                    link.href = title.toLowerCase() + '.html';
+                    link.className = 'wiki-link';
+                    link.innerText = title;
+                    grid.appendChild(link);
+                });
+            }
+        }
+
+        loadWikiIndex();
+    </script>
 
 </body>
 </html>

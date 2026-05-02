@@ -1,0 +1,46 @@
+{
+    "pages": [
+        {
+            "id": "architecture",
+            "title": "Architecture",
+            "description": "Deep dive into the layered scientific runtime and 4-plane separation.",
+            "url": "architecture.html",
+            "tags": ["core", "infra"]
+        },
+        {
+            "id": "runtime",
+            "title": "Runtime",
+            "description": "Execution orchestrator, turn handling, and resource scheduling details.",
+            "url": "runtime.html",
+            "tags": ["backend", "orchestration"]
+        },
+        {
+            "id": "observer",
+            "title": "Observer",
+            "description": "Truth-safe observation substrate, Supabase schema, and public API specs.",
+            "url": "observer.html",
+            "tags": ["frontend", "data"]
+        },
+        {
+            "id": "missions",
+            "title": "Missions",
+            "description": "Dynamic objectives: oscillatory dynamics, pharmacology, and organoids.",
+            "url": "missions.html",
+            "tags": ["science", "gameplay"]
+        },
+        {
+            "id": "roadmap",
+            "title": "Roadmap",
+            "description": "Engine evolution: AGSDR, adversarial review, and shared residency.",
+            "url": "roadmap.html",
+            "tags": ["future", "strategy"]
+        },
+        {
+            "id": "sde",
+            "title": "SDE Engine",
+            "description": "Technical specs for the Shared Dependency Execution engine backbone.",
+            "url": "sde.html",
+            "tags": ["technical", "core"]
+        }
+    ]
+}
