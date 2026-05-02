@@ -70,6 +70,60 @@ body::after {
     50% { opacity: 0.1; }
 }
 
+/* Credibility Chips */
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.chip {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.chip-doi { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.2); }
+.chip-tool { background: rgba(34, 211, 238, 0.1); color: var(--accent-cyan); border: 1px solid rgba(34, 211, 238, 0.2); }
+.chip-guarantee { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); border: 1px solid rgba(251, 191, 36, 0.2); }
+
+/* Blog / Dispatch Styles */
+.blog-feed { margin-top: 2rem; }
+.blog-post {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glow);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease;
+}
+.blog-post:hover { transform: translateX(5px); background: rgba(255, 255, 255, 0.04); }
+.blog-meta { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: flex; gap: 1rem; }
+.blog-author { color: var(--accent-gold); font-weight: 700; }
+
+/* Genesis Tree Styles */
+.genesis-tree {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.tree-branch {
+    background: var(--bg-card);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem;
+}
+.tree-branch h4 { color: var(--accent-cyan); margin-bottom: 0.5rem; font-size: 0.9rem; }
+.tree-branch ul { list-style: none; padding: 0; color: var(--text-secondary); font-size: 0.75rem; }
+.tree-branch li { margin-bottom: 0.3rem; padding-left: 0.5rem; border-left: 1px solid rgba(255,255,255,0.1); }
+
 /* --- Base Styles --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 

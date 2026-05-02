@@ -30,10 +30,10 @@
         },
         {
             "id": "roadmap",
-            "title": "Roadmap",
-            "description": "Engine evolution: AGSDR, adversarial review, and shared residency.",
+            "title": "World Roadmap",
+            "description": "Living strategy, founding editorial roster, and the Genesis Tree ontology.",
             "url": "roadmap.html",
-            "tags": ["future", "strategy"]
+            "tags": ["strategy", "world-building", "ontology"]
         },
         {
             "id": "sde",
