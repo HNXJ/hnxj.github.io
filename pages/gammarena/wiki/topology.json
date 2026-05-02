@@ -1,0 +1,26 @@
+{
+    "milestone": "telemetry-restored-20260502",
+    "status": "OPERATIONAL",
+    "topology": {
+        "truth_plane": {
+            "engine": "Gamma Runtime (MacOS Safe Mode)",
+            "repo": "HNXJ/gamma",
+            "commit": "963a557ef1e7615ce642eee8a56b48a52b1bca69"
+        },
+        "persistence_layer": {
+            "provider": "Supabase",
+            "project_id": "pedkrfxnicxdsacflvbj",
+            "tables": ["arena_snapshots", "arena_events", "arena_current"]
+        },
+        "observation_bridge": {
+            "provider": "Vercel",
+            "repo": "HNXJ/hnxj.github.io",
+            "commit": "857a6d315aaf6941be08e5ccfd3b73d56a696984",
+            "api_contract": "v1"
+        },
+        "observer_surfaces": [
+            "https://hnxj.github.io/pages/gammarena/",
+            "https://hnxj.github.io/pages/gammarena/wiki/readme.html"
+        ]
+    }
+}
