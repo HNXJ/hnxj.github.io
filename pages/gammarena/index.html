@@ -140,9 +140,16 @@
             .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .title { font-size: 2rem; }
         }
+
+        /* Observer Specific Hero Tweaks */
+        .hero { padding: 4rem 2rem 2rem 2rem; }
+        .hero-logo { width: 120px; height: 120px; }
+        .hero-logo .g-bg { font-size: 7rem; }
+        .hero-logo .g-fg { font-size: 8rem; }
     </style>
 </head>
 <body>
+    <div class="neural-overlay"></div>
     <nav>
         <a href="wiki/readme.html" class="nav-brand">
             <div class="gamma-mark">
@@ -157,15 +164,21 @@
             <a href="index.html" class="nav-link active">Live Status</a>
         </div>
     </nav>
-    <div class="container">
-        <!-- Terminal Header -->
-        <div class="header">
-            <div class="title">Gamma Arena Observer</div>
-            <div class="status-bar">
-                <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
-                <span id="clock" style="opacity: 0.4; font-family: monospace; font-size: 0.8rem;"></span>
+    <div class="hero">
+        <div class="hero-logo-container">
+            <div class="hero-logo">
+                <span class="g-bg">γ</span>
+                <span class="g-fg">Γ</span>
             </div>
         </div>
+        <h1 class="hero-subtitle" style="margin-bottom: 1rem;">Observation Surface</h1>
+        <div class="status-bar">
+            <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
+            <span id="clock" style="opacity: 0.4; font-family: monospace; font-size: 0.8rem;"></span>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 0;">
 
         <!-- Connectivity Detail -->
         <div id="connectivity-detail" class="card card-danger" style="display: none;">
