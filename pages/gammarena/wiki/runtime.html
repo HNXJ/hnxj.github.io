@@ -7,155 +7,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
     <style>
-        :root {
-            --bg-dark: #0a0a0a;
-            --bg-card: #121212;
-            --accent-gold: #eab308;
-            --accent-purple: #a855f7;
-            --accent-cyan: #06b6d4;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: rgba(168, 85, 247, 0.2);
-            --glass-bg: rgba(18, 18, 18, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Outfit', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        nav {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border-glow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-logo {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 900;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 1.2rem;
-            letter-spacing: 0.2em;
-        }
-
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover { color: var(--accent-gold); }
-
+        /* Page-specific runtime styles */
         header { margin-bottom: 4rem; text-align: center; }
         header h1 {
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 8vw, 3.5rem);
             margin-bottom: 1rem;
             background: linear-gradient(to bottom, #fff, var(--accent-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        header p { color: var(--accent-cyan); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; }
+        header p { color: var(--accent-cyan); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; }
 
-        .content-section { margin-bottom: 4rem; }
-        .content-section h2 {
-            font-size: 1.5rem;
-            color: var(--accent-purple);
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-glow);
-            padding-bottom: 0.5rem;
-        }
-
-        .runtime-flow {
+        .runtime-grid {
             display: grid;
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             margin-top: 2rem;
         }
 
-        .flow-card {
+        .runtime-card {
             background: var(--bg-card);
             border: 1px solid rgba(255,255,255,0.05);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 8px;
-            display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
+            border-left: 4px solid var(--accent-purple);
         }
-        .flow-step {
-            background: var(--accent-purple);
-            color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-weight: 800;
-            font-size: 0.8rem;
-        }
-        .flow-content h3 { color: var(--accent-gold); font-size: 1rem; margin-bottom: 0.5rem; }
-        .flow-content p { font-size: 0.9rem; color: var(--text-secondary); }
-
-        .highlight-box {
-            background: rgba(6, 182, 212, 0.05);
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 2rem;
-        }
-        .highlight-box h4 { font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 0.5rem; }
-        .highlight-box p { font-size: 0.9rem; color: var(--text-secondary); }
-
-        footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            border-top: 1px solid var(--border-glow);
-            margin-top: 4rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
+        .runtime-card h3 { color: var(--text-primary); font-size: 1rem; margin-bottom: 0.75rem; }
+        .runtime-card p { font-size: 0.9rem; color: var(--text-secondary); }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="readme.html" class="nav-logo">GAMMA ARENA</a>
+        <a href="readme.html" class="nav-brand">
+            <div class="gamma-mark">
+                <span class="g-bg">γ</span>
+                <span class="g-fg">Γ</span>
+            </div>
+            <span class="nav-logo-text">GAMMA ARENA</span>
+        </a>
         <div class="nav-links">
             <a href="readme.html" class="nav-link">Home</a>
             <a href="architecture.html" class="nav-link">Architecture</a>
-            <a href="runtime.html" class="nav-link" style="color: var(--accent-gold);">Runtime</a>
+            <a href="runtime.html" class="nav-link active">Runtime</a>
             <a href="observer.html" class="nav-link">Observer</a>
-            <a href="missions.html" class="nav-link">Missions</a>
             <a href="roadmap.html" class="nav-link">Roadmap</a>
+            <a href="../index.html" class="nav-link">Live Status</a>
         </div>
     </nav>
 
