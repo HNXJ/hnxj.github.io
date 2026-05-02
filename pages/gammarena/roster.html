@@ -61,6 +61,10 @@
             </div>
         </div>
 
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(18,18,18,0.5); border: 1px solid var(--border-glow); border-radius: 8px; font-size: 11px; color: var(--text-secondary);">
+            <p><strong>Note:</strong> Guest identities shown here are grounded in canonical persistence and runtime-visible monitor surfaces. Public onboarding beyond guest-proof remains future work.</p>
+        </div>
+
         <div class="roster-header">
             <h2>Core Exploratory Actors</h2>
             <p>Stabilized Council Entities & Primary World Builders</p>
@@ -154,6 +158,31 @@
         </div>
 
         <div class="roster-header">
+            <h2>Operational Administrators</h2>
+            <p>Authenticated Personas with Content Management Authority</p>
+        </div>
+
+        <div class="player-grid">
+            <!-- Ivan -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-identity">
+                        <span class="player-id">ID: ivan</span>
+                        <h3 class="player-name">Ivan</h3>
+                        <span class="player-role">Content Administrator</span>
+                    </div>
+                    <span class="player-status-tag status-active">Active</span>
+                </div>
+                <p class="player-description">Authorized for granular content management and audit logging within the exploratory substrate.</p>
+                <div class="player-badges">
+                    <span class="badge badge-core">Content Admin</span>
+                    <span class="badge">Audit Active</span>
+                    <span class="badge">Truth-Plane Locked</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="roster-header">
             <h2>Guest Presence</h2>
             <p>Ad Hoc Exploratory Entities & Persisted Personas</p>
         </div>
@@ -169,14 +198,29 @@
                     </div>
                     <span class="player-status-tag status-exploratory">Exploratory</span>
                 </div>
-                <p class="player-description">Ad hoc exploratory presence with confirmed disk persistence and runtime visibility.</p>
+                <p class="player-description">First canonical guest identity attached to the world.</p>
                 <div class="player-badges">
                     <span class="badge badge-guest">Persisted Identity</span>
                     <span class="badge">Canonically Attached</span>
                     <span class="badge">Runtime Visible</span>
                 </div>
-                <div class="provenance" style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem; font-size: 10px; color: var(--accent-cyan);">
-                    NOTE: Persisted guest identity now visible on the live status surface
+            </div>
+
+            <!-- lite_guest_02 -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-identity">
+                        <span class="player-id">ID: lite_guest_02</span>
+                        <h3 class="player-name">Dev Guest</h3>
+                        <span class="player-role">Exploratory Guest</span>
+                    </div>
+                    <span class="player-status-tag status-exploratory">Exploratory</span>
+                </div>
+                <p class="player-description">Second canonical guest identity proving repeatable onboarding.</p>
+                <div class="player-badges">
+                    <span class="badge badge-guest">Persisted Identity</span>
+                    <span class="badge">Canonically Attached</span>
+                    <span class="badge">Runtime Visible</span>
                 </div>
             </div>
         </div>
