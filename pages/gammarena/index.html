@@ -261,12 +261,67 @@
             </div>
         </section>
 
+        <!-- Dispatch Feed -->
+        <section class="teaser-section" style="border-top: 1px solid var(--border-glow); margin-top: 3rem;">
+            <div class="teaser-header">
+                <h2>Gamma Dispatches</h2>
+                <a href="editor.html" class="btn-cta" style="border-color: var(--accent-purple); color: var(--accent-purple);">Authoring UI →</a>
+            </div>
+            <div id="dispatch-feed" class="blog-feed">
+                <!-- Dispatches will be loaded here -->
+                <div class="blog-post" style="opacity: 0.5; text-align: center;">Initializing Secure Dispatch Link...</div>
+            </div>
+        </section>
+
         <footer class="footer">
             Gamma Arena Operator Surface :: © 2026 HNXJ(H.Nejat) / BASTOSLAB / VANDERBILT UNIVERSITY
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
+        // ... (existing clock and polling logic) ...
+        const HUB_API_BASE = 'http://localhost:8001/api';
+
+        async function loadDispatches() {
+            try {
+                const res = await fetch(`${HUB_API_BASE}/content/list?surface=blog`);
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                const feed = document.getElementById('dispatch-feed');
+                
+                if (data.pages.length === 0) {
+                    feed.innerHTML = '<div class="blog-post">No dispatches published yet.</div>';
+                    return;
+                }
+
+                feed.innerHTML = '';
+                for (const page of data.pages) {
+                    const pageId = page.replace('.md', '');
+                    const contentRes = await fetch(`${HUB_API_BASE}/content/read?surface=blog&page_id=${pageId}`);
+                    const contentData = await contentRes.json();
+                    
+                    const post = document.createElement('div');
+                    post.className = 'blog-post';
+                    post.innerHTML = `
+                        <div class="blog-meta">
+                            <span class="blog-author">GAMMA DISPATCH</span> | 
+                            <span>${pageId.toUpperCase()}</span>
+                        </div>
+                        <div class="markdown-body" style="font-size: 0.9rem; color: var(--text-secondary);">
+                            ${marked.parse(contentData.content)}
+                        </div>
+                    `;
+                    feed.appendChild(post);
+                }
+            } catch (err) {
+                document.getElementById('dispatch-feed').innerHTML = '<div class="blog-post" style="color: var(--danger-color)">Dispatch Link Offline (Requires Local Hub)</div>';
+            }
+        }
+
+        loadDispatches();
+        setInterval(loadDispatches, 30000);
+
         // Update Clock
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
