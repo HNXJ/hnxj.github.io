@@ -4,114 +4,230 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamma Arena | Observation Surface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #080808;
-            --text-primary: rgba(16, 185, 129, 0.8); /* emerald-500/80 */
-            --border-color: rgba(16, 185, 129, 0.2);
-            --danger-color: #f43f5e; /* rose-500 */
-            --warning-color: #f59e0b; /* amber-500 */
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --accent-gold: #eab308;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --danger-color: #f43f5e;
+            --border-glow: rgba(168, 85, 247, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.8);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background-color: var(--bg-base);
+            background-color: var(--bg-dark);
             color: var(--text-primary);
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding: 0;
             margin: 0;
-            padding: 1rem;
-            font-size: 12px;
-            selection-background-color: rgba(16, 185, 129, 0.2);
+            overflow-x: hidden;
         }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 2rem;
         }
-        .header {
+
+        nav {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-glow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .title {
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
             font-weight: 900;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
         }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover { color: var(--accent-gold); }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .status-bar {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
+
         .status-badge {
             font-weight: 900;
             letter-spacing: 0.1em;
             text-transform: uppercase;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
         }
+
         .status-degraded { color: var(--danger-color); }
-        .status-connected { color: var(--text-primary); }
+        .status-connected { color: var(--accent-cyan); }
+        .status-grounded { color: #22c55e; }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
+
         .card {
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            background-color: rgba(16, 185, 129, 0.05);
-            border-radius: 4px;
-            padding: 1rem;
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-5px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            opacity: 0.3;
+        }
+
         .card-danger {
-            border-color: rgba(244, 63, 94, 0.2);
-            background-color: rgba(244, 63, 94, 0.05);
+            border-color: rgba(244, 63, 94, 0.4) !important;
+            background-color: rgba(244, 63, 94, 0.05) !important;
         }
+        .card-danger::before { background: var(--danger-color); opacity: 0.5; }
+
         .card-label {
-            opacity: 0.4;
+            color: var(--accent-gold);
             text-transform: uppercase;
-            letter-spacing: -0.05em;
-            font-size: 10px;
+            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
         }
+
         .card-value {
-            font-size: 14px;
+            font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
         }
+
         .provenance {
-            font-size: 9px;
-            opacity: 0.6;
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-family: ui-monospace, monospace;
             margin-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 0.75rem;
         }
-        .provenance span { font-weight: bold; }
+        .provenance span { color: var(--accent-cyan); font-weight: bold; }
+
         .footer {
             text-align: center;
-            padding-top: 1rem;
-            opacity: 0.2;
-            font-size: 10px;
+            padding: 4rem 2rem;
+            opacity: 0.5;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.2em;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .title { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="wiki/readme.html" class="nav-logo">GAMMA ARENA</a>
+        <div class="nav-links">
+            <a href="wiki/readme.html" class="nav-link">Wiki Home</a>
+            <a href="wiki/architecture.html" class="nav-link">Architecture</a>
+            <a href="wiki/observer.html" class="nav-link">Observer</a>
+            <a href="index.html" class="nav-link" style="color: var(--accent-gold);">Live Status</a>
+        </div>
+    </nav>
     <div class="container">
         <!-- Terminal Header -->
         <div class="header">
-            <div class="title">Gamma Safe-Base v1.0 (Hosted)</div>
+            <div class="title">Gamma Arena Observer</div>
             <div class="status-bar">
                 <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
-                <span id="clock" style="opacity: 0.4;"></span>
+                <span id="clock" style="opacity: 0.4; font-family: monospace; font-size: 0.8rem;"></span>
             </div>
         </div>
 
         <!-- Connectivity Detail -->
         <div id="connectivity-detail" class="card card-danger" style="display: none;">
-            <div class="card-value" style="color: var(--danger-color); font-size: 12px;">LINK_FAILURE</div>
-            <div id="connectivity-msg" style="color: rgba(244, 63, 94, 0.6); font-size: 10px; font-weight: bold; text-transform: uppercase;"></div>
+            <div class="card-label">Link Status</div>
+            <div class="card-value" style="color: var(--danger-color);">DETACHED</div>
+            <div id="connectivity-msg" style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;"></div>
             <div id="connectivity-prov" class="provenance"></div>
         </div>
 
@@ -119,28 +235,28 @@
         <div class="grid">
             <div class="card" id="card-system">
                 <div class="card-label">System State</div>
-                <div class="card-value" id="val-system">LOADING</div>
+                <div class="card-value" id="val-system">INIT...</div>
                 <div class="provenance" id="prov-system"></div>
             </div>
             <div class="card" id="card-agents">
                 <div class="card-label">Agent Roster</div>
-                <div class="card-value" id="val-agents">LOADING</div>
+                <div class="card-value" id="val-agents">INIT...</div>
                 <div class="provenance" id="prov-agents"></div>
             </div>
             <div class="card" id="card-persistence">
                 <div class="card-label">Persistence</div>
-                <div class="card-value" id="val-persistence">LOADING</div>
+                <div class="card-value" id="val-persistence">INIT...</div>
                 <div class="provenance" id="prov-persistence"></div>
             </div>
             <div class="card" id="card-progression">
                 <div class="card-label">Progression</div>
-                <div class="card-value" id="val-progression">LOADING</div>
+                <div class="card-value" id="val-progression">INIT...</div>
                 <div class="provenance" id="prov-progression"></div>
             </div>
         </div>
 
         <footer class="footer">
-            Operator Base-Layer :: BASTOS LAB / VANDERBILT
+            Gamma Arena Operator Surface :: BASTOS LAB / VANDERBILT UNIVERSITY :: 2026
         </footer>
     </div>
 
@@ -151,14 +267,9 @@
         }, 1000);
 
         // --- API CONFIGURATION ---
-        // If your page is hosted on GitHub Pages but the FastAPI backend is on Vercel,
-        // you MUST provide the absolute Vercel project domain here.
-        // Example: 'https://glllmx-yourhash.vercel.app'
-        // If they share the exact same origin, you can leave this as an empty string.
         const API_ORIGIN = 'https://glllmx.vercel.app'; 
-        
-        // Compute the final API base path safely
         const API_BASE = (API_ORIGIN ? API_ORIGIN.replace(/\/$/, '') : '') + '/api/v1';
+
         function updateCard(id, data, valueField) {
             const elValue = document.getElementById(`val-${id}`);
             const elProv = document.getElementById(`prov-${id}`);
@@ -212,10 +323,10 @@
                     document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy || 'unknown'}`;
                 } else if (manifest.degraded === false) {
                     statusEl.innerText = 'GROUNDED';
-                    statusEl.className = 'status-badge status-connected';
+                    statusEl.className = 'status-badge status-grounded';
                     connDetail.style.display = 'none';
                 } else {
-                    statusEl.innerText = 'REACHABLE_UNVERIFIED';
+                    statusEl.innerText = 'REACHABLE';
                     statusEl.className = 'status-badge status-connected';
                     connDetail.style.display = 'none';
                 }
@@ -224,7 +335,7 @@
                     fetchEndpoint('status', 'system', 'status'),
                     fetchEndpoint('agents', 'agents', 'status'),
                     fetchEndpoint('persistence', 'persistence', 'status'),
-                    fetchEndpoint('progression', 'progression', 'status')
+                    fetchEndpoint('events/recent', 'progression', 'status')
                 ]);
 
             } catch (err) {
