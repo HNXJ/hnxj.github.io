@@ -62,6 +62,11 @@
         .future-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
         .future-item h4 { font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem; }
         .future-item p { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        /* Inline style refactors */
+        .genesis-link { color: var(--accent-gold); text-decoration: none; }
+        .mission-card-dev { border-top-color: var(--accent-purple); opacity: 0.8; }
+        .mechanistic-text { color: var(--accent-cyan); }
     </style>
 </head>
 <body>
@@ -94,7 +99,7 @@
         <section class="content-section">
             <h2>The Mission Framework</h2>
             <p>
-                Missions are the atomic units of progress in Gamma Arena. They define the scientific target, the constraints, and the scoring logic required for a discovery to be validated. Every mission is classified within the <a href="roadmap.html#genesis-tree" style="color: var(--accent-gold); text-decoration: none;">Genesis Tree</a> ontology.
+                Missions are the atomic units of progress in Gamma Arena. They define the scientific target, the constraints, and the scoring logic required for a discovery to be validated. Every mission is classified within the <a href="roadmap.html#genesis-tree" class="genesis-link">Genesis Tree</a> ontology.
             </p>
 
             <div class="mission-grid">
@@ -103,7 +108,7 @@
                     <p>Replicate the mechanistic firing patterns and spectral dynamics of specific biophysical circuits. Initial focus on pyramidal-interneuron feedback loops.</p>
                     <span class="mission-tag">LIVE NOW</span>
                 </div>
-                <div class="mission-card" style="border-top-color: var(--accent-purple); opacity: 0.8;">
+                <div class="mission-card mission-card-dev">
                     <h3>Oscillatory Phase-Amplitude Coupling</h3>
                     <p>Reproduce cross-frequency coupling dynamics observed in neocortical layers during cognitive tasks.</p>
                     <span class="mission-tag">IN DEVELOPMENT</span>
@@ -143,7 +148,7 @@
         <section class="content-section">
             <h2>Mechanistic Benchmarking</h2>
             <p>
-                Unlike traditional LLM benchmarks, Gamma Arena missions require <strong style="color: var(--accent-cyan);">mechanistic transparency</strong>. A model does not "solve" a mission by guessing an output; it solves it by providing a verifiable, executable mechanistic proposal that reproduces the target phenomenon within the scientific substrate.
+                Unlike traditional LLM benchmarks, Gamma Arena missions require <strong class="mechanistic-text">mechanistic transparency</strong>. A model does not "solve" a mission by guessing an output; it solves it by providing a verifiable, executable mechanistic proposal that reproduces the target phenomenon within the scientific substrate.
             </p>
         </section>
     </div>

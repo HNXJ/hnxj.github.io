@@ -85,6 +85,19 @@
             margin-bottom: 1rem;
             display: inline-block;
         }
+        
+        /* Inline style refactors */
+        .hero-caption { font-size: 0.8rem; opacity: 0.6; margin-top: 2rem; }
+        .hero-caption a { color: var(--accent-gold); text-decoration: none; }
+        .feature-card-cyan { border-left: 2px solid var(--accent-cyan); }
+        .feature-list { list-style: none; padding-left: 0; }
+        .feature-list li { margin-bottom: 0.5rem; }
+        .card-wide-cyan { grid-column: 1 / -1; background: rgba(6, 182, 212, 0.05); }
+        .card-eval { margin-bottom: 2rem; border-left: 4px solid var(--accent-gold); }
+        .card-eval p { margin-bottom: 1rem; }
+        .wiki-index-intro { color: var(--text-secondary); }
+        .loading-text { opacity: 0.5; }
+        .footer-copyright { font-size: 0.7rem; opacity: 0.3; margin-top: 1rem; }
     </style>
 </head>
 <body>
@@ -134,8 +147,8 @@
             <a href="topology.json" class="btn btn-secondary">Topology Meta</a>
         </div>
         
-        <p class="hero-caption" style="font-size: 0.8rem; opacity: 0.6; margin-top: 2rem;">
-            Current Emphasis: Truth-safe observation, modular runtime orchestration, and laminar neuronal modeling. All world entities are indexed in the <a href="roadmap.html#genesis-tree" style="color: var(--accent-gold); text-decoration: none;">Genesis Tree</a>.
+        <p class="hero-caption">
+            Current Emphasis: Truth-safe observation, modular runtime orchestration, and laminar neuronal modeling. All world entities are indexed in the <a href="roadmap.html#genesis-tree">Genesis Tree</a>.
         </p>
     </div>
 
@@ -189,13 +202,13 @@
                 <div class="card">
                     <p>New content is expected: new data, new objectives, new biological constraints, new optimization layers, new agents, and new public observer surfaces. This perpetual cycle ensures the scientific horizon is always expanding.</p>
                 </div>
-                <div class="card" style="border-left: 2px solid var(--accent-cyan);">
-                    <ul style="list-style: none; padding-left: 0;">
-                        <li style="margin-bottom: 0.5rem;">• more players can join</li>
-                        <li style="margin-bottom: 0.5rem;">• more compute can be attached</li>
-                        <li style="margin-bottom: 0.5rem;">• more missions can be appended</li>
-                        <li style="margin-bottom: 0.5rem;">• more resources can be staged</li>
-                        <li style="margin-bottom: 0.5rem;">• more scientific objectives introduced</li>
+                <div class="card feature-card-cyan">
+                    <ul class="feature-list">
+                        <li>• more players can join</li>
+                        <li>• more compute can be attached</li>
+                        <li>• more missions can be appended</li>
+                        <li>• more resources can be staged</li>
+                        <li>• more scientific objectives introduced</li>
                         <li>• new patches modify without resetting</li>
                     </ul>
                 </div>
@@ -326,7 +339,7 @@
                     <h3>Larger mechanistic networks</h3>
                     <p>Build toward mechanistically detailed networks that absorb the objectives of each mission.</p>
                 </div>
-                <div class="card" style="grid-column: 1 / -1; background: rgba(6, 182, 212, 0.05);">
+                <div class="card card-wide-cyan">
                     <h3>Engine direction</h3>
                     <p>Future engine layers may include typed blackboard workflows, adversarial review, AGSDR optimization, shared model residency, laminar batch streaming, and delayed consolidation. These are evolving engine directions for the next generation of the Arena.</p>
                 </div>
@@ -341,9 +354,9 @@
                     The game is not limited to simulation-only missions. It can also host scientific evaluation pipelines in which models read literature, extract structured evidence, and map disagreement.
                 </p>
             </div>
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--accent-gold);">
+            <div class="card card-eval">
                 <h3>Featured: Paper-scale evaluation pipeline</h3>
-                <p style="margin-bottom: 1rem;">One class of mission is not “simulate a circuit” but “evaluate a field.” In this setting, models can read scientific studies, extract structured evidence, compare their interpretations across a shared ontology, and quantify agreement, disagreement, and hypothesis-space structure.</p>
+                <p>One class of mission is not “simulate a circuit” but “evaluate a field.” In this setting, models can read scientific studies, extract structured evidence, compare their interpretations across a shared ontology, and quantify agreement, disagreement, and hypothesis-space structure.</p>
                 <p>This means the game can support both mechanistic runtime missions and literature-evaluation missions, turning fragmented literature into structured, auditable evidence space.</p>
             </div>
         </section>
@@ -379,11 +392,11 @@
         <!-- SECTION: WIKI INDEX -->
         <section class="wiki-index" id="wiki">
             <h2>Wiki index / further reading</h2>
-            <p style="color: var(--text-secondary);">This page is the start of the Gamma Arena wiki. It scales dynamically via manifest.json.</p>
+            <p class="wiki-index-intro">This page is the start of the Gamma Arena wiki. It scales dynamically via manifest.json.</p>
             
             <div class="wiki-grid" id="wiki-grid">
                 <!-- Dynamically populated -->
-                <div style="opacity: 0.5;">Loading index...</div>
+                <div class="loading-text">Loading index...</div>
             </div>
         </section>
 
@@ -391,7 +404,7 @@
 
     <footer>
         <p class="footer-tagline">Gamma Arena is a perpetual scientific discovery game: discover, build, evaluate, publish, observe, and expand.</p>
-        <p style="font-size: 0.7rem; opacity: 0.3; margin-top: 1rem;">© 2026 HNXJ(H.Nejat) / BASTOSLAB / VANDERBILT UNIVERSITY</p>
+        <p class="footer-copyright">© 2026 HNXJ(H.Nejat) / BASTOSLAB / VANDERBILT UNIVERSITY</p>
     </footer>
 
     <script>

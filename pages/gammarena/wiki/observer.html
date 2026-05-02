@@ -44,6 +44,11 @@
         .api-method { background: var(--accent-gold); color: #000; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 900; font-size: 0.7rem; min-width: 50px; text-align: center; }
         .api-path { font-family: ui-monospace, monospace; font-size: 0.85rem; color: var(--text-primary); font-weight: 600; }
         .api-desc { font-size: 0.8rem; color: var(--text-secondary); margin-left: auto; }
+        
+        /* Inline style refactors */
+        .fallback-list { margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        .fallback-list li { margin-bottom: 1rem; }
+        .fallback-list strong { color: var(--text-primary); }
     </style>
 </head>
 <body>
@@ -134,9 +139,9 @@
             <p>
                 In the event of a telemetry interruption, the observation plane implements a truth-safe fallback doctrine:
             </p>
-            <ul style="margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary);">
-                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">LINK_FAILURE:</strong> Displays a clear <code>UNREACHABLE</code> state instead of inventing activity.</li>
-                <li><strong style="color: var(--text-primary);">STALE_POINTER:</strong> Labels data with its provenance and last-updated timestamp to prevent misinterpretation.</li>
+            <ul class="fallback-list">
+                <li><strong>LINK_FAILURE:</strong> Displays a clear <code>UNREACHABLE</code> state instead of inventing activity.</li>
+                <li><strong>STALE_POINTER:</strong> Labels data with its provenance and last-updated timestamp to prevent misinterpretation.</li>
             </ul>
         </section>
     </div>
