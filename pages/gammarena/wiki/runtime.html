@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena Wiki | Runtime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --accent-gold: #eab308;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(168, 85, 247, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover { color: var(--accent-gold); }
+
+        header { margin-bottom: 4rem; text-align: center; }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--accent-cyan); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; }
+
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 {
+            font-size: 1.5rem;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 0.5rem;
+        }
+
+        .runtime-flow {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .flow-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+        .flow-step {
+            background: var(--accent-purple);
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+        .flow-content h3 { color: var(--accent-gold); font-size: 1rem; margin-bottom: 0.5rem; }
+        .flow-content p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .highlight-box {
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        .highlight-box h4 { font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 0.5rem; }
+        .highlight-box p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 4rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="readme.html" class="nav-logo">GAMMA ARENA</a>
+        <div class="nav-links">
+            <a href="readme.html" class="nav-link">Home</a>
+            <a href="architecture.html" class="nav-link">Architecture</a>
+            <a href="runtime.html" class="nav-link" style="color: var(--accent-gold);">Runtime</a>
+            <a href="observer.html" class="nav-link">Observer</a>
+            <a href="missions.html" class="nav-link">Missions</a>
+            <a href="roadmap.html" class="nav-link">Roadmap</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <p>Execution Substrate</p>
+            <h1>Gamma Runtime</h1>
+        </header>
+
+        <section class="content-section">
+            <h2>Orchestration Flow</h2>
+            <p>
+                The Gamma Runtime is the primary execution engine. It manages the lifecycle of turns, agent interactions, and truth publication.
+            </p>
+
+            <div class="runtime-flow">
+                <div class="flow-card">
+                    <div class="flow-step">1</div>
+                    <div class="flow-content">
+                        <h3>Turn Initialization</h3>
+                        <p>The Orchestrator identifies the next speaker from the canonical queue based on available model capacity.</p>
+                    </div>
+                </div>
+                <div class="flow-card">
+                    <div class="flow-step">2</div>
+                    <div class="flow-content">
+                        <h3>Spectator Room Update</h3>
+                        <p>Current state is loaded into the spectator room. Turn indices are synchronized to ensure linear progression.</p>
+                    </div>
+                </div>
+                <div class="flow-card">
+                    <div class="flow-step">3</div>
+                    <div class="flow-content">
+                        <h3>Mechanistic Execution</h3>
+                        <p>The selected agent performs a mechanistic scientific task (e.g., model fitting, circuit simulation).</p>
+                    </div>
+                </div>
+                <div class="flow-card">
+                    <div class="flow-step">4</div>
+                    <div class="flow-content">
+                        <h3>Event Emission</h3>
+                        <p>turn-reflections are converted into events and appended to the local event stack.</p>
+                    </div>
+                </div>
+                <div class="flow-card">
+                    <div class="flow-step">5</div>
+                    <div class="flow-content">
+                        <h3>Truth Publication</h3>
+                        <p>Authoritative state snapshots are published to the Supabase truth plane.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Sequence Reconciliation</h2>
+            <p>
+                To prevent truth-plane drift, the runtime implements automatic sequence reconciliation.
+            </p>
+            <div class="highlight-box">
+                <h4>AUTOMATED RECOVERY</h4>
+                <p>On startup, the runtime queries Supabase for the latest <code>sequence_id</code>. If the local turn index is behind the substrate, the runtime automatically increments to <code>latest_id + 1</code>, ensuring a seamless resumption of the telemetry stream without manual operator intervention.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Persistence Model</h2>
+            <p>
+                Runtime state is persisted across two layers:
+            </p>
+            <ul style="margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary);">
+                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Local Checkpoints:</strong> High-frequency JSON dumps in <code>local/run/</code> for sub-second recovery.</li>
+                <li><strong style="color: var(--text-primary);">Remote Truth:</strong> Laminar snapshots in Supabase for public observation and archival integrity.</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 BASTOS LAB / VANDERBILT UNIVERSITY</p>
+    </footer>
+
+</body>
+</html>

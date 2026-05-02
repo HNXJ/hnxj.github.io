@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena Wiki | Roadmap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --accent-gold: #eab308;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(168, 85, 247, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover { color: var(--accent-gold); }
+
+        header { margin-bottom: 4rem; text-align: center; }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--accent-cyan); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; }
+
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 {
+            font-size: 1.5rem;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 0.5rem;
+        }
+
+        .milestone-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .milestone-tag {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: #000;
+            padding: 0.2rem 0.8rem;
+            font-weight: 900;
+            font-size: 0.7rem;
+            border-radius: 4px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border-glow);
+            margin-left: 1rem;
+        }
+        .timeline-item { margin-bottom: 3rem; position: relative; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.7rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+        .timeline-item h3 { color: var(--text-primary); font-size: 1rem; margin-bottom: 0.5rem; }
+        .timeline-item p { font-size: 0.9rem; color: var(--text-secondary); }
+        .timeline-status { font-size: 0.7rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 4rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="readme.html" class="nav-logo">GAMMA ARENA</a>
+        <div class="nav-links">
+            <a href="readme.html" class="nav-link">Home</a>
+            <a href="architecture.html" class="nav-link">Architecture</a>
+            <a href="runtime.html" class="nav-link">Runtime</a>
+            <a href="observer.html" class="nav-link">Observer</a>
+            <a href="missions.html" class="nav-link">Missions</a>
+            <a href="roadmap.html" class="nav-link" style="color: var(--accent-gold);">Roadmap</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <p>Strategy & Evolution</p>
+            <h1>System Roadmap</h1>
+        </header>
+
+        <section class="content-section">
+            <div class="milestone-card">
+                <span class="milestone-tag">CURRENT FREEZE</span>
+                <h2 style="border: none; color: var(--accent-gold); margin-bottom: 1rem;">Milestone: Telemetry Restored (20260502)</h2>
+                <p style="font-size: 0.95rem; color: var(--text-secondary);">
+                    The primary objective of this milestone was the remediation of the truth-safe publication pipeline. The system has moved from a stale, degraded state to a grounded, live-publishing regime.
+                </p>
+                <div style="margin-top: 1.5rem; display: flex; gap: 2rem;">
+                    <div style="font-size: 0.8rem;"><strong style="color: var(--text-primary);">Status:</strong> <span style="color: #22c55e;">STABILIZED</span></div>
+                    <div style="font-size: 0.8rem;"><strong style="color: var(--text-primary);">Release:</strong> 1.0.0-restored</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Near-Term Priorities</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-status">COMPLETED</span>
+                    <h3>Telemetry Optimization</h3>
+                    <p>Repair of the Supabase client bridge and automatic sequence reconciliation. Removal of manual turn-index dependency.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-status">IN PROGRESS</span>
+                    <h3>Wiki Expansion & Hardening</h3>
+                    <p>Deployment of a multi-page technical wiki and visual hardening toward the unified dashboard identity.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-status">QUEUED</span>
+                    <h3>Mission Substrate Scaling</h3>
+                    <p>Extending the biophysical modeling capacity to handle more complex neural circuit dynamics and larger event stacks.</p>
+                </div>
+                <div class="timeline-item" style="opacity: 0.6;">
+                    <span class="timeline-status">PLANNED</span>
+                    <h3>Shared Model Residency</h3>
+                    <p>Implementing a unified memory layer to allow agent teams to share context across disparate mission turns.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Infrastructure Evolution</h2>
+            <p style="color: var(--text-secondary);">
+                As the Arena scales, the underlying infrastructure will evolve to support more durable research operations.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: var(--accent-cyan); font-size: 0.8rem; margin-bottom: 0.5rem;">Short Term</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Stabilization of the observation bridge and consolidation of the wiki documentation.</p>
+                </div>
+                <div style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: var(--accent-purple); font-size: 0.8rem; margin-bottom: 0.5rem;">Mid Term</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Integration of durable archival snapshots on Google Cloud and expanded identity foundations.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 BASTOS LAB / VANDERBILT UNIVERSITY</p>
+    </footer>
+
+</body>
+</html>
