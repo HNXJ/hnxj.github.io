@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena Wiki | SDE Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --accent-gold: #eab308;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(168, 85, 247, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover { color: var(--accent-gold); }
+
+        header { margin-bottom: 4rem; text-align: center; }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--accent-purple); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; }
+
+        .content-section { margin-bottom: 4rem; }
+        .content-section h2 {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 0.5rem;
+        }
+
+        .sde-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-cyan);
+        }
+        .sde-card h3 { color: var(--text-primary); margin-bottom: 1rem; }
+        .sde-card p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .feature-item h4 { font-size: 0.9rem; color: var(--accent-gold); margin-bottom: 0.5rem; }
+        .feature-item p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 4rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="readme.html" class="nav-logo">GAMMA ARENA</a>
+        <div class="nav-links">
+            <a href="readme.html" class="nav-link">Home</a>
+            <a href="architecture.html" class="nav-link">Architecture</a>
+            <a href="runtime.html" class="nav-link">Runtime</a>
+            <a href="observer.html" class="nav-link">Observer</a>
+            <a href="missions.html" class="nav-link">Missions</a>
+            <a href="roadmap.html" class="nav-link">Roadmap</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <p>Engine Backbone</p>
+            <h1>SDE Engine</h1>
+        </header>
+
+        <section class="content-section">
+            <div class="sde-card">
+                <h3>Shared Dependency Execution (SDE)</h3>
+                <p>
+                    The SDE Engine is the core scheduling and dependency management backbone of Gamma Arena. It is designed to handle non-overlapping model dependency trees, ensuring that complex scientific workflows can be parallelized without race conditions on the truth plane.
+                </p>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>Non-overlapping Branches</h4>
+                        <p>SDE isolates model dependencies into discrete branches, allowing multiple agents to evolve independent hypotheses simultaneously.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Lazy Reconciliation</h4>
+                        <p>State is only reconciled when dependencies converge, reducing the compute overhead of continuous truth publication.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Technical Specifications</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                The SDE backbone operates as a typed blackboard system where each dependency node is tagged with its mechanistic provenance.
+            </p>
+            <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
+                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Dependency Locking:</strong> Prevents multiple models from claiming the same biophysical parameter space within a single turn.</li>
+                <li style="margin-bottom: 1rem;"><strong style="color: var(--text-primary);">Laminar Batching:</strong> Groups scientific events into coherent batches for efficient truth-plane publication.</li>
+                <li><strong style="color: var(--text-primary);">Delayed Consolidation:</strong> Allows speculative execution to happen in the foreground while truth-plane commits happen asynchronously.</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 BASTOS LAB / VANDERBILT UNIVERSITY</p>
+    </footer>
+
+</body>
+</html>
