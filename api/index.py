@@ -17,7 +17,7 @@ db = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) if SUPABASE_URL and 
 # --- CORS CONFIGURATION ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://hnxj.github.io"],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
@@ -84,7 +84,5 @@ async def get_events():
 
 @app.get("/api/v1/agents")
 async def get_agents():
-    # Placeholder: Assuming agent list might be part of recent snapshots or a separate table.
-    # Returning empty list or degraded if table not defined.
     return {"agents": [], "provenance": get_provenance()}
 
