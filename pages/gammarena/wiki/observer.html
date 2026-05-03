@@ -49,6 +49,7 @@
         .fallback-list { margin-top: 1.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
         .fallback-list li { margin-bottom: 1rem; }
         .fallback-list strong { color: var(--text-primary); }
+        .fallback-list.editorial-guardrails { margin-top: 0.5rem; }
     </style>
 </head>
 <body>
@@ -138,7 +139,7 @@
                 <div class="table-item">
                     <h3>Operational Guardrails</h3>
                     <p>Content administrators are granted granular authority for editorial workflows while maintaining strict isolation from the truth-plane and runtime execution surfaces.</p>
-                    <ul class="fallback-list" style="margin-top: 0.5rem;">
+                    <ul class="fallback-list editorial-guardrails">
                         <li><strong>Audit Logging:</strong> All content mutations are captured in a tamper-evident audit record.</li>
                         <li><strong>Safety Bounds:</strong> Administrators are explicitly blocked from truth-plane mutation and runtime control.</li>
                     </ul>
