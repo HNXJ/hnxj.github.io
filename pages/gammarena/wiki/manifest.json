@@ -48,6 +48,13 @@
             "description": "Index of core exploratory actors and guest presences in the world.",
             "url": "../roster.html",
             "tags": ["social", "entities"]
+        },
+        {
+            "id": "ontology",
+            "title": "Ontology Tournament",
+            "description": "Council Reasoning and HPC scientific evidence arena.",
+            "url": "../ontology.html",
+            "tags": ["science", "council"]
         }
     ]
 }
