@@ -191,13 +191,14 @@
             <form id="login-form">
                 <div class="input-group">
                     <label>Username</label>
-                    <input type="text" id="username" value="editor_alpha">
+                    <input type="text" id="username" placeholder="operator_id" disabled style="opacity: 0.5; cursor: not-allowed;">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" id="password" value="pass_alpha_2026">
+                    <input type="password" id="password" placeholder="••••••••" disabled style="opacity: 0.5; cursor: not-allowed;">
                 </div>
-                <button type="submit" class="btn-primary">Authenticate</button>
+                <button type="submit" class="btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;">Authenticate</button>
+                <p style="margin-top: 1rem; font-size: 0.7rem; color: var(--accent-purple); text-align: center;">Public read-only simulation. Operator authentication is disabled on this surface.</p>
             </form>
         </div>
     </div>
@@ -251,144 +252,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const API_BASE = 'http://localhost:8001/api';
-        let session = null;
-        let activePost = null;
+        // PUBLIC_READ_ONLY: This page is a public observation-plane simulation.
+        // All mutation, authentication, and backend fetch calls are disabled.
+        // To restore operator functionality, deploy the internal version
+        // against a running Gamma hub instance.
+        const PUBLIC_READ_ONLY = true;
 
-        // --- AUTH ---
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        // --- AUTH (disabled) ---
+        document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-
-                if (!res.ok) throw new Error('Authentication Failed');
-
-                session = await res.json();
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('user-display').innerText = session.display_name;
-                
-                loadPosts();
-            } catch (err) {
-                showError(err.message);
-            }
+            if (PUBLIC_READ_ONLY) return;
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => {
-            session = null;
-            document.getElementById('login-overlay').style.display = 'flex';
+            if (PUBLIC_READ_ONLY) return;
         });
 
-        // --- CONTENT ---
-        async function loadPosts() {
-            try {
-                const res = await fetch(`${API_BASE}/content/list?surface=blog`);
-                const data = await res.json();
-                const list = document.getElementById('post-list');
-                list.innerHTML = '';
-
-                data.pages.forEach(page => {
-                    const pageId = page.replace('.md', '');
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerText = pageId;
-                    item.onclick = () => selectPost(pageId);
-                    list.appendChild(item);
-                });
-            } catch (err) {
-                showError('Failed to load posts');
-            }
-        }
-
-        async function selectPost(pageId) {
-            try {
-                const res = await fetch(`${API_BASE}/content/read?surface=blog&page_id=${pageId}`);
-                const data = await res.json();
-                
-                activePost = pageId;
-                document.getElementById('post-title').value = pageId;
-                document.getElementById('editor-body').value = data.content;
-                updatePreview();
-
-                document.querySelectorAll('.list-item').forEach(el => {
-                    el.classList.toggle('active', el.innerText === pageId);
-                });
-            } catch (err) {
-                showError('Failed to read post');
-            }
-        }
-
+        // --- CONTENT (disabled) ---
         document.getElementById('new-btn').addEventListener('click', () => {
-            activePost = null;
+            if (PUBLIC_READ_ONLY) return;
             document.getElementById('post-title').value = '';
             document.getElementById('editor-body').value = '';
             updatePreview();
-            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
         });
 
-        document.getElementById('save-btn').addEventListener('click', async () => {
-            const title = document.getElementById('post-title').value;
-            const body = document.getElementById('editor-body').value;
-
-            if (!title || !body) return showError('Title and Body required');
-
-            try {
-                const res = await fetch(`${API_BASE}/content/write`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${session.session_id}`
-                    },
-                    body: JSON.stringify({
-                        surface: 'blog',
-                        page_id: title.toLowerCase().replace(/\s+/g, '_'),
-                        content: body,
-                        metadata: { author: session.username, timestamp: Date.now() }
-                    })
-                });
-
-                if (!res.ok) throw new Error('Save Failed');
-                
-                showSuccess('Draft Staged');
-                loadPosts();
-            } catch (err) {
-                showError(err.message);
-            }
+        document.getElementById('save-btn').addEventListener('click', () => {
+            if (PUBLIC_READ_ONLY) return;
         });
 
-        document.getElementById('publish-btn').addEventListener('click', async () => {
-            const title = document.getElementById('post-title').value;
-            if (!title) return showError('Select a post first');
-
-            try {
-                const res = await fetch(`${API_BASE}/content/publish`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${session.session_id}`
-                    },
-                    body: JSON.stringify({
-                        surface: 'blog',
-                        page_id: title.toLowerCase().replace(/\s+/g, '_'),
-                        metadata: { status: 'published', publisher: session.username }
-                    })
-                });
-
-                if (!res.ok) throw new Error('Publish Failed');
-                
-                showSuccess('Post Published');
-            } catch (err) {
-                showError(err.message);
-            }
+        document.getElementById('publish-btn').addEventListener('click', () => {
+            if (PUBLIC_READ_ONLY) return;
         });
 
-        // --- PREVIEW ---
+        // --- PREVIEW (local-only, no network) ---
         const editor = document.getElementById('editor-body');
         const preview = document.getElementById('preview');
 
@@ -397,23 +293,6 @@
         }
 
         editor.addEventListener('input', updatePreview);
-
-        // --- UTILS ---
-        function showError(msg) {
-            const toast = document.getElementById('error-toast');
-            toast.innerText = msg;
-            toast.style.background = 'var(--danger-color)';
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 3000);
-        }
-
-        function showSuccess(msg) {
-            const toast = document.getElementById('error-toast');
-            toast.innerText = msg;
-            toast.style.background = 'var(--success-color)';
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 3000);
-        }
     </script>
 </body>
 </html>
