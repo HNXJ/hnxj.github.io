@@ -1,0 +1,29 @@
+{
+  "event_id": "ONTOLOGY_TOURNAMENT_HPC_001",
+  "plane": "observation",
+  "truth_mutation": false,
+  "ontology": "HPC",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "name": "Predictive Suppression",
+      "description": "Expected input is suppressed, sharpened, or explained away."
+    },
+    {
+      "id": "H2",
+      "name": "Feedforward Error Propagation",
+      "description": "Unpredicted mismatch propagates through ascending cortical pathways."
+    },
+    {
+      "id": "H3",
+      "name": "Ubiquity",
+      "description": "Predictive mechanisms generalize across areas, modalities, species, states, or scales."
+    }
+  ],
+  "corpus_size": 31,
+  "council_size": 10,
+  "ontology_factors": 36,
+  "contexts": ["LO", "GO"],
+  "artifact_status": "static-import",
+  "last_updated": "2026-05-02T21:00:00Z"
+}
