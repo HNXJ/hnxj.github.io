@@ -222,8 +222,8 @@
             </div>
             <div class="card" id="card-population">
                 <div class="card-label">World Inhabitants</div>
-                <div class="card-value" id="val-population">8 ENTITIES</div>
-                <div class="provenance" id="prov-population"><span>SOURCE:</span> available_grounded_report | 5 Core · 2 Guests · 1 Admin</div>
+                <div class="card-value" id="val-population">LOADING...</div>
+                <div class="provenance" id="prov-population"><span>SOURCE:</span> available_grounded_report | Historical Baseline</div>
             </div>
             <div class="card" id="card-operational">
                 <div class="card-label">Operational Roles</div>
@@ -266,7 +266,7 @@
         <section class="teaser-section" style="border-top: 1px solid var(--border-glow); margin-top: 3rem;">
             <div class="teaser-header">
                 <h2>Gamma Dispatches</h2>
-                <a href="editor.html" class="btn-cta" style="border-color: var(--accent-purple); color: var(--accent-purple);">Authoring UI →</a>
+                <a href="editor.html" class="btn-cta" style="border-color: var(--accent-purple); color: var(--accent-purple);">Operator Console (Internal) →</a>
             </div>
             <div id="dispatch-feed" class="blog-feed">
                 <!-- Dispatches will be loaded here -->
@@ -381,7 +381,7 @@
                     statusEl.innerText = 'DEGRADED OBSERVATION';
                     statusEl.className = 'status-badge status-degraded';
                     connDetail.style.display = 'flex';
-                    document.getElementById('connectivity-msg').innerText = "Live execution substrate detached. Showing committed truth only.";
+                    document.getElementById('connectivity-msg').innerText = "Live execution substrate detached. Showing historical evidence baseline.";
                     document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy || 'unknown'}`;
                 } else if (manifest.degraded === false) {
                     statusEl.innerText = 'GROUNDED';

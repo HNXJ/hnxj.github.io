@@ -183,6 +183,10 @@
                     <span class="g-fg">Γ</span>
                 </div>
             </div>
+            <div class="disclaimer-banner" style="background: rgba(168, 85, 247, 0.1); border: 1px solid var(--accent-purple); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.7rem; line-height: 1.4; color: var(--text-secondary); text-align: left;">
+                <strong style="color: var(--accent-purple); display: block; margin-bottom: 0.3rem;">READ-ONLY SIMULATION</strong>
+                This operator console is an observation-plane representation of the internal Gamma content-administration surface. Mutation controls are disabled in this public instance.
+            </div>
             <h2>CONTENT ADMIN</h2>
             <form id="login-form">
                 <div class="input-group">
@@ -229,8 +233,8 @@
                     <input type="text" id="post-title" placeholder="Entry Title..." style="font-size: 1.2rem; font-weight: 800;">
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                    <button class="btn-cta" id="save-btn">Stage Draft</button>
-                    <button class="btn-cta" id="publish-btn" style="border-color: var(--success-color); color: var(--success-color);">Publish</button>
+                    <button class="btn-cta" id="save-btn" disabled style="opacity: 0.5; cursor: not-allowed;">Stage Draft</button>
+                    <button class="btn-cta" id="publish-btn" disabled style="opacity: 0.5; cursor: not-allowed; border-color: var(--success-color); color: var(--success-color);">Publish</button>
                 </div>
             </div>
 
