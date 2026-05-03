@@ -282,8 +282,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         // ... (existing clock and polling logic) ...
-        // PUBLIC_READ_ONLY: Localhost polling disabled for public surface.
-        // const HUB_API_BASE = 'http://localhost:8001/api';
+        // Public observer mode uses deployed read-only observation endpoints.
         async function loadDispatches() {
             document.getElementById('dispatch-feed').innerHTML = '<div class="blog-post" style="color: var(--text-secondary)">Dispatch Link Offline (Requires Local Hub)</div>';
         }
