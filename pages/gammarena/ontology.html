@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena | Ontology Tournament</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .ontology-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .plot-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .plot-container:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+
+        .plot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        .plot-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        .plot-meta {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-family: ui-monospace, monospace;
+        }
+
+        .plot-svg {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background: #fff;
+            padding: 1rem;
+        }
+
+        .narrative-card {
+            grid-column: span 2;
+            background: rgba(168, 85, 247, 0.05);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .narrative-title {
+            color: var(--accent-purple);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .narrative-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 992px) {
+            .ontology-grid { grid-template-columns: 1fr; }
+            .narrative-card { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-overlay"></div>
+    <nav>
+        <a href="wiki/readme.html" class="nav-brand">
+            <div class="gamma-mark">
+                <span class="g-bg">γ</span>
+                <span class="g-fg">Γ</span>
+            </div>
+            <span class="nav-logo-text">GAMMA ARENA</span>
+        </a>
+        <div class="nav-links">
+            <a href="wiki/readme.html" class="nav-link">Wiki</a>
+            <a href="wiki/architecture.html" class="nav-link">Docs</a>
+            <a href="ontology.html" class="nav-link active">Ontology Tournament</a>
+            <a href="roster.html" class="nav-link">Roster</a>
+            <a href="index.html" class="nav-link">Live Status</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero" style="padding: 4rem 0;">
+            <div class="hero-logo-container">
+                <div class="hero-logo" style="width: 120px; height: 120px;">
+                    <span class="g-bg" style="font-size: 6rem;">γ</span>
+                    <span class="g-fg" style="font-size: 8rem;">Γ</span>
+                </div>
+            </div>
+            <p class="hero-subtitle">Council Reasoning</p>
+            <h1 class="hero-title" style="font-size: 3.5rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ontology Tournament</h1>
+            <p style="margin-top: 1rem; color: var(--text-secondary); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.9rem; font-weight: 700;">Hierarchical Predictive Coding Evidence Arena</p>
+        </header>
+
+        <div class="ontology-grid">
+            <!-- GO Plot -->
+            <div class="plot-container">
+                <div class="plot-header">
+                    <span class="plot-title">Gene Ontology (GO)</span>
+                    <span class="plot-meta">HPC_3SCATTER_GO</span>
+                </div>
+                <img src="assets/ontology/hpc_3scatter_compact_noted_go.svg" alt="GO Scatter Plot" class="plot-svg">
+                <div class="provenance">
+                    <span>SOURCE:</span> GLLLM/MLLM Pipeline | <span>PLANE:</span> Scientific Evidence
+                </div>
+            </div>
+
+            <!-- LO Plot -->
+            <div class="plot-container">
+                <div class="plot-header">
+                    <span class="plot-title">Label Ontology (LO)</span>
+                    <span class="plot-meta">HPC_3SCATTER_LO</span>
+                </div>
+                <img src="assets/ontology/hpc_3scatter_compact_noted_lo.svg" alt="LO Scatter Plot" class="plot-svg">
+                <div class="provenance">
+                    <span>SOURCE:</span> GLLLM/MLLM Pipeline | <span>PLANE:</span> Scientific Evidence
+                </div>
+            </div>
+        </div>
+
+        <div class="narrative-card">
+            <h2 class="narrative-title">HPC Tournament Methodology</h2>
+            <div class="narrative-text">
+                <p>The Hierarchical Predictive Coding (HPC) Tournament leverages a multi-LLM (GLLLM) pipeline to score scientific literature against a 36-factor predictive-coding glossary. This process involves:</p>
+                <ul style="margin: 1rem 0 1rem 1.5rem; list-style-type: square; color: var(--accent-cyan);">
+                    <li>Hierarchical ingestion of neurophysiological manuscripts.</li>
+                    <li>Ontology-constrained scoring via specialized MLLM agents.</li>
+                    <li>Consensus validation across diverse model architectures (Gemma, Qwen, etc.).</li>
+                    <li>Visual comparison of Gene vs. Label ontology mappings.</li>
+                </ul>
+                <p>These scatter plots represent the terminal alignment of the Council's reasoning, grounding high-level scientific hypotheses in literature-derived evidence.</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            Gamma Arena Scientific Evidence Surface :: © 2026 HNXJ(H.Nejat) / BASTOSLAB / VANDERBILT UNIVERSITY
+        </footer>
+    </div>
+</body>
+</html>
