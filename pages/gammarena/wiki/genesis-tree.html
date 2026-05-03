@@ -43,8 +43,8 @@
             border: 1px solid var(--border-glow);
             padding: 1rem;
             border-radius: 8px;
-            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
             pointer-events: auto;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
@@ -149,6 +149,10 @@
 
         .panel-section {
             margin-bottom: 2rem;
+        }
+
+        #panel-evidence {
+            display: none;
         }
 
         .panel-section label {
@@ -287,7 +291,7 @@
                     <label>Description</label>
                     <p id="panel-desc">Select a node to view details.</p>
                 </div>
-                <div id="panel-evidence" class="panel-section" style="display: none;">
+                <div id="panel-evidence" class="panel-section">
                     <label>Credibility Anchors</label>
                     <div id="evidence-container" class="chip-group"></div>
                 </div>

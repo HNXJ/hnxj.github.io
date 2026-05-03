@@ -195,6 +195,39 @@
             .report-grid { grid-template-columns: 1fr; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
         }
+
+        /* Hero Inline Style Consolidation */
+        .hero-tournament {
+            padding: 4rem 0;
+            align-items: center;
+            text-align: center;
+        }
+        .hero-logo-tournament {
+            width: 100px;
+            height: 100px;
+        }
+        .hero-logo-tournament .g-bg {
+            font-size: 5rem;
+        }
+        .hero-logo-tournament .g-fg {
+            font-size: 7rem;
+        }
+        .hero-title-tournament {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub-tournament {
+            margin-top: 1rem;
+            color: var(--accent-cyan);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-size: 1rem;
+            font-weight: 800;
+        }
     </style>
 </head>
 <body>
@@ -217,16 +250,16 @@
     </nav>
 
     <div class="lab-report-container">
-        <header class="hero" style="padding: 4rem 0; align-items: center; text-align: center;">
+        <header class="hero hero-tournament">
             <div class="hero-logo-container">
-                <div class="hero-logo" style="width: 100px; height: 100px;">
-                    <span class="g-bg" style="font-size: 5rem;">γ</span>
-                    <span class="g-fg" style="font-size: 7rem;">Γ</span>
+                <div class="hero-logo hero-logo-tournament">
+                    <span class="g-bg">γ</span>
+                    <span class="g-fg">Γ</span>
                 </div>
             </div>
             <p class="hero-subtitle">Council Reasoning</p>
-            <h1 class="hero-title" style="font-size: 3.5rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent-gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ontology Tournament</h1>
-            <p style="margin-top: 1rem; color: var(--accent-cyan); letter-spacing: 0.15em; text-transform: uppercase; font-size: 1rem; font-weight: 800;">Hierarchical Predictive Coding Evidence Arena</p>
+            <h1 class="hero-title hero-title-tournament">Ontology Tournament</h1>
+            <p class="hero-sub-tournament">Hierarchical Predictive Coding Evidence Arena</p>
         </header>
 
         <div class="stats-strip">
@@ -261,7 +294,7 @@
                         <span class="plot-id">FIG_01A</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/1_hpc_space_GO_HPC_Hypothesis_Space.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/1_hpc_space_GO_HPC_Hypothesis_Space.html" class="plot-frame" title="GO HPC Hypothesis Space Interactive Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Scientific Evidence | <span>ONTOLOGY:</span> Gene (GO)</div>
                 </div>
@@ -271,7 +304,7 @@
                         <span class="plot-id">FIG_01B</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/1_hpc_space_LO_HPC_Hypothesis_Space.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/1_hpc_space_LO_HPC_Hypothesis_Space.html" class="plot-frame" title="LO HPC Hypothesis Space Interactive Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Scientific Evidence | <span>ONTOLOGY:</span> Label (LO)</div>
                 </div>
@@ -281,7 +314,7 @@
                         <span class="plot-id">FIG_02</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/2_hpc_space_vectors_LO_to_GO.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/2_hpc_space_vectors_LO_to_GO.html" class="plot-frame" title="LO to GO Vector Alignment Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Scientific Evidence | <span>ALIGNMENT:</span> Cross-Ontology</div>
                 </div>
@@ -291,7 +324,7 @@
                         <span class="plot-id">FIG_03</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/3_hpc_space_trend_prediction.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/3_hpc_space_trend_prediction.html" class="plot-frame" title="HPC Trend Prediction Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Scientific Evidence | <span>ANALYSIS:</span> Predictive Trend</div>
                 </div>
@@ -311,7 +344,7 @@
                         <span class="plot-id">FIG_04_DASH</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/4_agent_agreement_summary_dashboard.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/4_agent_agreement_summary_dashboard.html" class="plot-frame" title="Agent Agreement Summary Dashboard"></iframe>
                     </div>
                     <div class="provenance"><span>SOURCE:</span> GLLLM Consensus | <span>MODELS:</span> Gemma, Qwen, GPT4</div>
                 </div>
@@ -321,7 +354,7 @@
                         <span class="plot-id">FIG_07</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/7_raw_score_distribution.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/7_raw_score_distribution.html" class="plot-frame" title="Raw Score Distribution Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Confidence Layer | <span>METRIC:</span> Factor Variance</div>
                 </div>
@@ -341,7 +374,7 @@
                         <span class="plot-id">FIG_04A</span>
                     </div>
                     <div class="plot-frame-container svg-container">
-                        <iframe src="assets/ontology/FIG_04A_MMFF_Hierarchy.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/FIG_04A_MMFF_Hierarchy.html" class="plot-frame" title="MMFF Hierarchy Flow Diagram"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Mechanistic Flow | <span>DEPTH:</span> Multi-Layer</div>
                 </div>
@@ -351,7 +384,7 @@
                         <span class="plot-id">FIG_04B</span>
                     </div>
                     <div class="plot-frame-container svg-container">
-                        <iframe src="assets/ontology/FIG_04B_Post_Omission_Scaling.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/FIG_04B_Post_Omission_Scaling.html" class="plot-frame" title="Post-Omission Scaling Dynamics"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Dynamic Scaling | <span>EVENT:</span> Omission Response</div>
                 </div>
@@ -361,7 +394,7 @@
                         <span class="plot-id">FIG_06A</span>
                     </div>
                     <div class="plot-frame-container svg-container">
-                        <img src="assets/ontology/FIG_06A_V1_PFC_Spike_Lag.svg" class="svg-img">
+                        <img src="assets/ontology/FIG_06A_V1_PFC_Spike_Lag.svg" class="svg-img" alt="V1-PFC Spike Lag Diagram showing biophysical delay across areas">
                     </div>
                     <div class="provenance"><span>PLANE:</span> Biophysical Lag | <span>CIRCUIT:</span> Inter-Area</div>
                 </div>
@@ -371,7 +404,7 @@
                         <span class="plot-id">FIG_05A</span>
                     </div>
                     <div class="plot-frame-container">
-                        <iframe src="assets/ontology/FIG_05A_Identity_Decoding.html" class="plot-frame"></iframe>
+                        <iframe src="assets/ontology/FIG_05A_Identity_Decoding.html" class="plot-frame" title="Semantic Identity Decoding Plot"></iframe>
                     </div>
                     <div class="provenance"><span>PLANE:</span> Semantic Decoding | <span>TARGET:</span> Entity Identity</div>
                 </div>
