@@ -43,17 +43,17 @@
             "tags": ["technical", "core"]
         },
         {
-            "id": "roster",
-            "title": "Player Roster",
+            "id": "arena",
+            "title": "Arena",
             "description": "Index of core exploratory actors and guest presences in the world.",
-            "url": "../roster.html",
+            "url": "../arena.html",
             "tags": ["social", "entities"]
         },
         {
-            "id": "ontology",
-            "title": "Ontology Tournament",
+            "id": "analysis",
+            "title": "Analysis",
             "description": "Council Reasoning and HPC scientific evidence arena.",
-            "url": "../ontology.html",
+            "url": "../analysis.html",
             "tags": ["science", "council"]
         }
     ]
