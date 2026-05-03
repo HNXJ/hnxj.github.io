@@ -98,6 +98,23 @@
         }
         .card-danger::before { background: var(--danger-color); opacity: 0.5; }
 
+        .teaser-section {
+            border-top: 1px solid var(--border-glow);
+            margin-top: 3rem;
+        }
+
+        .btn-cta-disabled {
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        .blog-post-loading {
+            opacity: 0.5;
+            text-align: center;
+        }
+
         .card-label {
             color: var(--accent-gold);
             text-transform: uppercase;
@@ -263,14 +280,14 @@
         </section>
 
         <!-- Dispatch Feed -->
-        <section class="teaser-section" style="border-top: 1px solid var(--border-glow); margin-top: 3rem;">
+        <section class="teaser-section">
             <div class="teaser-header">
                 <h2>Gamma Dispatches</h2>
-                <span class="btn-cta" style="border-color: var(--text-secondary); color: var(--text-secondary); cursor: default; opacity: 0.5;">Operator Console (Internal Only)</span>
+                <span class="btn-cta btn-cta-disabled">Operator Console (Internal Only)</span>
             </div>
             <div id="dispatch-feed" class="blog-feed">
                 <!-- Dispatches will be loaded here -->
-                <div class="blog-post" style="opacity: 0.5; text-align: center;">Initializing Secure Dispatch Link...</div>
+                <div class="blog-post blog-post-loading">Initializing Secure Dispatch Link...</div>
             </div>
         </section>
 

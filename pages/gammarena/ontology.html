@@ -100,6 +100,24 @@
             border-radius: 4px;
         }
 
+        .disclaimer-banner {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid var(--accent-purple);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .disclaimer-label {
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+
         .plot-frame-container {
             flex-grow: 1;
             background: #fff;
@@ -262,8 +280,8 @@
             <p class="hero-sub-tournament">Hierarchical Predictive Coding Evidence Arena</p>
         </header>
 
-        <div class="disclaimer-banner" style="background: rgba(168, 85, 247, 0.1); border: 1px solid var(--accent-purple); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary);">
-            <strong style="color: var(--accent-purple); display: block; margin-bottom: 0.5rem; letter-spacing: 0.1em;">OBSERVATION SURFACE ONLY</strong>
+        <div class="disclaimer-banner">
+            <strong class="disclaimer-label">OBSERVATION SURFACE ONLY</strong>
             These scores represent model-rated alignment between literature excerpts and HPC ontology hypotheses. They are not experimental measurements, replications, meta-analyses, or committed Gamma substrate truth.
         </div>
 
