@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Internal Tool Only</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamma Arena | Operator Console Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .preview-banner {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid var(--accent-purple);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .preview-banner strong {
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .login-card {
+            width: 400px;
+            padding: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            text-align: center;
+            margin: 100px auto;
+            opacity: 0.8;
+        }
+        .input-group { margin-bottom: 1.5rem; text-align: left; }
+        .input-group label { display: block; font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .input-group input { 
+            width: 100%; 
+            padding: 0.75rem; 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 4px; 
+            color: #fff;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
-    <h1>403 Forbidden</h1>
-    <p>This is an internal operator tool and is not published on this surface.</p>
+    <div style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+        <div class="preview-banner">
+            <strong>Static observation-plane preview. No input here mutates substrate truth.</strong>
+            This is a non-functional visual representation of the Gamma operator surface.
+        </div>
+        
+        <div class="login-card">
+            <div class="hero-logo-container" style="transform: scale(0.6); margin-bottom: 1rem;">
+                <div class="hero-logo">
+                    <span class="g-bg">γ</span>
+                    <span class="g-fg">Γ</span>
+                </div>
+            </div>
+            <h2 style="color: var(--accent-gold); margin-bottom: 2rem;">CONTENT ADMIN</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" placeholder="Operator ID" disabled>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" placeholder="••••••••" disabled>
+            </div>
+            <button class="btn-primary" disabled>Authenticate</button>
+        </div>
+    </div>
+    
+    <script>
+        // No executable handlers, fetch calls, or localhost references.
+        // Static observation surface only.
+    </script>
 </body>
 </html>
