@@ -31,3 +31,7 @@ This is the personal website of Hamed Nejat.
 It serves a dual purpose:
 1. **Public Static Site**: A portfolio and research showcase (including HPC research figures in the MindApp section).
 2. **Hosted Observation API**: A Vercel-hosted FastAPI service (`glllmx_backend/main.py`) providing a secure, versioned, read-only API and UI surface for the Gamma Arena project (`pages/gammarena/`).
+
+## Coordination
+
+This repository follows the [GAMMA-BUS Coordination Doctrine](GEMINI.md). Agents should refer to `GEMINI.md` for specific instructions and coordination rules.
