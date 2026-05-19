@@ -115,8 +115,10 @@
 
         <div class="site-section bg-dark">
             <div class="container">
-                <div class="text-center">
-                    <p class="text-muted">Gallery empty for now.</p>
+                <div id="gallery-grid" class="row">
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Loading gallery...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,5 +127,65 @@
     <script src="../../assets/js/jquery-3.3.1.min.js"></script>
     <script src="../../assets/js/bootstrap.min.js"></script>
     <script src="../../assets/js/aos.js"></script>
+
+    <script>
+        // Load gallery manifest and render items
+        fetch('manifest.json')
+            .then(response => response.json())
+            .then(data => {
+                const gallery = document.getElementById('gallery-grid');
+                gallery.innerHTML = '';
+
+                if (!data.gallery || data.gallery.length === 0) {
+                    gallery.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No gallery items yet.</p></div>';
+                    return;
+                }
+
+                // Group items by category
+                const byCategory = {};
+                data.gallery.forEach(item => {
+                    const cat = item.category || 'Other';
+                    if (!byCategory[cat]) byCategory[cat] = [];
+                    byCategory[cat].push(item);
+                });
+
+                // Render each category
+                Object.keys(byCategory).sort().forEach(category => {
+                    // Category header
+                    const header = document.createElement('div');
+                    header.className = 'col-12';
+                    header.innerHTML = `<h3 class="text-white mt-5 mb-4" style="font-family: 'Roboto Mono', monospace; border-bottom: 1px solid rgba(207, 184, 124, 0.3); padding-bottom: 1rem;">${category}</h3>`;
+                    gallery.appendChild(header);
+
+                    // Items in category
+                    byCategory[category].forEach(item => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-6 col-lg-4 mb-4';
+
+                        col.innerHTML = `
+                            <a href="${item.filename}" target="_blank" class="gallery-item d-block" style="text-decoration: none;">
+                                <div class="gallery-card-body">
+                                    <div class="gallery-category">${item.category}</div>
+                                    <h5 class="gallery-title">${item.title}</h5>
+                                    <p class="text-muted mb-2" style="font-size: 0.9rem;">${item.description}</p>
+                                    <small class="text-muted d-block">${item.date}</small>
+                                </div>
+                            </a>
+                        `;
+                        gallery.appendChild(col);
+                    });
+                });
+
+                // Initialize AOS for animations
+                if (window.AOS) {
+                    AOS.refresh();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading gallery manifest:', error);
+                const gallery = document.getElementById('gallery-grid');
+                gallery.innerHTML = '<div class="col-12 text-center"><p class="text-danger">Error loading gallery.</p></div>';
+            });
+    </script>
 </body>
 </html>

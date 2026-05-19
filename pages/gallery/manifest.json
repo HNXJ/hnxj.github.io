@@ -1,0 +1,44 @@
+{
+  "gallery": [
+    {
+      "id": "3d-shift-vectors",
+      "title": "3d Shift Vectors",
+      "description": "Interactive visualization - 04_3d_shift_vectors.html",
+      "filename": "04_3d_shift_vectors.html",
+      "category": "3D Visualization",
+      "date": "2026-05-19"
+    },
+    {
+      "id": "3d-trend-vectors",
+      "title": "3d Trend Vectors",
+      "description": "Interactive visualization - 05_3d_trend_vectors.html",
+      "filename": "05_3d_trend_vectors.html",
+      "category": "3D Visualization",
+      "date": "2026-05-19"
+    },
+    {
+      "id": "hpc-2d-suites-with-stats",
+      "title": "Hpc 2d Suites With Stats",
+      "description": "Interactive visualization - 0_hpc_2d_suites_with_stats.html",
+      "filename": "0_hpc_2d_suites_with_stats.html",
+      "category": "HPC Research",
+      "date": "2026-05-19"
+    },
+    {
+      "id": "hpc-space-go-hpc-hypothesis-space",
+      "title": "Hpc Space Go Hpc Hypothesis Space",
+      "description": "Interactive visualization - 1_hpc_space_GO_HPC_Hypothesis_Space.html",
+      "filename": "1_hpc_space_GO_HPC_Hypothesis_Space.html",
+      "category": "HPC Research",
+      "date": "2026-05-19"
+    },
+    {
+      "id": "hpc-space-vectors-lo-to-go",
+      "title": "Hpc Space Vectors Lo To Go",
+      "description": "Interactive visualization - 2_hpc_space_vectors_LO_to_GO.html",
+      "filename": "2_hpc_space_vectors_LO_to_GO.html",
+      "category": "HPC Research",
+      "date": "2026-05-19"
+    }
+  ]
+}
