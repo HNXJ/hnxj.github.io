@@ -1,6 +1,22 @@
 {
   "gallery": [
     {
+      "id": "lo-3d-hpc-space",
+      "title": "Local Optimum (LO) 3D HPC Space",
+      "description": "Three-dimensional visualization of the Local Optimum hypothesis space. Explore local optimization landscapes and solution clustering patterns.",
+      "filename": "01_lo_3d_hpc_space.html",
+      "category": "3D Hypothesis Space",
+      "date": "2026-05-19"
+    },
+    {
+      "id": "go-3d-hpc-space",
+      "title": "Global Optimum (GO) 3D HPC Space",
+      "description": "Three-dimensional visualization of the Global Optimum hypothesis space. Examine global optimization topology and convergence dynamics.",
+      "filename": "02_go_3d_hpc_space.html",
+      "category": "3D Hypothesis Space",
+      "date": "2026-05-19"
+    },
+    {
       "id": "3d-shift-vectors",
       "title": "3d Shift Vectors",
       "description": "Interactive visualization - 04_3d_shift_vectors.html",
