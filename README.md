@@ -34,4 +34,4 @@ It serves a dual purpose:
 
 ## Coordination
 
-This repository follows the [GAMMA-BUS Coordination Doctrine](GEMINI.md). Agents should refer to `GEMINI.md` for specific instructions and coordination rules.
+This repository follows the [GAMMA-BUS Coordination Doctrine](AGENTS.md). Agents should refer to `AGENTS.md` for specific instructions and coordination rules.
