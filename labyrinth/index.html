@@ -1,33 +1,55 @@
 <!DOCTYPE html>
 
-<style>
-    h2.red-text
-    {
-        color: #CFB87C;
-    }
-</style>
-
 <html lang="en">
 
     <head>
 
-        <link rel="icon" href="ico1.jpg">
-        <title> Hamed Nejat's Personal website </title>
+        <link rel="icon" href="../ico1.jpg">
+        <title> Labyrinth | Hamed Nejat </title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
-        <link rel="stylesheet" href="assets/fonts/icomoon/style.css">
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/magnific-popup.css">
-        <link rel="stylesheet" href="assets/css/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-        <link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
-        <link rel="stylesheet" href="assets/css/animate.css">
-        <link rel="stylesheet" href="assets/fonts/flaticon/font/flaticon.css">
-        <link rel="stylesheet" href="assets/css/fl-bigmug-line.css">
-        <link rel="stylesheet" href="assets/css/aos.css">
-        <link rel="stylesheet" href="assets/css/style.css?v=1.1">
-        <link rel="stylesheet" href="assets/css/madelane-theme.css?v=1.1">
+        <link rel="stylesheet" href="../assets/fonts/icomoon/style.css">
+        <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../assets/css/animate.css">
+        <link rel="stylesheet" href="../assets/fonts/flaticon/font/flaticon.css">
+        <link rel="stylesheet" href="../assets/css/fl-bigmug-line.css">
+        <link rel="stylesheet" href="../assets/css/aos.css">
+        <link rel="stylesheet" href="../assets/css/style.css?v=1.1">
+        <link rel="stylesheet" href="../assets/css/madelane-theme.css?v=1.1">
+
+        <style>
+            .labyrinth-badge {
+                display: inline-block;
+                padding: 3px 12px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .04em;
+                text-transform: uppercase;
+                color: var(--vandy-gold);
+                border: 1px solid var(--vandy-gold-dark);
+                background: rgba(207, 184, 124, .08);
+                margin: 6px 0 24px;
+            }
+            .labyrinth-scope {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 20px;
+            }
+            .labyrinth-scope li {
+                padding: 6px 0;
+                border-bottom: 1px solid var(--vandy-dark-gray);
+                color: #E0E0E0;
+            }
+            .labyrinth-scope li:last-child {
+                border-bottom: none;
+            }
+            .labyrinth-mut {
+                color: #9a9a9a;
+                font-size: 0.92rem;
+            }
+        </style>
 
     </head>
 
@@ -45,7 +67,7 @@
 
                             <h1 class="mb-0">
 
-                                <a href="index.html" class="text-white h2 mb-0">
+                                <a href="/" class="text-white h2 mb-0">
 
                                     <strong>
 
@@ -74,13 +96,13 @@
                                 </div>
 
                                 <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                    <li class="active">
+                                    <li>
                                         <a href="/"> Home </a>
                                     </li>
                                     <li>
                                         <a href="/pages/about/"> About </a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="/labyrinth/"> Labyrinth </a>
                                     </li>
                                     <li>
@@ -125,70 +147,50 @@
 
         </div> <!-- .site-mobile-menu -->
 
-        <div class="site-blocks-cover overlay index-cover" data-stellar-background-ratio="0.5" data-aos="fade">
-
-            <div class="container">
-
-                <div class="row align-items-center justify-content-center">
-
-                    <div class="col-md-7 text-center" data-aos="fade-up" data-aos-delay="400">
-
-                        <h2 class="red-text"> Welcome </h2>
-                        <iframe src="https://open.spotify.com/embed/track/0ROMalDdNg3L2HoZP4qFyJ" width="100%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Spotify Track" loading="lazy"></iframe>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="site-section">
+        <div class="site-section" style="padding-top: 140px;">
 
             <div class="row">
 
-                <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+                <div class="site-section-heading text-center mb-4 w-border col-md-8 mx-auto">
 
-                    <h2 class="mb-5"> Research Projects: </h2>
+                    <h2 class="mb-3"> Labyrinth </h2>
 
-                    <p> </p>
+                    <p class="labyrinth-mut"> A general-purpose knowledge graph and workspace. </p>
 
-                    <a href="https://github.com/HNXJ/GSDR">
+                    <span class="labyrinth-badge">In development</span>
 
-                    GSDR: Genetic stochastic delta rule implementation in Jax
-
-                    </a>
-
-                    <p> </p>
-
-                    <a href="mindapp/">
-
-                    GLLLM: Global & Local Large Language Model Analysis
-
-                    </a>
-
-                    <p> </p>
-
-                    <a href="https://github.com/HNXJ/MentalArthGraph">
-
-                    Cortical connectivity graphs based on EEG recordings during mental arithmetic tasks
-
-                    </a>
+                    <p style="max-width: 640px; margin: 0 auto 8px;">
+                    Labyrinth is being developed as a common interface for organizing projects,
+                    knowledge, evidence, tools, agents, and their relationships.
+                    </p>
 
                 </div>
 
             </div>
 
-            <div class="site-section-heading text-center mb-5 w-border col-md-6 mx-auto">
+            <div class="row">
 
-                <h2 class="mb-5"> Musique! </h2>
+                <div class="col-md-6 mx-auto">
 
-                <p>
+                    <h3 class="mb-3 text-center" style="font-size: 1.1rem;"> Planned scope </h3>
 
-                <iframe src="https://open.spotify.com/embed/playlist/0aPvyQnS9CW8Av3TkT5hQo" width="70%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Spotify Playlist" loading="lazy"></iframe>
+                    <ul class="labyrinth-scope">
+                        <li>knowledge graph</li>
+                        <li>project relationships</li>
+                        <li>evidence and provenance</li>
+                        <li>tools and agents</li>
+                        <li>searchable project context</li>
+                    </ul>
 
-                </p>
+                    <p class="labyrinth-mut text-center">
+                    These are planned categories, not claims of implemented functionality.
+                    </p>
+
+                    <p class="labyrinth-mut text-center" style="margin-top: 28px;">
+                    This page is a placeholder for the developing Labyrinth interface.
+                    </p>
+
+                </div>
 
             </div>
 
@@ -228,11 +230,11 @@
 
                                 <li>
 
-                                    <a href="index.html"> Home | </a>
+                                    <a href="/"> Home | </a>
 
-                                    <a href="pages/about/"> About | </a>
+                                    <a href="/pages/about/"> About | </a>
 
-                                    <a href="pages/contact/"> Contact </a>
+                                    <a href="/pages/contact/"> Contact </a>
 
                                 </li>
 
@@ -248,17 +250,12 @@
 
         </footer>
 
-        <script src="assets/js/jquery-3.3.1.min.js"></script>
-        <script src="assets/js/jquery-migrate-3.0.1.min.js" defer></script>
-        <script src="assets/js/jquery-ui.js" defer></script>
-        <script src="assets/js/popper.min.js" defer></script>
-        <script src="assets/js/bootstrap.min.js" defer></script>
-        <script src="assets/js/owl.carousel.min.js" defer></script>
-        <script src="assets/js/jquery.stellar.min.js" defer></script>
-        <script src="assets/js/jquery.magnific-popup.min.js" defer></script>
-        <script src="assets/js/aos.js" defer></script>
-        <script src="assets/js/circleaudioplayer.js" defer></script>
-        <script src="assets/js/main.js" defer></script>
+        <script src="../assets/js/jquery-3.3.1.min.js"></script>
+        <script src="../assets/js/jquery-migrate-3.0.1.min.js" defer></script>
+        <script src="../assets/js/popper.min.js" defer></script>
+        <script src="../assets/js/bootstrap.min.js" defer></script>
+        <script src="../assets/js/aos.js" defer></script>
+        <script src="../assets/js/main.js" defer></script>
 
     </body>
 
