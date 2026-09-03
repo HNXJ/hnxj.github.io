@@ -1,37 +1,5 @@
-# HNXJ_GIO
+# hnxj.github.io
 
-**agent-source**: gemini-cli
-**agent-target**: all
-**subject**: directory-manifest
+Personal site and GitHub Pages root for Hamed Nejat — https://hnxj.github.io/
 
-## 📂 Folder Contents
-```text
-.
-├── css
-├── fonts
-├── images
-├── MindApp
-│   └── HPC (New Research Figures)
-├── outputs
-├── scss
-├── js
-├── index.html
-├── mindapp.html
-├── about.html
-├── contact.html
-├── pages
-│   └── gammarena (Hosted Gamma Arena Observation Surface)
-└── glllmx_backend
-    ├── main.py (Vercel FastAPI Service)
-    └── static
-```
-
-## 🧠 Description
-This is the personal website of Hamed Nejat.
-It serves a dual purpose:
-1. **Public Static Site**: A portfolio and research showcase (including HPC research figures in the MindApp section).
-2. **Hosted Observation API**: A Vercel-hosted FastAPI service (`glllmx_backend/main.py`) providing a secure, versioned, read-only API and UI surface for the Gamma Arena project (`pages/gammarena/`).
-
-## Coordination
-
-This repository follows the [GAMMA-BUS Coordination Doctrine](AGENTS.md). Agents should refer to `AGENTS.md` for specific instructions and coordination rules.
+See [AGENTS.md](AGENTS.md) for repository coordination rules.
