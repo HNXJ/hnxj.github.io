@@ -1,0 +1,155 @@
+.labyrinth-intro {
+  max-width: 52rem;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: #c8c8c8;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.labyrinth-scope-note {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vandy-gold);
+  border: 1px solid var(--vandy-gold-dark);
+  background: rgba(207, 184, 124, 0.08);
+}
+
+.labyrinth-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+.labyrinth-card {
+  border: 1px solid var(--vandy-gold-dark);
+  background: rgba(26, 26, 26, 0.82);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 18rem;
+  backdrop-filter: blur(4px);
+}
+
+.labyrinth-card-preview {
+  height: 8.5rem;
+  background-color: #111;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid rgba(134, 109, 75, 0.45);
+}
+
+.labyrinth-card-preview.placeholder {
+  background-image: linear-gradient(135deg, rgba(207, 184, 124, 0.12), rgba(0, 0, 0, 0.65));
+}
+
+.labyrinth-card-body {
+  padding: 1rem 1.1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1;
+}
+
+.labyrinth-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.labyrinth-card-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vandy-gold) !important;
+}
+
+.labyrinth-kind {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9a9a9a;
+}
+
+.labyrinth-status {
+  font-size: 0.68rem;
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(134, 109, 75, 0.55);
+  white-space: nowrap;
+  color: #d4d4d4;
+}
+
+.labyrinth-status.live { color: #8fd6a8; }
+.labyrinth-status.fixture { color: #d4b5ff; }
+.labyrinth-status.degraded { color: #f0d58a; }
+.labyrinth-status.unavailable { color: #8a8a8a; }
+.labyrinth-status.planned { color: #8ecdf8; }
+
+.labyrinth-desc {
+  margin: 0;
+  color: #e0e0e0;
+  font-size: 0.92rem;
+  flex: 1;
+}
+
+.labyrinth-reason {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #9a9a9a;
+}
+
+.labyrinth-meta {
+  font-size: 0.72rem;
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  color: #777;
+}
+
+.labyrinth-action {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.labyrinth-action.disabled {
+  color: #8a8a8a;
+  font-weight: 500;
+}
+
+.labyrinth-notice {
+  max-width: 42rem;
+  margin: 0 auto 1.5rem;
+  border: 1px solid rgba(207, 184, 124, 0.35);
+  background: rgba(207, 184, 124, 0.08);
+  color: #f0e2c0;
+  border-radius: 0.75rem;
+  padding: 1rem 1.1rem;
+  text-align: center;
+}
+
+.site-footer .footer-nav-links a {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .labyrinth-grid {
+    grid-template-columns: 1fr;
+    padding: 0 0.75rem 1.5rem;
+  }
+}
