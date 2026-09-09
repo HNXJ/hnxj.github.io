@@ -5,6 +5,9 @@ glllmx_backend/
 .DS_Store
 Thumbs.db
 # Development artifacts
+__pycache__/
+*.pyc
+artifacts/
 *.log
 .tempmediaStorage/
 scratch/
