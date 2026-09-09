@@ -3,6 +3,29 @@
   "updated": "2026-09-09",
   "apps": [
     {
+      "id": "jaxfne",
+      "title": "JaxFNE",
+      "description": "Tensor-Field Neural Equations (TFNE) in JAX — field neural modeling and optimization.",
+      "href": "https://github.com/HNXJ/jaxfne",
+      "status": "live",
+      "reason": "Open-source research library on GitHub.",
+      "kind": "application",
+      "provenance": "HNXJ/jaxfne",
+      "updated": "2026-09-09",
+      "image": "../assets/images/winter_opt.png"
+    },
+    {
+      "id": "jnwb",
+      "title": "JNWB",
+      "description": "Python library for NWB electrophysiology analysis.",
+      "href": "https://github.com/HNXJ/jnwb",
+      "status": "live",
+      "reason": "Open-source research library on GitHub.",
+      "kind": "application",
+      "provenance": "HNXJ/jnwb",
+      "updated": "2026-09-09"
+    },
+    {
       "id": "labyrinth-protocol",
       "title": "Labyrinth",
       "description": "Knowledge graph and workspace for projects, evidence, tools, agents, and their relationships.",
@@ -66,29 +89,6 @@
       "reason": "Hosted inside Lobby; unavailable without live Gravia on public deployment.",
       "kind": "surface",
       "provenance": "HNXJ/jynx",
-      "updated": "2026-09-09"
-    },
-    {
-      "id": "jaxfne",
-      "title": "JaxFNE",
-      "description": "Tensor-Field Neural Equations (TFNE) in JAX — field neural modeling and optimization.",
-      "href": "https://github.com/HNXJ/jaxfne",
-      "status": "live",
-      "reason": "Open-source research library on GitHub.",
-      "kind": "application",
-      "provenance": "HNXJ/jaxfne",
-      "updated": "2026-09-09",
-      "image": "../assets/images/winter_opt.png"
-    },
-    {
-      "id": "jnwb",
-      "title": "JNWB",
-      "description": "Python library for NWB electrophysiology analysis.",
-      "href": "https://github.com/HNXJ/jnwb",
-      "status": "live",
-      "reason": "Open-source research library on GitHub.",
-      "kind": "application",
-      "provenance": "HNXJ/jnwb",
       "updated": "2026-09-09"
     },
     {
