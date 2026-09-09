@@ -202,7 +202,7 @@
         </div>
         <h1 class="hero-subtitle">Observation Surface</h1>
         <div class="status-bar">
-            <div id="connection-status" class="status-badge status-degraded">CONNECTING...</div>
+            <div id="connection-status" class="status-badge status-degraded">STATIC OBSERVATION</div>
             <span id="clock"></span>
         </div>
     </div>
@@ -210,34 +210,34 @@
     <div class="container container-flush">
 
         <!-- Connectivity Detail -->
-        <div id="connectivity-detail" class="card card-danger">
-            <div class="card-label">Link Status</div>
-            <div class="card-value card-value-danger">DETACHED</div>
-            <div id="connectivity-msg"></div>
-            <div id="connectivity-prov" class="provenance"></div>
+        <div id="connectivity-detail" class="card card-danger" style="display: flex;">
+            <div class="card-label">Observation Mode</div>
+            <div class="card-value card-value-danger">STATIC-ONLY</div>
+            <div id="connectivity-msg">Live observation service retired. Wiki, ontology figures, and historical baselines remain available on this surface.</div>
+            <div id="connectivity-prov" class="provenance"><span>MODE:</span> static-only | <span>LIVE API:</span> not configured on Pages</div>
         </div>
 
         <!-- Compact Status Grid -->
         <div class="grid">
             <div class="card" id="card-system">
                 <div class="card-label">System State</div>
-                <div class="card-value" id="val-system">INIT...</div>
-                <div class="provenance" id="prov-system"></div>
+                <div class="card-value" id="val-system">STATIC-ONLY</div>
+                <div class="provenance" id="prov-system"><span>NOTE:</span> Live backend detached from Pages presentation plane.</div>
             </div>
-            <div class="card" id="card-agents">
+            <div class="card card-danger" id="card-agents">
                 <div class="card-label">Agent Roster</div>
-                <div class="card-value" id="val-agents">INIT...</div>
-                <div class="provenance" id="prov-agents"></div>
+                <div class="card-value" id="val-agents" style="color: var(--danger-color);">N/A</div>
+                <div class="provenance" id="prov-agents"><span>NOTE:</span> Agent roster requires a live observation service.</div>
             </div>
             <div class="card" id="card-persistence">
                 <div class="card-label">Persistence</div>
-                <div class="card-value" id="val-persistence">INIT...</div>
-                <div class="provenance" id="prov-persistence"></div>
+                <div class="card-value" id="val-persistence">HISTORICAL</div>
+                <div class="provenance" id="prov-persistence"><span>NOTE:</span> Static evidence baselines only.</div>
             </div>
-            <div class="card" id="card-progression">
+            <div class="card card-danger" id="card-progression">
                 <div class="card-label">Progression</div>
-                <div class="card-value" id="val-progression">INIT...</div>
-                <div class="provenance" id="prov-progression"></div>
+                <div class="card-value" id="val-progression" style="color: var(--danger-color);">N/A</div>
+                <div class="provenance" id="prov-progression"><span>NOTE:</span> Event stream requires a live observation service.</div>
             </div>
             <div class="card" id="card-population">
                 <div class="card-label">World Inhabitants</div>
@@ -298,107 +298,17 @@
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // ... (existing clock and polling logic) ...
-        // Public observer mode uses deployed read-only observation endpoints.
-        async function loadDispatches() {
-            document.getElementById('dispatch-feed').innerHTML = '<div class="blog-post" style="color: var(--text-secondary)">Dispatch Link Offline (Requires Local Hub)</div>';
-        }
-        loadDispatches();
-        // setInterval(loadDispatches, 30000);
+        // Static-only observation surface. Live API retired from Pages ownership.
+        document.getElementById('dispatch-feed').innerHTML =
+            '<div class="blog-post" style="color: var(--text-secondary)">Dispatch feed unavailable in static observation mode.</div>';
 
-        // Update Clock
-        setInterval(() => {
+        document.getElementById('card-agents').classList.add('card-danger');
+        document.getElementById('card-progression').classList.add('card-danger');
+
+        setInterval(function () {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
         }, 1000);
-
-        // --- API CONFIGURATION ---
-        const API_ORIGIN = 'https://glllmx.vercel.app'; 
-        const API_BASE = (API_ORIGIN ? API_ORIGIN.replace(/\/$/, '') : '') + '/api/v1';
-
-        function updateCard(id, data, valueField) {
-            const elValue = document.getElementById(`val-${id}`);
-            const elProv = document.getElementById(`prov-${id}`);
-            const card = document.getElementById(`card-${id}`);
-
-            if (!data || !data.status || data.status === 'UNREACHABLE' || data.status === 'CRITICAL_FAILURE') {
-                elValue.innerText = 'UNREACHABLE';
-                elValue.style.color = 'var(--danger-color)';
-                card.classList.add('card-danger');
-                const detailStr = data?.detail ? `<span>DETAIL:</span> ${data.detail}<br>` : '';
-                const sourceStr = data?.provenance?.source || 'unavailable';
-                const readOnlyStr = data?.provenance?.readonly !== undefined ? data.provenance.readonly : 'unknown';
-                elProv.innerHTML = `${detailStr}<span>SOURCE:</span> ${sourceStr} | <span>READONLY:</span> ${readOnlyStr}`;
-            } else {
-                elValue.innerText = data[valueField] || 'UNKNOWN_STATE';
-                elValue.style.color = 'inherit';
-                card.classList.remove('card-danger');
-                const sourceStr = data.provenance?.source || 'unavailable';
-                const readOnlyStr = data.provenance?.readonly !== undefined ? data.provenance.readonly : 'unknown';
-                elProv.innerHTML = `<span>SOURCE:</span> ${sourceStr} | <span>READONLY:</span> ${readOnlyStr}`;
-            }
-        }
-
-        async function fetchEndpoint(endpoint, id, valueField) {
-            try {
-                const res = await fetch(`${API_BASE}/${endpoint}`);
-                if (!res.ok) throw new Error('HTTP Error');
-                const data = await res.json();
-                updateCard(id, data, valueField);
-                return data;
-            } catch (err) {
-                updateCard(id, { status: 'UNREACHABLE', detail: 'Network/Protocol Error', provenance: { source: 'browser_fetch_failure' } }, '');
-                return null;
-            }
-        }
-
-        async function pollData() {
-            try {
-                const manifestRes = await fetch(`${API_BASE}/manifest`);
-                if (!manifestRes.ok) throw new Error('Manifest not reachable');
-                const manifest = await manifestRes.json();
-                
-                const statusEl = document.getElementById('connection-status');
-                const connDetail = document.getElementById('connectivity-detail');
-                
-                if (manifest.degraded === true) {
-                    statusEl.innerText = 'DEGRADED OBSERVATION';
-                    statusEl.className = 'status-badge status-degraded';
-                    connDetail.style.display = 'flex';
-                    document.getElementById('connectivity-msg').innerText = "Live execution substrate detached. Showing historical evidence baseline.";
-                    document.getElementById('connectivity-prov').innerHTML = `<span>POLICY:</span> ${manifest.provenance_policy || 'unknown'}`;
-                } else if (manifest.degraded === false) {
-                    statusEl.innerText = 'GROUNDED';
-                    statusEl.className = 'status-badge status-grounded';
-                    connDetail.style.display = 'none';
-                } else {
-                    statusEl.innerText = 'REACHABLE';
-                    statusEl.className = 'status-badge status-connected';
-                    connDetail.style.display = 'none';
-                }
-
-                await Promise.all([
-                    fetchEndpoint('status', 'system', 'status'),
-                    fetchEndpoint('agents', 'agents', 'status'),
-                    fetchEndpoint('persistence', 'persistence', 'status'),
-                    fetchEndpoint('events/recent', 'progression', 'status')
-                ]);
-
-            } catch (err) {
-                const statusEl = document.getElementById('connection-status');
-                statusEl.innerText = 'UNREACHABLE';
-                statusEl.className = 'status-badge status-degraded';
-                
-                const connDetail = document.getElementById('connectivity-detail');
-                connDetail.style.display = 'flex';
-                document.getElementById('connectivity-msg').innerText = "Observation service unreachable or contract mismatched.";
-                document.getElementById('connectivity-prov').innerHTML = "<span>SOURCE:</span> browser_fetch_failure";
-            }
-        }
-
-        pollData();
-        setInterval(pollData, 10000); // Poll every 10s
     </script>
 </body>
 </html>

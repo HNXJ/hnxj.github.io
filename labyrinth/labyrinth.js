@@ -7,6 +7,7 @@
     degraded: "degraded",
     unavailable: "unavailable",
     planned: "planned",
+    archived: "archived",
   };
 
   function el(tag, className, text) {
@@ -49,8 +50,8 @@
       if (app.reason) body.appendChild(el("p", "labyrinth-reason", app.reason));
       body.appendChild(el("div", "labyrinth-meta", app.provenance + " · updated " + app.updated));
 
-      if (app.href && (app.status === "live" || app.status === "fixture" || app.status === "degraded")) {
-        var link = el("a", "labyrinth-action", "Open →");
+      if (app.href && (app.status === "live" || app.status === "fixture" || app.status === "degraded" || app.status === "archived")) {
+        var link = el("a", "labyrinth-action", app.status === "archived" ? "View archive →" : "Open →");
         link.href = app.href;
         link.rel = "noopener noreferrer";
         body.appendChild(link);
@@ -74,11 +75,11 @@
     if (!registry || typeof registry !== "object") return "Registry is not an object.";
     if (registry.schemaVersion !== "hnxj-labyrinth-registry-v1") return "Unsupported schemaVersion.";
     if (!Array.isArray(registry.apps) || registry.apps.length === 0) return "Registry apps array is empty.";
-    var allowed = { live: 1, fixture: 1, degraded: 1, unavailable: 1, planned: 1 };
+    var allowed = { live: 1, fixture: 1, degraded: 1, archived: 1, unavailable: 1, planned: 1 };
     for (var i = 0; i < registry.apps.length; i++) {
       var app = registry.apps[i];
       if (!app.id || !app.title || !app.status || !allowed[app.status]) return "Invalid app entry at index " + i;
-      if ((app.status === "live" || app.status === "fixture" || app.status === "degraded") && !app.href) {
+      if ((app.status === "live" || app.status === "fixture" || app.status === "degraded" || app.status === "archived") && !app.href) {
         return "App " + app.id + " requires href for status " + app.status;
       }
       if (!app.reason) return "App " + app.id + " requires reason.";

@@ -97,6 +97,7 @@
 .labyrinth-status.degraded { color: #f0d58a; }
 .labyrinth-status.unavailable { color: #8a8a8a; }
 .labyrinth-status.planned { color: #8ecdf8; }
+.labyrinth-status.archived { color: #b0a090; }
 
 .labyrinth-desc {
   margin: 0;

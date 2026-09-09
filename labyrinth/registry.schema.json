@@ -23,7 +23,7 @@
   "definitions": {
     "status": {
       "type": "string",
-      "enum": ["live", "fixture", "degraded", "unavailable", "planned"]
+      "enum": ["live", "fixture", "degraded", "archived", "unavailable", "planned"]
     },
     "kind": {
       "type": "string",
@@ -54,7 +54,7 @@
       "allOf": [
         {
           "if": {
-            "properties": { "status": { "enum": ["live", "fixture", "degraded"] } },
+            "properties": { "status": { "enum": ["live", "fixture", "degraded", "archived"] } },
             "required": ["status"]
           },
           "then": { "required": ["href", "reason"] }

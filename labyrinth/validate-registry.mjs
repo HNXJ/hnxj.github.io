@@ -36,7 +36,7 @@ for (const app of registry.apps) {
   if (!KINDS.has(app.kind)) fail(`invalid kind for ${app.id}`);
   if (!app.reason) fail(`${app.id} missing reason`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(app.updated)) fail(`${app.id} updated must be YYYY-MM-DD`);
-  if (["live", "fixture", "degraded"].includes(app.status) && !app.href) {
+  if (["live", "fixture", "degraded", "archived"].includes(app.status) && !app.href) {
     fail(`${app.id} requires href for status ${app.status}`);
   }
   if (app.href) {
