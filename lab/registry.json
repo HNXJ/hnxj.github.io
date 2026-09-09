@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "hnxj-lab-registry-v1",
+  "updated": "2026-09-09",
+  "apps": [
+    {
+      "id": "jynx",
+      "title": "Jynx",
+      "description": "Gravia control plane — product UI, Lobby, Observatory, and bounded agent runtime.",
+      "href": "https://jynx-ten.vercel.app/",
+      "status": "fixture",
+      "reason": "Public deployment has no live Gravia engine; overview uses labelled fixture read models.",
+      "kind": "application",
+      "provenance": "HNXJ/jynx",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "jynx-observatory",
+      "title": "Observatory",
+      "description": "Inspect epistemic frontier, claims, and provenance projections.",
+      "href": "https://jynx-ten.vercel.app/observatory",
+      "status": "fixture",
+      "reason": "Fixture read model until secure remote Gravia is configured (D4/D5).",
+      "kind": "surface",
+      "provenance": "HNXJ/jynx",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "jynx-lobby",
+      "title": "Lobby",
+      "description": "Governed cognitive workspace — compile, propose, adjudicate.",
+      "href": "https://jynx-ten.vercel.app/lobby",
+      "status": "unavailable",
+      "reason": "Requires live Gravia engine; GRAVIA_HTTP_URL is not configured on public deployment.",
+      "kind": "surface",
+      "provenance": "HNXJ/jynx",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "agent-runs",
+      "title": "Agent Runs",
+      "description": "Bounded compile → adapt → invoke → parse turns that stop for human review.",
+      "status": "unavailable",
+      "reason": "Hosted inside Lobby; unavailable without live Gravia on public deployment.",
+      "kind": "surface",
+      "provenance": "HNXJ/jynx",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "artifacts",
+      "title": "Artifacts",
+      "description": "Research outputs, reports, figures, and datasets.",
+      "status": "planned",
+      "reason": "Object storage and governed catalog not yet deployed.",
+      "kind": "catalog",
+      "provenance": "HNXJ",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "gammarena",
+      "title": "Gamma Arena",
+      "description": "Tournament observation surface and science wiki.",
+      "href": "https://hnxj.github.io/pages/gammarena/",
+      "status": "live",
+      "reason": "Static observation surface on GitHub Pages.",
+      "kind": "experiment",
+      "provenance": "HNXJ/hnxj.github.io",
+      "updated": "2026-09-09"
+    },
+    {
+      "id": "mindapp",
+      "title": "MindApp",
+      "description": "Research figures and cognitive visualization entry point.",
+      "href": "https://hnxj.github.io/mindapp/",
+      "status": "live",
+      "reason": "Static research showcase on GitHub Pages.",
+      "kind": "experiment",
+      "provenance": "HNXJ/hnxj.github.io",
+      "updated": "2026-09-09"
+    }
+  ]
+}
