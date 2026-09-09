@@ -2,7 +2,8 @@
   "use strict";
 
   var SUPPORTED_SCHEMA_VERSIONS = { "hnxj-labyrinth-registry-v1": true };
-  var REMOTE_REGISTRY_URL = "https://hnxj.github.io/labyrinth/catalog/registry.json";
+  var REMOTE_REGISTRY_URL =
+    "https://github.com/HNXJ/labyrinth/releases/download/catalog-latest/registry.json";
   var FALLBACK_REGISTRY_URL = "registry.fallback.json";
 
   var STATUS_LABEL = {

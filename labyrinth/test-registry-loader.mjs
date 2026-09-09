@@ -12,7 +12,7 @@ const fallback = JSON.parse(readFileSync(join(root, "registry.fallback.json"), "
 const js = readFileSync(join(root, "labyrinth.js"), "utf8");
 
 const checks = [
-  ["remote URL configured", js.includes("labyrinth/catalog/registry.json")],
+  ["remote URL configured", js.includes("catalog-latest/registry.json")],
   ["fallback URL configured", js.includes("registry.fallback.json")],
   ["supported schema version", js.includes("hnxj-labyrinth-registry-v1")],
   ["snapshot banner label", js.includes("CATALOG SNAPSHOT")],
