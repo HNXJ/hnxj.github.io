@@ -1,6 +1,10 @@
 (function () {
   "use strict";
 
+  var SUPPORTED_SCHEMA_VERSIONS = { "hnxj-labyrinth-registry-v1": true };
+  var REMOTE_REGISTRY_URL = "https://hnxj.github.io/labyrinth/catalog/registry.json";
+  var FALLBACK_REGISTRY_URL = "registry.fallback.json";
+
   var STATUS_LABEL = {
     live: "live",
     fixture: "fixture",
@@ -10,6 +14,24 @@
     archived: "archived",
   };
 
+  var ALLOWED_STATUS = {
+    live: 1,
+    fixture: 1,
+    degraded: 1,
+    archived: 1,
+    unavailable: 1,
+    planned: 1,
+  };
+
+  var ALLOWED_KIND = {
+    application: 1,
+    surface: 1,
+    experiment: 1,
+    catalog: 1,
+  };
+
+  var FORBIDDEN_HOST = /localhost|127\.0\.0\.1|0\.0\.0\.0|::1|\.local\b/i;
+
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -17,7 +39,62 @@
     return node;
   }
 
-  function renderDegraded(root, message, detail) {
+  function isPlainObject(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function isSafeHttpsUrl(value) {
+    if (typeof value !== "string" || !value) return false;
+    if (!/^https:\/\//i.test(value)) return false;
+    if (FORBIDDEN_HOST.test(value)) return false;
+    if (/[\s<>"']/.test(value)) return false;
+    return true;
+  }
+
+  function validateRegistry(registry) {
+    if (!isPlainObject(registry)) return "Registry is not an object.";
+    if (!SUPPORTED_SCHEMA_VERSIONS[registry.schemaVersion]) {
+      return "Unsupported schemaVersion: " + String(registry.schemaVersion);
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(registry.updated)) return "Invalid registry updated date.";
+    if (!Array.isArray(registry.apps) || registry.apps.length === 0) return "Registry apps array is empty.";
+
+    var ids = {};
+    for (var i = 0; i < registry.apps.length; i++) {
+      var app = registry.apps[i];
+      if (!isPlainObject(app)) return "Invalid app entry at index " + i;
+      if (!app.id || !/^[a-z0-9][a-z0-9-]*$/.test(app.id)) return "Invalid app id at index " + i;
+      if (ids[app.id]) return "Duplicate app id: " + app.id;
+      ids[app.id] = true;
+      if (!app.title || typeof app.title !== "string") return "App " + app.id + " requires title.";
+      if (!app.description || typeof app.description !== "string") return "App " + app.id + " requires description.";
+      if (!ALLOWED_STATUS[app.status]) return "App " + app.id + " has invalid status.";
+      if (!ALLOWED_KIND[app.kind]) return "App " + app.id + " has invalid kind.";
+      if (!app.reason || typeof app.reason !== "string") return "App " + app.id + " requires reason.";
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(app.updated)) return "App " + app.id + " has invalid updated date.";
+      if (!app.provenance || typeof app.provenance !== "string") return "App " + app.id + " requires provenance.";
+      if (app.href !== undefined && (typeof app.href !== "string" || !isSafeHttpsUrl(app.href))) {
+        return "App " + app.id + " href must be public HTTPS.";
+      }
+      if (app.image !== undefined) {
+        if (typeof app.image !== "string") return "App " + app.id + " image must be a string when present.";
+        if (/^https:\/\//i.test(app.image)) {
+          if (!isSafeHttpsUrl(app.image)) return "App " + app.id + " image must be public HTTPS.";
+        } else if (!/^(\.\.\/|\/)/.test(app.image) || /[\s<>"']/.test(app.image)) {
+          return "App " + app.id + " image must be HTTPS or renderer-relative.";
+        }
+      }
+      if (
+        (app.status === "live" || app.status === "fixture" || app.status === "degraded" || app.status === "archived") &&
+        !app.href
+      ) {
+        return "App " + app.id + " requires href for status " + app.status;
+      }
+    }
+    return null;
+  }
+
+  function renderNotice(root, message, detail) {
     root.innerHTML = "";
     var notice = el("div", "labyrinth-notice");
     notice.appendChild(el("strong", null, message));
@@ -29,15 +106,30 @@
     root.appendChild(notice);
   }
 
-  function renderRegistry(root, registry) {
+  function renderSourceBanner(root, label) {
+    var banner = el("div", "labyrinth-source-banner", label);
+    root.appendChild(banner);
+  }
+
+  function resolveImageUrl(image) {
+    if (!image) return null;
+    if (/^https:\/\//i.test(image)) return image;
+    if (image.indexOf("/") === 0) return image;
+    return image;
+  }
+
+  function renderRegistry(root, registry, sourceLabel) {
     root.innerHTML = "";
+    if (sourceLabel) renderSourceBanner(root, sourceLabel);
+
     var grid = el("div", "labyrinth-grid");
 
     registry.apps.forEach(function (app) {
       var card = el("article", "labyrinth-card");
 
       var preview = el("div", "labyrinth-card-preview" + (app.image ? "" : " placeholder"));
-      if (app.image) preview.style.backgroundImage = "url('" + app.image + "')";
+      var imageUrl = resolveImageUrl(app.image);
+      if (imageUrl) preview.style.backgroundImage = "url('" + imageUrl.replace(/'/g, "%27") + "')";
       card.appendChild(preview);
 
       var body = el("div", "labyrinth-card-body");
@@ -71,45 +163,46 @@
     root.appendChild(grid);
   }
 
-  function basicValidate(registry) {
-    if (!registry || typeof registry !== "object") return "Registry is not an object.";
-    if (registry.schemaVersion !== "hnxj-labyrinth-registry-v1") return "Unsupported schemaVersion.";
-    if (!Array.isArray(registry.apps) || registry.apps.length === 0) return "Registry apps array is empty.";
-    var allowed = { live: 1, fixture: 1, degraded: 1, archived: 1, unavailable: 1, planned: 1 };
-    for (var i = 0; i < registry.apps.length; i++) {
-      var app = registry.apps[i];
-      if (!app.id || !app.title || !app.status || !allowed[app.status]) return "Invalid app entry at index " + i;
-      if ((app.status === "live" || app.status === "fixture" || app.status === "degraded" || app.status === "archived") && !app.href) {
-        return "App " + app.id + " requires href for status " + app.status;
+  function fetchJson(url) {
+    return fetch(url, { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    }).then(function (text) {
+      try {
+        return JSON.parse(text);
+      } catch (err) {
+        throw new Error("Invalid JSON");
       }
-      if (!app.reason) return "App " + app.id + " requires reason.";
-      if (app.href && !/^https:\/\//i.test(app.href)) return "App " + app.id + " href must be public HTTPS.";
-    }
-    return null;
+    });
+  }
+
+  function loadRegistry() {
+    return fetchJson(REMOTE_REGISTRY_URL).then(function (registry) {
+      var err = validateRegistry(registry);
+      if (err) throw new Error(err);
+      return { registry: registry, sourceLabel: null };
+    }).catch(function () {
+      return fetchJson(FALLBACK_REGISTRY_URL).then(function (registry) {
+        var err = validateRegistry(registry);
+        if (err) throw new Error(err);
+        return { registry: registry, sourceLabel: "CATALOG SNAPSHOT" };
+      });
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     var root = document.getElementById("labyrinth-gallery");
     if (!root) return;
 
-    fetch("registry.json", { cache: "no-store" })
-      .then(function (res) {
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        return res.json();
-      })
-      .then(function (registry) {
-        var err = basicValidate(registry);
-        if (err) {
-          renderDegraded(root, "Labyrinth registry degraded", err);
-          return;
-        }
-        renderRegistry(root, registry);
+    loadRegistry()
+      .then(function (result) {
+        renderRegistry(root, result.registry, result.sourceLabel);
       })
       .catch(function (error) {
-        renderDegraded(
+        renderNotice(
           root,
           "Labyrinth registry unavailable",
-          error && error.message ? error.message : "Could not load registry.json",
+          error && error.message ? error.message : "Could not load a valid registry.",
         );
       });
   });

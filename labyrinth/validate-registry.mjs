@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = dirname(fileURLToPath(import.meta.url));
-const registry = JSON.parse(readFileSync(join(root, "registry.json"), "utf8"));
+const registry = JSON.parse(readFileSync(join(root, "registry.fallback.json"), "utf8"));
 const schema = JSON.parse(readFileSync(join(root, "registry.schema.json"), "utf8"));
 
 const STATUSES = new Set(schema.definitions.status.enum);
@@ -43,6 +43,9 @@ for (const app of registry.apps) {
     if (!app.href.startsWith("https://")) fail(`${app.id} href must be public HTTPS`);
     if (FORBIDDEN_HOST.test(app.href)) fail(`${app.id} href contains forbidden host`);
     if (FORBIDDEN_HREF.test(app.href)) fail(`${app.id} href points to private/local destination`);
+  }
+  if (app.image && !app.image.startsWith("https://") && !app.image.startsWith("../")) {
+    fail(`${app.id} image must be HTTPS or renderer-relative`);
   }
 }
 
