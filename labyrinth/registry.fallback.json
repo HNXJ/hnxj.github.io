@@ -12,7 +12,7 @@
       "kind": "application",
       "provenance": "HNXJ/jaxfne",
       "updated": "2026-09-09",
-      "image": "../assets/images/winter_opt.png"
+      "image": "../assets/images/juluminance.png"
     },
     {
       "id": "jnwb",
@@ -23,7 +23,8 @@
       "reason": "Open-source research library on GitHub.",
       "kind": "application",
       "provenance": "HNXJ/jnwb",
-      "updated": "2026-09-09"
+      "updated": "2026-09-09",
+      "image": "../assets/images/ivaluminance.png"
     },
     {
       "id": "labyrinth-protocol",
@@ -60,38 +61,6 @@
       "updated": "2026-09-09"
     },
     {
-      "id": "jynx-lobby",
-      "title": "Lobby",
-      "description": "Governed cognitive workspace — compile, propose, adjudicate.",
-      "href": "https://jynx-ten.vercel.app/lobby",
-      "status": "unavailable",
-      "reason": "Requires live Gravia engine; GRAVIA_HTTP_URL is not configured on public deployment.",
-      "kind": "surface",
-      "provenance": "HNXJ/jynx",
-      "updated": "2026-09-09"
-    },
-    {
-      "id": "gravia",
-      "title": "Gravia",
-      "description": "Canonical epistemic engine — governed admission, durable state, and execution audit.",
-      "href": "https://github.com/HNXJ/Gravia",
-      "status": "planned",
-      "reason": "Engine source and durable HTTP boundary; public remote service pending D4/D5.",
-      "kind": "application",
-      "provenance": "HNXJ/Gravia",
-      "updated": "2026-09-09"
-    },
-    {
-      "id": "agent-runs",
-      "title": "Agent Runs",
-      "description": "Bounded compile → adapt → invoke → parse turns that stop for human review.",
-      "status": "unavailable",
-      "reason": "Hosted inside Lobby; unavailable without live Gravia on public deployment.",
-      "kind": "surface",
-      "provenance": "HNXJ/jynx",
-      "updated": "2026-09-09"
-    },
-    {
       "id": "gammarena",
       "title": "Gamma Arena",
       "description": "Tournament observation surface and science wiki.",
@@ -123,16 +92,6 @@
       "reason": "Static media gallery on GitHub Pages.",
       "kind": "catalog",
       "provenance": "HNXJ/hnxj.github.io",
-      "updated": "2026-09-09"
-    },
-    {
-      "id": "artifacts",
-      "title": "Artifacts",
-      "description": "Research outputs, reports, figures, and datasets.",
-      "status": "planned",
-      "reason": "Object storage and governed catalog not yet deployed.",
-      "kind": "catalog",
-      "provenance": "HNXJ",
       "updated": "2026-09-09"
     }
   ]

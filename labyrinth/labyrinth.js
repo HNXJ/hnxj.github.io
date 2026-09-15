@@ -31,6 +31,7 @@
   };
 
   var FORBIDDEN_HOST = /localhost|127\.0\.0\.1|0\.0\.0\.0|::1|\.local\b/i;
+  var DEFAULT_IMAGE_URL = "../assets/images/keluminance.png";
 
   function el(tag, className, text) {
     var node = document.createElement(tag);
@@ -127,9 +128,10 @@
     registry.apps.forEach(function (app) {
       var card = el("article", "labyrinth-card");
 
-      var preview = el("div", "labyrinth-card-preview" + (app.image ? "" : " placeholder"));
+      var preview = el("div", "labyrinth-card-preview");
       var imageUrl = resolveImageUrl(app.image);
-      if (imageUrl) preview.style.backgroundImage = "url('" + imageUrl.replace(/'/g, "%27") + "')";
+      if (!imageUrl) imageUrl = DEFAULT_IMAGE_URL;
+      preview.style.backgroundImage = "url('" + imageUrl.replace(/'/g, "%27") + "')";
       card.appendChild(preview);
 
       var body = el("div", "labyrinth-card-body");
