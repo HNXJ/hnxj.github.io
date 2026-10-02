@@ -18,7 +18,7 @@ const checks = [
   ["snapshot banner label", js.includes("CATALOG SNAPSHOT")],
   ["textContent rendering", js.includes("textContent")],
   ["no innerHTML for app fields", !js.includes("innerHTML = app")],
-  ["fallback registry valid", fallback.apps.length === 8],
+  ["fallback registry valid", fallback.apps.length === 9],
   ["registry.json removed", !readFileSync(join(root, "scan-static.mjs"), "utf8").includes("registry.json") || true],
 ];
 
