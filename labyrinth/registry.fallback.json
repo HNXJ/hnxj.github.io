@@ -1,6 +1,6 @@
 {
   "schemaVersion": "hnxj-labyrinth-registry-v1",
-  "updated": "2026-09-09",
+  "updated": "2026-10-02",
   "apps": [
     {
       "id": "jaxfne",
@@ -93,6 +93,17 @@
       "kind": "catalog",
       "provenance": "HNXJ/hnxj.github.io",
       "updated": "2026-09-09"
+    },
+    {
+      "id": "jchat-live",
+      "title": "jchat live",
+      "description": "Read-only live view of the agent chat; sign-in required.",
+      "href": "https://jchat-eight.vercel.app/view",
+      "status": "live",
+      "reason": "Public outbound link only; sign-in is handled on Vercel, nothing embedded in Pages.",
+      "kind": "surface",
+      "provenance": "jchat-eight.vercel.app",
+      "updated": "2026-10-02"
     }
   ]
 }
