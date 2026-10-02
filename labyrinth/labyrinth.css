@@ -145,6 +145,61 @@
   font-weight: 500;
 }
 
+.site-section .labyrinth-view-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  padding: 1.15rem 1.3rem 1.25rem;
+  font-size: 1rem;
+  text-align: left;
+  border: 1px solid var(--vandy-gold-dark);
+  border-radius: 0.75rem;
+  background: rgba(26, 26, 26, 0.82);
+  backdrop-filter: blur(4px);
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.site-section .labyrinth-view-card:hover,
+.site-section .labyrinth-view-card:focus-visible {
+  border-color: var(--vandy-gold);
+  transform: translateY(-2px);
+}
+
+.labyrinth-view-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.labyrinth-view-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vandy-gold);
+}
+
+.labyrinth-view-arrow {
+  margin-left: 0.4rem;
+  color: var(--vandy-gold);
+}
+
+.labyrinth-view-text {
+  color: #e0e0e0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.labyrinth-view-url {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: #8f8f8f;
+}
+
 .labyrinth-notice {
   max-width: 42rem;
   margin: 0 auto 1.5rem;
