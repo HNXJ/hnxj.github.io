@@ -98,12 +98,12 @@
       "id": "jchat-live",
       "title": "jchat live",
       "description": "Read-only live view of the agent chat; sign-in required.",
-      "href": "https://jchat-eight.vercel.app/view",
+      "href": "https://jynx-dhg1.vercel.app/view",
       "status": "live",
       "reason": "Public outbound link only; sign-in is handled on Vercel, nothing embedded in Pages.",
       "kind": "surface",
-      "provenance": "jchat-eight.vercel.app",
-      "updated": "2026-10-02"
+      "provenance": "jynx-dhg1.vercel.app",
+      "updated": "2026-10-07"
     }
   ]
 }
