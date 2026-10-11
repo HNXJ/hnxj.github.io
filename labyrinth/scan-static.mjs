@@ -30,6 +30,37 @@ for (const file of files) {
   }
 }
 
+// labyrinth/jchat/ is the one public page that signs in to a hub (AGENTS.md, "Single exception"). Its own rules:
+// no literal secret values, URL literals name only loopback hosts, and no innerHTML or outerHTML writes.
+const jchatDir = join(root, "jchat");
+const jchatFiles = readdirSync(jchatDir).filter((f) => /\.(html|css|js)$/.test(f));
+const HEX48 = /(?<![0-9a-fA-F])[0-9a-fA-F]{48,}(?![0-9a-fA-F])/;
+const SK_KEY = /\bsk-[A-Za-z0-9_-]{10,}/;
+const BEARER_VALUE = /Bearer\s+[A-Za-z0-9._~+\/-]{16,}/;
+const URL_AUTHORITY = /\b(?:https?|wss?):\/\/([^\/\s"'`<>\\?#]+)/gi;
+const LOOPBACK_HOST = /^(127\.0\.0\.1|localhost)$/i;
+const INNER_HTML = /\.(?:innerHTML|outerHTML)\s*\+?=|insertAdjacentHTML\s*\(|document\.write(?:ln)?\s*\(/;
+
+for (const file of jchatFiles) {
+  const text = readFileSync(join(jchatDir, file), "utf8");
+  if (HEX48.test(text) || SK_KEY.test(text) || BEARER_VALUE.test(text)) {
+    console.error(`SCAN FAIL jchat/${file}: literal secret value`);
+    failed = true;
+  }
+  for (const m of text.matchAll(URL_AUTHORITY)) {
+    const host = m[1].split("@").pop().replace(/:(\d+|\*)$/, "");
+    if (!LOOPBACK_HOST.test(host)) {
+      console.error(`SCAN FAIL jchat/${file}: URL literal names a host other than 127.0.0.1 or localhost`);
+      failed = true;
+      break;
+    }
+  }
+  if (INNER_HTML.test(text)) {
+    console.error(`SCAN FAIL jchat/${file}: innerHTML or outerHTML write (message text is inserted as text)`);
+    failed = true;
+  }
+}
+
 if (failed) process.exit(1);
-console.log(`STATIC SCAN OK: ${files.length} labyrinth files`);
+console.log(`STATIC SCAN OK: ${files.length} labyrinth files, ${jchatFiles.length} jchat files`);
 process.exit(0);
