@@ -33,6 +33,8 @@ the PRP backlog that rides on it.
 - **No Mutation Handlers**: No `onclick` or `addEventListener` on mutation-shaped controls.
 - **Static Only**: Public surfaces are read-only observation artifacts.
 
+**Single exception: `labyrinth/jchat/`.** Owner decision, 2026-10-11 ("labyrinth signs in"). The jchat viewer in that folder may sign in to a hub with a username and password, call it with `fetch`, and show its send box and room controls, which the hub's session flags allow or refuse. It is the only page exempt from the four rules above. What still holds there: no credentials, tokens, usernames or private hostnames in its source; the default hub is loopback only (127.0.0.1); the source holds no hub address except the loopback default, and the user types any other hub at runtime; a link may name only this PC's loopback hub. `labyrinth/scan-static.mjs` enforces the source rules for that folder.
+
 
 
 ## GAMMA-BUS Coordination Doctrine

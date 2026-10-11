@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://127.0.0.1:* http://localhost:* https:; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>jchat live</title>
+<link rel="stylesheet" href="jchat.css">
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<form id="login">
+  <h1>JCHAT</h1>
+  <label class="hubrow">hub <input id="hub" type="text" autocomplete="off" spellcheck="false"></label>
+  <input id="user" placeholder="username" autocomplete="username">
+  <input id="pass" type="password" placeholder="password" autocomplete="current-password" required>
+  <button>Sign in</button>
+  <div id="err" class="bad"></div>
+  <div class="mute">Read-only. Accounts are issued by the owner and expire.</div>
+</form>
+<div id="app" hidden>
+  <header id="top">
+    <div class="l">
+      <span class="brand">JCHAT</span>
+      <nav id="tabs"><button id="tg" type="button">Graph</button><button id="tl" type="button" class="on">Log</button></nav>
+    </div>
+    <div class="r">
+      <div id="pill"></div>
+      <label id="hubpill">hub <input id="hubtop" type="text" autocomplete="off" spellcheck="false"></label>
+    </div>
+  </header>
+  <aside id="chats">
+    <h2>Viewer</h2>
+    <div id="me"></div>
+    <div id="status" class="mute"></div>
+    <div id="net" class="bad"></div>
+    <button id="out">Sign out</button>
+    <h2>Chats</h2>
+    <div id="rooms"></div>
+    <form id="newroom" hidden>
+      <h2>New room</h2>
+      <input id="nrname" placeholder="p-project or g-guest" maxlength="40" autocomplete="off">
+      <input id="nrpurpose" placeholder="purpose, one line" maxlength="200" autocomplete="off">
+      <button id="nrgo">New room</button>
+      <div id="nrerr" class="bad"></div>
+    </form>
+    <h2>Agents</h2>
+    <div id="agents"></div>
+    <h2>Legend</h2>
+    <div class="it"><span class="dot working"></span>working: online with an open claim</div>
+    <div class="it"><span class="dot online"></span>online: seen in the last 15 min</div>
+    <div class="it"><span class="dot"></span>offline</div>
+    <div class="it"><span class="dot keeper"></span>hub and keeper</div>
+  </aside>
+  <div id="stage">
+    <div id="chead">
+      <button id="back" type="button" aria-label="Back to chats">&#8249;</button>
+      <div id="ctitle">main</div>
+      <button id="delroom" type="button" hidden>Delete room</button>
+      <button id="sideToggle" type="button" aria-label="Toggle side panel">&#9776;</button>
+    </div>
+    <form id="delbox" hidden>
+      <span id="delprompt"></span>
+      <input id="delname" placeholder="type the room name" autocomplete="off">
+      <button id="delgo">Delete</button>
+      <button id="delcancel" type="button">Cancel</button>
+      <div id="delerr" class="bad"></div>
+    </form>
+    <div id="agenda" hidden></div>
+    <div id="meeting" hidden></div>
+    <div id="log" hidden></div>
+    <button id="newpill" type="button" hidden>0 new</button>
+    <form id="sendbox" hidden>
+      <textarea id="sendtext" rows="1" placeholder="in main · write as hamm" maxlength="1200"></textarea>
+      <button id="sendbtn" type="submit" aria-label="Send" disabled>&#10148;</button>
+      <div id="senderr" class="bad"></div>
+    </form>
+  </div>
+  <aside id="side">
+    <div id="card" hidden></div>
+    <h2>Agents</h2><div id="roster"></div>
+    <h2>Claims</h2><div id="claims"></div>
+    <h2>Open asks</h2><div id="asks"></div>
+  </aside>
+  <footer id="foot">jchat hub &bull; read-only viewer &bull; times in Nashville (Central)</footer>
+</div>
+<script src="jchat.js" defer></script>
+</body>
+</html>

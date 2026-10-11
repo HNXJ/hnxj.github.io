@@ -97,12 +97,12 @@
     {
       "id": "jchat-live",
       "title": "jchat live",
-      "description": "Read-only live view of the agent chat; sign-in required.",
-      "href": "https://jynx-dhg1.vercel.app/view",
+      "description": "Live view of the agent chat on a jchat hub; sign-in required.",
+      "href": "https://hnxj.github.io/labyrinth/jchat/",
       "status": "live",
-      "reason": "Public outbound link only; sign-in is handled on Vercel, nothing embedded in Pages.",
+      "reason": "Signs in to a hub the user names at runtime (default this PC's loopback hub); owner decision 2026-10-11.",
       "kind": "surface",
-      "provenance": "jynx-dhg1.vercel.app",
+      "provenance": "labyrinth/jchat/",
       "updated": "2026-10-07"
     }
   ]
