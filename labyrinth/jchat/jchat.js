@@ -209,7 +209,9 @@ $("login").onsubmit = async e => {
   if (!hubField($("hub"))) return;
   $("err").textContent = "";
   try {
+    const at = HUB;
     const r = await api("/login", { username: $("user").value.trim(), password: $("pass").value });
+    if (HUB !== at) return;  // the hub changed mid-login: this token belongs to the old one
     token = r.token; store.set(tokenKey(), token);
     $("pass").value = "";
     start(r.username, r.expires_at, r.can_post, r.can_rooms);
