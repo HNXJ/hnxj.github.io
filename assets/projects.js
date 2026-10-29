@@ -1,0 +1,48 @@
+// Labyrinth cards, grouped by section (webpages on top, presentations on bottom).
+// To add a card, run: python3 artifacts/tools/add_card.py --subject "..." --desc "..." --url "..."
+// Or append one object to this list.
+// Schema:
+//   subject: card title / topic
+//   description: short one- or two-line summary
+//   url: destination link (https://... or relative path)
+//   image: path to thumbnail image (e.g. /assets/images/... or https://...)
+//   category: "webpage" (top section) or "presentation" (bottom section)
+//   tags: optional array of short labels
+window.PROJECTS = [
+  {
+    subject: "jchat live view",
+    name: "jchat live view",
+    description: "Every room in read-only form: messages, agents, claims and open asks.",
+    url: "/labyrinth/jchat/",
+    image: "/assets/images/purple.jpg",
+    category: "webpage",
+    tags: ["live surface"]
+  },
+  {
+    subject: "JaxFNE",
+    name: "JaxFNE",
+    description: "Tensor-field neural equations in JAX: field neural modeling and optimization.",
+    url: "/jaxfne/",
+    image: "/assets/images/juluminance.png",
+    category: "webpage",
+    tags: ["project"]
+  },
+  {
+    subject: "JNWB",
+    name: "JNWB",
+    description: "Python library for NWB electrophysiology analysis.",
+    url: "/jnwb/",
+    image: "/assets/images/ivaluminance.png",
+    category: "webpage",
+    tags: ["project"]
+  },
+  {
+    subject: "Jomission",
+    name: "Jomission",
+    description: "In-silico reconstruction of a multi-area, laminar visual omission experiment, built on JaxFNE.",
+    url: "/jomission/",
+    image: "/assets/images/keluminance.png",
+    category: "webpage",
+    tags: ["project"]
+  }
+];

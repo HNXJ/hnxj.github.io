@@ -7,7 +7,8 @@ Thumbs.db
 # Development artifacts
 __pycache__/
 *.pyc
-artifacts/
+artifacts/acceptance-*/
+artifacts/.lab/
 *.log
 .tempmediaStorage/
 scratch/
