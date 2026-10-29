@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>jnwb: Dataset-Agnostic Ephys & Agent Tools · Slides</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #000; color: #cfb87c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #111; border-bottom: 1px solid #222; font-size: 0.9rem; }
+    header a { color: #cfb87c; text-decoration: none; font-weight: 600; }
+    header a:hover { text-decoration: underline; }
+    .nav-btn { background: #1a1a1a; color: #cfb87c; border: 1px solid #333; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+    .nav-btn:hover { background: #2a2a2a; border-color: #cfb87c; }
+    main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 16px; position: relative; cursor: pointer; }
+    img.slide-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,0,0,0.8); }
+    footer { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #111; border-top: 1px solid #222; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../">← Return to site</a>
+    <span id="deck-title">jnwb: Dataset-Agnostic Ephys & Agent Tools</span>
+    <a href="slides.pdf" target="_blank" download>Download PDF ↗</a>
+  </header>
+  <main id="slide-container">
+    <img id="current-slide" class="slide-img" src="pages/page-01.png" alt="Slide 1" />
+  </main>
+  <footer>
+    <button class="nav-btn" id="prev-btn">← Prev</button>
+    <span id="counter">Slide 1 / 11</span>
+    <button class="nav-btn" id="next-btn">Next →</button>
+  </footer>
+  <script>
+    var total = 11;
+    var current = 1;
+    var img = document.getElementById('current-slide');
+    var counter = document.getElementById('counter');
+    function show(n) {
+      if (n < 1) n = 1;
+      if (n > total) n = total;
+      current = n;
+      var pad = (current < 10 ? '0' : '') + current;
+      img.src = 'pages/page-' + pad + '.png';
+      img.alt = 'Slide ' + current;
+      counter.textContent = 'Slide ' + current + ' / ' + total;
+    }
+    document.getElementById('prev-btn').onclick = function() { show(current - 1); };
+    document.getElementById('next-btn').onclick = function() { show(current + 1); };
+    document.getElementById('slide-container').onclick = function() { show(current + 1); };
+    window.onkeydown = function(e) {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') show(current + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(current - 1);
+    };
+  </script>
+</body>
+</html>

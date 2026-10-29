@@ -44,5 +44,7 @@ window.PROJECTS = [
     image: "/assets/images/keluminance.png",
     category: "webpage",
     tags: ["project"]
-  }
+  },
+  {subject: "jnwb: Agent-Assisted Ephys", name: "jnwb: Agent-Assisted Ephys", description: "Dataset-agnostic electrophysiology analysis and verifiable agent tools.", url: "/slides/jnwb/", image: "/slides/jnwb/thumb.png", category: "presentation", tags: ["slides"]},
+  {subject: "JaxFNE: Spectrolaminar Dynamics", name: "JaxFNE: Spectrolaminar Dynamics", description: "Tensor-field neural equations, oscillations, and laminar LFP microcircuits.", url: "/slides/jaxfne/", image: "/slides/jaxfne/thumb.png", category: "presentation", tags: ["slides"]}
 ];
