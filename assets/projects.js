@@ -45,6 +45,6 @@ window.PROJECTS = [
     category: "webpage",
     tags: ["project"]
   },
-  {subject: "jnwb: Agent-Assisted Ephys", name: "jnwb: Agent-Assisted Ephys", description: "Dataset-agnostic electrophysiology analysis and verifiable agent tools.", url: "/slides/jnwb/", image: "/slides/jnwb/thumb.png", category: "presentation", tags: ["slides"]},
+  {subject: "jnwb: Spike and Field", name: "jnwb: Spike and Field", description: "Spike-field phase coupling by area and epoch from an omission session.", url: "/slides/jnwb/", image: "/slides/jnwb/thumb.png", category: "presentation", tags: ["slides"]},
   {subject: "JaxFNE: Spectrolaminar Dynamics", name: "JaxFNE: Spectrolaminar Dynamics", description: "Tensor-field neural equations, oscillations, and laminar LFP microcircuits.", url: "/slides/jaxfne/", image: "/slides/jaxfne/thumb.png", category: "presentation", tags: ["slides"]}
 ];
