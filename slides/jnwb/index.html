@@ -6,29 +6,108 @@
   <title>jnwb: Spike and Field · Slides</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #000; color: #cfb87c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #111; border-bottom: 1px solid #222; font-size: 0.9rem; }
+    html, body {
+      background: #000;
+      color: #cfb87c;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    header {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #111;
+      border-bottom: 1px solid #222;
+      font-size: 0.9rem;
+      z-index: 10;
+    }
     header a { color: #cfb87c; text-decoration: none; font-weight: 600; }
     header a:hover { text-decoration: underline; }
-    .nav-btn { background: #1a1a1a; color: #cfb87c; border: 1px solid #333; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
-    .nav-btn:hover { background: #2a2a2a; border-color: #cfb87c; }
-    main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 16px; position: relative; cursor: pointer; }
-    img.slide-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,0,0,0.8); }
-    footer { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #111; border-top: 1px solid #222; font-size: 0.85rem; color: #888; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      background: #1a1a1a;
+      color: #cfb87c;
+      border: 1px solid #333;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .nav-btn:hover { background: #2a2a2a; border-color: #cfb87c; text-decoration: none; }
+    main {
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 16px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    img.slide-img {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.9);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    footer {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #111;
+      border-top: 1px solid #222;
+      font-size: 0.85rem;
+      color: #888;
+      z-index: 10;
+    }
+    .footer-center { display: flex; align-items: center; gap: 16px; }
+    .hint { font-size: 0.75rem; color: #666; }
+    @media (max-width: 600px) {
+      .hint { display: none; }
+      header, footer { padding: 8px 12px; font-size: 0.8rem; }
+      main { padding: 4px; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <a href="../../">← Return to site</a>
+    <a href="../../labyrinth/">← Return to labyrinth</a>
     <span id="deck-title">jnwb: Spike and Field</span>
-    <a href="slides.pdf" target="_blank" download>Download PDF ↗</a>
+    <div class="header-actions">
+      <button class="nav-btn" id="fs-btn" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+      <a href="slides.pdf" target="_blank" download class="nav-btn">PDF ↗</a>
+    </div>
   </header>
-  <main id="slide-container">
+  <main id="slide-container" title="Click to advance (or use ← / → arrows)">
     <img id="current-slide" class="slide-img" src="pages/page-01.png" alt="Slide 1" />
   </main>
   <footer>
     <button class="nav-btn" id="prev-btn">← Prev</button>
-    <span id="counter">Slide 1 / 11</span>
+    <div class="footer-center">
+      <span id="counter">Slide 1 / 11</span>
+      <span class="hint">Click or press Space / Arrows to navigate</span>
+    </div>
     <button class="nav-btn" id="next-btn">Next →</button>
   </footer>
   <script>
@@ -45,12 +124,32 @@
       img.alt = 'Slide ' + current;
       counter.textContent = 'Slide ' + current + ' / ' + total;
     }
-    document.getElementById('prev-btn').onclick = function() { show(current - 1); };
-    document.getElementById('next-btn').onclick = function() { show(current + 1); };
+    document.getElementById('prev-btn').onclick = function(e) { e.stopPropagation(); show(current - 1); };
+    document.getElementById('next-btn').onclick = function(e) { e.stopPropagation(); show(current + 1); };
     document.getElementById('slide-container').onclick = function() { show(current + 1); };
+
+    var fsBtn = document.getElementById('fs-btn');
+    function toggleFs() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+    if (fsBtn) fsBtn.onclick = toggleFs;
+
     window.onkeydown = function(e) {
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') show(current + 1);
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(current - 1);
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        show(current + 1);
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        show(current - 1);
+      }
+      if (e.key === 'f' || e.key === 'F') {
+        toggleFs();
+      }
     };
   </script>
 </body>
