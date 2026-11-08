@@ -296,31 +296,3 @@ CircleAudioPlayer.prototype = {
 };
 
 
-// now init one as an example
-var cap1 = new CircleAudioPlayer({
-	audio: 'https://www.wga.hu/music1/18_cent/vivaldi_rv297_winter.mp3',
-  size: 120,
-  borderWidth: 4
-});
-cap1.appendTo(playerContainer1);
-
-var cap2 = new CircleAudioPlayer({
-	audio: 'musics/RV521 Concerto In A For 2 Violins.mp3',
-  size: 120,
-  borderWidth: 4
-});
-cap2.appendTo(playerContainer2);
-
-var cap3 = new CircleAudioPlayer({
-	audio: 'https://www.wga.hu/music1/19_cent/tchaikovsky_nutcracker_waltz.mp3',
-  size: 120,
-  borderWidth: 4
-});
-cap3.appendTo(playerContainer3);
-
-var cap4 = new CircleAudioPlayer({
-	audio: 'https://dorar.at/LARGE/PuretuneMp3/xjiy0w-PgP7njkYfiVSjKA/1633838400/201405/199.mp3',
-  size: 120,
-  borderWidth: 4
-});
-cap4.appendTo(playerContainer4);

@@ -154,7 +154,7 @@ jQuery(document).ready(function($) {
 	    fixedContentPos: false
 	  });
 	};
-	siteMagnificPopup();
+	if ($.fn.magnificPopup) siteMagnificPopup();
 
 
 	var siteCarousel = function () {
@@ -235,7 +235,7 @@ jQuery(document).ready(function($) {
 	    scrollProperty: 'scroll'
 	  });
 	};
-	siteStellar();
+	if ($.fn.stellar) siteStellar();
 
 	var siteCountDown = function() {
 
