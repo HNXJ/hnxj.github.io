@@ -23,6 +23,17 @@ body {
   border-bottom: 1px solid var(--vandy-gold-dark);
 }
 
+/* keep the logo on one line; smaller at phone width (col-8 is ~250px at 375px) */
+.site-navbar h1 a {
+  white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+  .site-navbar h1 a {
+    font-size: 1.35rem;
+  }
+}
+
 .site-navbar .site-menu > li > a {
   color: #FFFFFF !important;
   text-transform: uppercase;
