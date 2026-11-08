@@ -7,20 +7,6 @@
   line-height: 1.7;
 }
 
-.labyrinth-source-banner {
-  max-width: 42rem;
-  margin: 0 auto 1rem;
-  text-align: center;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #b0a090;
-  border: 1px solid rgba(134, 109, 75, 0.35);
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  background: rgba(26, 26, 26, 0.55);
-}
-
 .labyrinth-scope-note {
   display: inline-block;
   margin-top: 0.75rem;
@@ -96,40 +82,11 @@
   color: #9a9a9a;
 }
 
-.labyrinth-status {
-  font-size: 0.68rem;
-  font-family: "Roboto Mono", ui-monospace, monospace;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid rgba(134, 109, 75, 0.55);
-  white-space: nowrap;
-  color: #d4d4d4;
-}
-
-.labyrinth-status.live { color: #8fd6a8; }
-.labyrinth-status.fixture { color: #d4b5ff; }
-.labyrinth-status.degraded { color: #f0d58a; }
-.labyrinth-status.unavailable { color: #8a8a8a; }
-.labyrinth-status.planned { color: #8ecdf8; }
-.labyrinth-status.archived { color: #b0a090; }
-
 .labyrinth-desc {
   margin: 0;
   color: #e0e0e0;
   font-size: 0.92rem;
   flex: 1;
-}
-
-.labyrinth-reason {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #9a9a9a;
-}
-
-.labyrinth-meta {
-  font-size: 0.72rem;
-  font-family: "Roboto Mono", ui-monospace, monospace;
-  color: #777;
 }
 
 .labyrinth-action {
@@ -138,11 +95,6 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.labyrinth-action.disabled {
-  color: #8a8a8a;
-  font-weight: 500;
 }
 
 .site-section .labyrinth-view-card {
@@ -198,17 +150,6 @@
   font-family: "Roboto Mono", ui-monospace, monospace;
   font-size: 0.72rem;
   color: #8f8f8f;
-}
-
-.labyrinth-notice {
-  max-width: 42rem;
-  margin: 0 auto 1.5rem;
-  border: 1px solid rgba(207, 184, 124, 0.35);
-  background: rgba(207, 184, 124, 0.08);
-  color: #f0e2c0;
-  border-radius: 0.75rem;
-  padding: 1rem 1.1rem;
-  text-align: center;
 }
 
 .site-footer .footer-nav-links a {
