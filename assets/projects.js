@@ -10,11 +10,11 @@
 //   tags: optional array of short labels
 window.PROJECTS = [
   {
-    subject: "jchat live view",
-    name: "jchat live view",
+    subject: "jchat",
+    name: "jchat",
     description: "Every room in read-only form: messages, agents, claims and open asks.",
     url: "/labyrinth/jchat/",
-    image: "/assets/images/purple.jpg",
+    image: "/assets/images/jchat-violet.jpg",
     category: "webpage",
     tags: ["live surface"]
   },
@@ -32,7 +32,7 @@ window.PROJECTS = [
     name: "JNWB",
     description: "Python library for NWB electrophysiology analysis.",
     url: "/jnwb/",
-    image: "/assets/images/ivaluminance.png",
+    image: "/assets/images/jnwb-cool.jpg",
     category: "webpage",
     tags: ["project"]
   },
