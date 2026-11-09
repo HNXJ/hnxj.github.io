@@ -22,9 +22,10 @@
             cursor: pointer;
             overflow: hidden;
             height: 100%;
+            text-decoration: none;
         }
         .gallery-item:hover {
-            border-color: #CFB87C;
+            border-color: var(--vandy-gold);
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(207, 184, 124, 0.1);
         }
@@ -32,7 +33,7 @@
             padding: 20px;
         }
         .gallery-category {
-            color: #CFB87C;
+            color: var(--vandy-gold);
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -51,8 +52,19 @@
             height: 300px;
             min-height: 300px;
         }
-        .gallery-title {
+        .hero-title {
             font-family: 'Roboto Mono', monospace;
+        }
+        .gallery-muted {
+            color: #767676;
+        }
+        .gallery-desc {
+            font-size: 0.9rem;
+        }
+        .gallery-group-title {
+            font-family: 'Roboto Mono', monospace;
+            border-bottom: 1px solid rgba(207, 184, 124, 0.3);
+            padding-bottom: 1rem;
         }
     </style>
 </head>
@@ -68,7 +80,7 @@
                         </h1>
                     </div>
                     <div class="col-4 col-md-4 col-lg-8">
-                        <nav class="site-navigation text-right text-md-right" role="navigation">
+                        <nav class="site-navigation text-right">
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
                                 <li><a href="/"> Home </a></li>
                                 <li><a href="/pages/about/"> About </a></li>
@@ -84,26 +96,28 @@
             </div>
         </div>
 
-        <div class="site-blocks-cover overlay hero-banner" data-aos="fade">
-            <div class="container">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-md-7 text-center">
-                        <h2 class="text-white gallery-title"> Research Asset Gallery </h2>
-                        <p class="text-white-50"> High-fidelity visualizations from the GLLLM project. </p>
+        <main>
+            <div class="site-blocks-cover overlay hero-banner" data-aos="fade">
+                <div class="container">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-md-7 text-center">
+                            <h2 class="text-white hero-title"> Research Asset Gallery </h2>
+                            <p class="text-white-50"> High-fidelity visualizations from the GLLLM project. </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="site-section bg-dark">
-            <div class="container">
-                <div id="gallery-grid" class="row">
-                    <div class="col-12 text-center">
-                        <p class="text-muted">Loading gallery...</p>
+            <div class="site-section">
+                <div class="container">
+                    <div id="gallery-grid" class="row">
+                        <div class="col-12 text-center">
+                            <p class="gallery-muted">Loading gallery...</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script src="../../assets/js/jquery-3.3.1.min.js"></script>
@@ -119,7 +133,7 @@
                 gallery.innerHTML = '';
 
                 if (!data.gallery || data.gallery.length === 0) {
-                    gallery.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No gallery items yet.</p></div>';
+                    gallery.innerHTML = '<div class="col-12 text-center"><p class="gallery-muted">No gallery items yet.</p></div>';
                     return;
                 }
 
@@ -136,7 +150,7 @@
                     // Category header
                     const header = document.createElement('div');
                     header.className = 'col-12';
-                    header.innerHTML = `<h3 class="text-white mt-5 mb-4" style="font-family: 'Roboto Mono', monospace; border-bottom: 1px solid rgba(207, 184, 124, 0.3); padding-bottom: 1rem;">${category}</h3>`;
+                    header.innerHTML = `<h3 class="text-white mt-5 mb-4 gallery-group-title">${category}</h3>`;
                     gallery.appendChild(header);
 
                     // Items in category
@@ -145,12 +159,12 @@
                         col.className = 'col-md-6 col-lg-4 mb-4';
 
                         col.innerHTML = `
-                            <a href="${item.filename}" target="_blank" class="gallery-item d-block" style="text-decoration: none;">
+                            <a href="${item.filename}" target="_blank" class="gallery-item d-block">
                                 <div class="gallery-card-body">
                                     <div class="gallery-category">${item.category}</div>
-                                    <h5 class="gallery-title">${item.title}</h5>
-                                    <p class="text-muted mb-2" style="font-size: 0.9rem;">${item.description}</p>
-                                    <small class="text-muted d-block">${item.date}</small>
+                                    <h4 class="gallery-title">${item.title}</h4>
+                                    <p class="gallery-muted gallery-desc mb-2">${item.description}</p>
+                                    <small class="gallery-muted d-block">${item.date}</small>
                                 </div>
                             </a>
                         `;

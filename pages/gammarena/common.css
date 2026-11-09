@@ -154,6 +154,7 @@ nav {
     padding: 1rem 2rem;
     border-bottom: 1px solid var(--border-glow);
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     background: var(--glass-bg);
@@ -180,7 +181,7 @@ nav {
     text-transform: uppercase;
 }
 
-.nav-links { display: flex; gap: 2rem; }
+.nav-links { display: flex; flex-wrap: wrap; gap: 2rem; }
 .nav-link {
     color: var(--text-secondary);
     text-decoration: none;
@@ -189,8 +190,15 @@ nav {
     text-transform: uppercase;
     transition: all 0.3s ease;
     letter-spacing: 0.1em;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
 }
 .nav-link:hover, .nav-link.active { color: var(--accent-gold); }
+
+@media (max-width: 768px) {
+    nav, .nav-links { gap: 0.5rem 1rem; }
+}
 
 /* --- Canonical Logo Component (Gamma Mark) --- */
 .gamma-mark {
@@ -609,4 +617,26 @@ footer {
 .btn-cta:hover {
     background: var(--accent-gold);
     color: #000;
+}
+
+.disclaimer-banner {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid var(--accent-purple);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.disclaimer-label {
+    color: var(--accent-purple);
+    display: block;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::after, .neural-overlay, .hero-logo { animation: none; }
 }

@@ -18,21 +18,6 @@
             gap: 2rem;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 1rem;
-        }
-
-        .title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(to bottom, #fff, var(--accent-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .status-bar {
             display: flex;
             gap: 1.5rem;
@@ -55,7 +40,6 @@
 
         .status-degraded { color: var(--danger-color); }
         .status-connected { color: var(--accent-cyan); }
-        .status-grounded { color: #22c55e; }
 
         .grid {
             display: grid;
@@ -115,6 +99,8 @@
             text-align: center;
         }
 
+        .blog-post-unavailable { color: var(--text-secondary); }
+
         .card-label {
             color: var(--accent-gold);
             text-transform: uppercase;
@@ -145,17 +131,11 @@
         .footer {
             text-align: center;
             padding: 4rem 2rem;
-            opacity: 0.5;
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             border-top: 1px solid var(--border-glow);
             margin-top: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .title { font-size: 2rem; }
         }
 
         /* Observer Specific Hero Tweaks */
@@ -166,7 +146,7 @@
         
         /* Inline style refactors */
         .hero-subtitle { margin-bottom: 1rem; }
-        #clock { opacity: 0.4; font-family: monospace; font-size: 0.8rem; }
+        #clock { font-family: monospace; font-size: 0.8rem; }
         .container-flush { margin-top: 0; }
         #connectivity-detail { display: none; }
         .card-value-danger { color: var(--danger-color); }
@@ -226,7 +206,7 @@
             </div>
             <div class="card card-danger" id="card-agents">
                 <div class="card-label">Agent Roster</div>
-                <div class="card-value" id="val-agents" style="color: var(--danger-color);">N/A</div>
+                <div class="card-value card-value-danger" id="val-agents">N/A</div>
                 <div class="provenance" id="prov-agents"><span>NOTE:</span> Agent roster requires a live observation service.</div>
             </div>
             <div class="card" id="card-persistence">
@@ -236,7 +216,7 @@
             </div>
             <div class="card card-danger" id="card-progression">
                 <div class="card-label">Progression</div>
-                <div class="card-value" id="val-progression" style="color: var(--danger-color);">N/A</div>
+                <div class="card-value card-value-danger" id="val-progression">N/A</div>
                 <div class="provenance" id="prov-progression"><span>NOTE:</span> Event stream requires a live observation service.</div>
             </div>
             <div class="card" id="card-population">
@@ -288,8 +268,6 @@
                 <span class="btn-cta btn-cta-disabled">Operator Console (Internal Only)</span>
             </div>
             <div id="dispatch-feed" class="blog-feed">
-                <!-- Dispatches will be loaded here -->
-                <div class="blog-post blog-post-loading">Initializing Secure Dispatch Link...</div>
             </div>
         </section>
 
@@ -301,10 +279,7 @@
     <script>
         // Static-only observation surface. Live API retired from Pages ownership.
         document.getElementById('dispatch-feed').innerHTML =
-            '<div class="blog-post" style="color: var(--text-secondary)">Dispatch feed unavailable in static observation mode.</div>';
-
-        document.getElementById('card-agents').classList.add('card-danger');
-        document.getElementById('card-progression').classList.add('card-danger');
+            '<div class="blog-post blog-post-unavailable">Dispatch feed unavailable in static observation mode.</div>';
 
         setInterval(function () {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
