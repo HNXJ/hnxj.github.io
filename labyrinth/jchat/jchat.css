@@ -53,7 +53,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .row:hover { background:var(--soft); }
 .row.on { background:var(--soft); box-shadow:inset 2px 0 0 var(--acc); }
 .av { position:relative; flex:0 0 auto; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  font:600 13px var(--mono); color:#fff; background:var(--dim); }
+  font:600 13px var(--mono); color:#fff; }
 .av.h0 { background:#c2410c; } .av.h1 { background:#b3261e; } .av.h2 { background:#6d28d9; } .av.h3 { background:#0b6fa4; }
 .av.h4 { background:#0e7a3f; } .av.h5 { background:#8a5a00; } .av.h6 { background:#8b2f6b; } .av.h7 { background:#334155; }
 .av .pdot { position:absolute; right:-1px; bottom:-1px; margin:0; width:9px; height:9px; border:2px solid var(--glass); }
@@ -154,8 +154,7 @@ button.it:hover { color:var(--fg); border-color:var(--soft); }
 .hubrow input { flex:1 1 auto; min-width:0; }
 /* ---- composer: an auto-growing bar that sticks to the bottom ---- */
 #sendbox { display:flex; gap:8px; align-items:center; padding:10px 12px; background:var(--glass); backdrop-filter:blur(10px);
-  border:1px solid var(--line); border-radius:16px; }
-#sendbox { flex:0 0 auto; }
+  border:1px solid var(--line); border-radius:16px; flex:0 0 auto; }
 #sendtext { flex:1 1 auto; resize:none; min-height:24px; max-height:110px; line-height:22px; padding:6px 10px; border-radius:12px; }
 #sendbtn { flex:0 0 auto; width:38px; height:38px; padding:0; border:0; border-radius:50%; background:var(--acc); color:var(--badge-fg); font-size:16px; }
 #sendbtn:hover:not(:disabled) { background:var(--gold-d); color:#fff; }

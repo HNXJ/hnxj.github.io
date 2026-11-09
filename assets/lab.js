@@ -4,38 +4,36 @@
   "use strict";
 
   function el(tag, className, text) {
-    var node = document.createElement(tag);
+    const node = document.createElement(tag);
     if (className) node.className = className;
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
   }
 
   function renderCards() {
-    var webRoot = document.getElementById("cards-webpages");
-    var presRoot = document.getElementById("cards-presentations");
+    const webRoot = document.getElementById("cards-webpages");
+    const presRoot = document.getElementById("cards-presentations");
 
     if (!webRoot && !presRoot) return;
 
-    var projects = window.PROJECTS || [];
-    var presCount = 0;
-    var webCount = 0;
+    const projects = window.PROJECTS || [];
+    let presCount = 0;
 
     projects.forEach(function (p) {
-      var isPres = p.category === "presentation" || (p.tags && p.tags.indexOf("slides") !== -1);
-      var target = (isPres && presRoot) ? presRoot : webRoot;
+      const isPres = p.category === "presentation" || (p.tags && p.tags.indexOf("slides") !== -1);
+      const target = (isPres && presRoot) ? presRoot : webRoot;
       if (!target) return;
 
       if (isPres) presCount++;
-      else webCount++;
 
-      var card = el("a", "labyrinth-card");
+      const card = el("a", "labyrinth-card");
       card.href = p.url;
       if (p.url && (p.url.indexOf("http://") === 0 || p.url.indexOf("https://") === 0)) {
         card.target = "_blank";
         card.rel = "noopener noreferrer";
       }
 
-      var preview = el("div", "labyrinth-card-preview");
+      const preview = el("div", "labyrinth-card-preview");
       if (p.image) {
         preview.style.backgroundImage = "url('" + p.image.replace(/'/g, "%27") + "')";
       } else {
@@ -43,8 +41,8 @@
       }
       card.appendChild(preview);
 
-      var body = el("div", "labyrinth-card-body");
-      var header = el("div", "labyrinth-card-header");
+      const body = el("div", "labyrinth-card-body");
+      const header = el("div", "labyrinth-card-header");
       header.appendChild(el("h3", null, p.subject || p.name));
       body.appendChild(header);
 
