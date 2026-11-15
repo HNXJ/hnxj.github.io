@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Read-only portfolio index of HNXJ research and agent engineering projects.">
+<title>Research & Engineering Portfolio | HNXJ</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1018;--panel:#141d2a;--edge:#2c3b4c;--ink:#eaf0f7;--muted:#afbfce;--accent:#b9d6ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--accent)}a:focus-visible{outline:3px solid #fff;outline-offset:4px}.wrap{max-width:1100px;margin:auto;padding:28px 22px 72px}nav{display:flex;gap:24px;flex-wrap:wrap;font-size:.9rem}header{padding:60px 0 34px;border-bottom:1px solid var(--edge)}.eyebrow{text-transform:uppercase;letter-spacing:.15em;color:var(--muted);font-size:.75rem}h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0}h2{font-size:1.4rem;margin:40px 0 18px}h3{margin:0 0 9px;font-size:1.2rem}.lede{max-width:750px;color:var(--muted);font-size:1.1rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:24px}.card p{color:var(--muted);margin:0 0 18px}.links{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem}.tag{font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}.note{border-left:3px solid #a3b9d2;padding:12px 18px;background:var(--panel);color:var(--muted)}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--edge);padding:12px 10px}th{color:var(--muted)}footer{border-top:1px solid var(--edge);padding-top:20px;margin-top:48px;color:var(--muted);font-size:.86rem}@media(max-width:620px){table{display:block;overflow-x:auto}.wrap{padding-inline:16px}}
+</style>
+</head>
+<body><div class="wrap">
+<nav aria-label="Site navigation"><a href="/">Home</a><a href="/info/">Info</a><a href="/labyrinth/">Labyrinth</a><a href="https://github.com/HNXJ">GitHub</a></nav>
+<header><div class="eyebrow">HNXJ / public observation plane</div><h1>Research &amp; Engineering</h1><p class="lede">A navigable index of computational neuroscience, scientific simulation, and autonomous engineering systems. Repository evidence remains authoritative; this page does not execute agents or represent live verification.</p></header>
+<main>
+<h2>Projects</h2>
+<div class="grid">
+<article class="card"><div class="tag">Simulation engine</div><h3>JaxFNE</h3><p>JAX-based biophysical simulation, reproducibility and model comparisons.</p><div class="links"><a href="https://github.com/HNXJ/jaxfne">Repository</a><a href="https://github.com/HNXJ/jaxfne/blob/dev/artifacts/state.md">State record</a><a href="https://github.com/HNXJ/jaxfne/blob/dev/artifacts/todo_stack.md">Work queue</a></div></article>
+<article class="card"><div class="tag">Scientific program</div><h3>Jomission</h3><p>Mechanistic modeling and tests of visual omission and hierarchical circuit dynamics.</p><div class="links"><a href="https://github.com/HNXJ/jomission">Repository</a><a href="https://github.com/HNXJ/jomission/blob/dev/manifests/current_state.json">State record</a><a href="https://github.com/HNXJ/jomission/blob/dev/docs/OPEN.md">Open questions</a></div></article>
+<article class="card"><div class="tag">Agent governance</div><h3>Jarness</h3><p>Shared rules, skills, roles and workspace controls for autonomous engineering.</p><div class="links"><a href="https://github.com/HNXJ/jarness">Repository</a><a href="https://github.com/HNXJ/jarness/blob/main/rules/start.md">Entrypoint</a></div></article>
+<article class="card"><div class="tag">Agent infrastructure</div><h3>Jynx</h3><p>Agent tooling and coordination infrastructure, with repository-native verification.</p><div class="links"><a href="https://github.com/HNXJ/jynx">Repository</a><a href="https://github.com/HNXJ/jynx/tree/dev">Development branch</a></div></article>
+<article class="card"><div class="tag">Agent evaluation</div><h3>OCMA</h3><p>Work ontology and council-based evaluation of bounded agent tasks.</p><div class="links"><a href="https://github.com/HNXJ/ocma">Repository</a><a href="https://github.com/HNXJ/ocma/blob/dev/method/work_ontology.md">Work ontology</a></div></article>
+<article class="card"><div class="tag">Data infrastructure</div><h3>jnwb</h3><p>Neurodata workflows and reproducible data access.</p><div class="links"><a href="https://github.com/HNXJ/jnwb">Repository</a></div></article>
+</div>
+<h2>Dependencies and evidence</h2>
+<div class="note">Status is <strong>not live</strong>. No project is labeled passing, released, blocked or completed without a timestamped, independently checked receipt. Open the linked repository records for current evidence.</div>
+<table><thead><tr><th>Relationship</th><th>Interpretation</th><th>Verification source</th></tr></thead><tbody>
+<tr><td>Jomission → JaxFNE</td><td>Scientific simulation dependency; preserve the version pinned by the scientific lineage.</td><td><a href="https://github.com/HNXJ/jomission/blob/dev/manifests/current_state.json">Jomission state</a></td></tr>
+<tr><td>Jarness → project agents</td><td>Cross-environment governance; verify current main before execution.</td><td><a href="https://github.com/HNXJ/jarness/blob/main/rules/start.md">Jarness start</a></td></tr>
+<tr><td>OCMA → evaluated tasks</td><td>Evaluation results are separate from execution and scientific acceptance.</td><td><a href="https://github.com/HNXJ/ocma">OCMA evidence</a></td></tr>
+<tr><td>GitHub Pages → repositories</td><td>Read-only links, not a control plane or scientific source of truth.</td><td><a href="https://github.com/HNXJ/hnxj.github.io">Site source</a></td></tr>
+</tbody></table>
+<h2>Evidence convention</h2><p class="lede">Proposed ≠ implemented ≠ tested ≠ verified. Failed, null, stale and unavailable results remain visible in their native records. Dashboard summaries must identify their source SHA, gate scope, execution host and timestamp before making performance claims.</p>
+</main><footer>Public portfolio index · Static HTML · No credentials, control endpoints or mutation actions · <a href="https://github.com/HNXJ/hnxj.github.io">Source</a></footer>
+</div></body></html>
