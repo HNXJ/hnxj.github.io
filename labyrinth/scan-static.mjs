@@ -61,6 +61,25 @@ for (const file of jchatFiles) {
   }
 }
 
+// The Jomission/LANSA (OPEN-38) status page, its scripts and its snapshot: render-only, so the labyrinth rules
+// apply, plus no network call and no markup write.
+const o38sFiles = ["o38s/index.html", "../assets/o38s_view.js", "../assets/o38s_card.js", "../assets/data/o38s_status.js"];
+const NETWORK = /\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|\bimport\s*\(/;
+for (const file of o38sFiles) {
+  const text = readFileSync(join(root, file), "utf8");
+  const found = [
+    [SECRET, "possible secret pattern"],
+    [LOCAL, "localhost/private endpoint reference"],
+    [MUTATION, "mutation handler detected"],
+    [NETWORK, "network call"],
+    [INNER_HTML, "markup write (status text is inserted as text)"]
+  ].filter(([pattern]) => pattern.test(text));
+  for (const [, what] of found) {
+    console.error(`SCAN FAIL ${file}: ${what}`);
+    failed = true;
+  }
+}
+
 if (failed) process.exit(1);
-console.log(`STATIC SCAN OK: ${files.length} labyrinth files, ${jchatFiles.length} jchat files`);
+console.log(`STATIC SCAN OK: ${files.length} labyrinth files, ${jchatFiles.length} jchat files, ${o38sFiles.length} o38s files`);
 process.exit(0);

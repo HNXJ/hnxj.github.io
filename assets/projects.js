@@ -45,6 +45,16 @@ window.PROJECTS = [
     category: "webpage",
     tags: ["project"]
   },
+  {
+    subject: "Jomission / LANSA",
+    name: "Jomission / LANSA",
+    description: "OPEN-38: does the laminar spectral motif depend on the SST/PV composition profile? Status read from the repository's checker receipts.",
+    url: "/labyrinth/o38s/",
+    image: "/assets/images/ivaluminance.png",
+    category: "webpage",
+    tags: ["project", "status"],
+    status: "o38s"
+  },
   {subject: "jnwb: Spike and Field", name: "jnwb: Spike and Field", description: "Spike-field phase coupling by area and epoch from an omission session.", url: "/slides/jnwb/", image: "/slides/jnwb/thumb.png", category: "presentation", tags: ["slides"]},
   {subject: "JaxFNE: Spectrolaminar Dynamics", name: "JaxFNE: Spectrolaminar Dynamics", description: "Tensor-field neural equations, oscillations, and laminar LFP microcircuits.", url: "/slides/jaxfne/", image: "/slides/jaxfne/thumb.png", category: "presentation", tags: ["slides"]}
 ];
