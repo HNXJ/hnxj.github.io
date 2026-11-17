@@ -71,35 +71,56 @@
 
   // A stage published as PASS whose own fields say otherwise: a check that is not PASS, run counts that are
   // missing or unequal, a failed consistency block, a failed phase or a failed construction gate.
-  function contradictsPass(stage) {
+  // `spec` is the generator's fixed shape for the stage (open38_status.py): its run count and check names.
+  function contradictsPass(stage, spec) {
     var checks = isObject(stage.checks) ? stage.checks : {};
-    var bad = Object.keys(checks).some(function (name) { return checks[name] !== "PASS"; });
-    var runs = count(stage.runs_exit0) === null || stage.runs_exit0 !== stage.runs_expected;
-    var phase = Array.isArray(stage.phases) && stage.phases.some(function (p) { return !isObject(p) || p.status === "FAIL"; });
-    var gate = isObject(stage.construction_gate) && stage.construction_gate.verdict === "FAIL";
+    var bad = spec.checks.some(function (name) { return checks[name] !== "PASS"; }) ||
+      Object.keys(checks).some(function (name) { return checks[name] !== "PASS"; });
+    var runs = stage.runs_expected !== spec.runs || stage.runs_exit0 !== spec.runs;
+    var phases = Array.isArray(stage.phases) ? stage.phases : [];
+    var phase = (spec.phases && !phases.length) || phases.some(function (p) {
+      return !isObject(p) || p.status !== "PASS" || p.construction === "FAIL" || p.integrity === "FAIL";
+    });
+    var gate = spec.gate && !(isObject(stage.construction_gate) && stage.construction_gate.verdict === "PASS");
     return bad || runs || phase || gate || (isObject(stage.consistency) && stage.consistency.ok === false);
   }
 
-  // Rows of generator records (phases, attempts) with the contract's keys only.
-  function rows(list, keys) {
-    if (!Array.isArray(list)) return [];
-    return list.filter(isObject).map(function (item) {
-      var out = {};
-      keys.forEach(function (k) {
-        if (typeof item[k] === "string" || typeof item[k] === "number") out[k] = item[k];
-      });
-      return out;
-    });
+  var STAGE1 = { runs: 15, checks: ["stage_check", "integrity", "construction_frozen", "construction_ruling_b"], phases: false, gate: false };
+  var STAGE2 = { runs: 30, checks: [], phases: true, gate: true };
+  var MODES = ["smoke", "rest"];
+
+  function verdict(x) {
+    return STATUSES.indexOf(x) !== -1 ? x : null;
   }
 
-  var PHASE_KEYS = ["mode", "status", "reason", "started", "exit0", "construction", "integrity", "last_line_utc"];
-  var ATTEMPT_KEYS = ["attempt", "mode", "head", "construction", "stop"];
+  // One generator record (a phase or an attempt): the contract's keys, each with its own type. A record whose
+  // mode is not a known one is dropped.
+  function record(item, withReason) {
+    if (!isObject(item) || MODES.indexOf(item.mode) === -1) return null;
+    var out = { mode: item.mode };
+    if (count(item.attempt) !== null) out.attempt = item.attempt;
+    if (verdict(item.status)) out.status = item.status;
+    if (withReason && text(item.reason)) out.reason = item.reason;
+    if (count(item.started) !== null) out.started = item.started;
+    if (count(item.exit0) !== null) out.exit0 = item.exit0;
+    if (verdict(item.construction)) out.construction = item.construction;
+    if (verdict(item.integrity)) out.integrity = item.integrity;
+    if (isSha(item.head)) out.head = item.head;
+    if (isUtc(item.last_line_utc)) out.last_line_utc = item.last_line_utc;
+    if (!withReason && text(item.stop)) out.stop = item.stop;
+    return out;
+  }
 
-  // The gate's multiple-comparison family: numbers only.
+  function records(list, withReason) {
+    if (!Array.isArray(list)) return [];
+    return list.map(function (item) { return record(item, withReason); }).filter(isObject);
+  }
+
+  // The gate's multiple-comparison family: numbers under plain names.
   function numbers(obj) {
     var out = {};
     Object.keys(obj).forEach(function (k) {
-      if (typeof obj[k] === "number" && isFinite(obj[k])) out[k] = obj[k];
+      if (/^[a-z][a-z0-9_]*$/.test(k) && !/pass/.test(k) && typeof obj[k] === "number" && isFinite(obj[k])) out[k] = obj[k];
     });
     return out;
   }
@@ -117,19 +138,19 @@
     return { items: items, known: items.length === listed.length };
   }
 
-  function stageView(label, stage, trusted) {
+  function stageView(label, stage, trusted, spec) {
     stage = isObject(stage) ? stage : {};
     // A verdict is shown only as the generator publishes it: receipts committed and the public status equal to
     // the local one. Anything else, a PASS its own checks contradict included, is UNKNOWN.
     var status = stage.committed === true && stage.public_status === stage.status ? shown(stage.public_status, trusted) : "UNKNOWN";
-    if (status === "PASS" && contradictsPass(stage)) status = "UNKNOWN";
+    if (status === "PASS" && contradictsPass(stage, spec)) status = "UNKNOWN";
     // Detail (reason, checks, run counts, gate, phases, attempts, blockers) belongs to a shown verdict. An
     // UNKNOWN stage shows no detail: its checks and reason can read PASS from machine-local files.
     var verified = status !== "UNKNOWN";
     var checks = [];
     if (verified && isObject(stage.checks)) {
-      Object.keys(stage.checks).forEach(function (name) {
-        checks.push({ name: name, status: shown(stage.checks[name], true) });
+      spec.checks.forEach(function (name) {
+        if (verdict(stage.checks[name])) checks.push({ name: name, status: stage.checks[name] });
       });
     }
     return {
@@ -165,9 +186,10 @@
     for (var i = 0; i < stages.length; i++) {
       var receipt = isObject(evidence[keys[i]]) ? text(evidence[keys[i]].path) : null;
       var what = text(m.what);
-      // The text must also name that stage first ("stage 1 ...", "stage 2: ...").
+      // The text must also name that stage first ("stage 1 ...", "stage 2: ...") and no other item after it.
       if (stages[i].status === "PASS" && receipt && m.evidence === receipt && what &&
-          what.indexOf("stage " + (i + 1)) === 0 && !/\d/.test(what.charAt(7))) return what;
+          what.indexOf("stage " + (i + 1)) === 0 && !/\d/.test(what.charAt(7)) &&
+          !/stage|gate|test/i.test(what.slice(7))) return what;
     }
     return null;
   }
@@ -179,8 +201,8 @@
     var s = isObject(status) ? status : {};
     var source = isObject(s.source) ? s.source : {};
     var project = isObject(s.project) ? s.project : {};
-    var stage1 = stageView("Stage 1", s.stage1, trusted);
-    var stage2 = stageView("Stage 2", s.stage2, trusted);
+    var stage1 = stageView("Stage 1", s.stage1, trusted, STAGE1);
+    var stage2 = stageView("Stage 2", s.stage2, trusted, STAGE2);
     var raw2 = isObject(s.stage2) ? s.stage2 : {};
     var gate = isObject(raw2.construction_gate) ? raw2.construction_gate : {};
     var tests = isObject(s.tests) ? s.tests : {};
@@ -207,10 +229,10 @@
         passed: testsPublic ? count(tests.passed) : null,
         failed: testsPublic ? count(tests.failed) : null,
         defined: trusted ? count(tests.defined) : null,
-        reason: testsPublic ? text(tests.reason) : null
+        reason: testsPublic && /^pytest rc \d+$/.test(String(tests.reason)) ? tests.reason : null
       },
-      phases: stage2.verified ? rows(raw2.phases, PHASE_KEYS) : [],
-      attempts: stage2.verified ? rows(raw2.attempts, ATTEMPT_KEYS) : [],
+      phases: stage2.verified ? records(raw2.phases, true) : [],
+      attempts: stage2.verified ? records(raw2.attempts, false) : [],
       blockers: blockers.items,
       blockers_known: blockers.known,
       milestone: trusted ? milestoneText(s, [stage1, stage2]) : null,
