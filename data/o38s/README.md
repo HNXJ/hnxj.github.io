@@ -5,12 +5,10 @@ The Labyrinth card and `/labyrinth/o38s/` show the status of OPEN-38.
 **Authority.** jomission's generator (`scripts/open38_status.py`, schema `o38s_status/1`) is the only authority
 for a status. This site holds no status logic. It owns provenance, freshness and presentation.
 
-**Source (owner, 2026-11-17).** The intended source is jomission `dev` at a recorded commit. The pin still
-names `refs/heads/_temp_o38s-status` at `568e659a`, which left the remote on 2026-11-17, and the generator is
-not on `dev` yet: the gate refuses, no artifact is built, and every status is UNKNOWN. No fallback to the old
-snapshot. The pin moves to `refs/heads/dev` only after the generator and its output are verified there
-(provenance, schema, card mapping, missing and stale handling) and independently reviewed. The jomission owner
-delivers the generator; the site owner moves and verifies the pin.
+**Source (owner, 2026-11-17).** The source is jomission `dev` at a recorded commit: the pin names
+`refs/heads/dev` at `520d5fb4`, where the generator landed by a fast-forward on 2026-11-17. A later commit on
+`dev` is not followed: the pin moves by a reviewed commit (`refresh --to-tip`, then `verify` and the tests).
+The jomission owner delivers the generator; the site owner moves and verifies the pin.
 
 | File | Role |
 |---|---|

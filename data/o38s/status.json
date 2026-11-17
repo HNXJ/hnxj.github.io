@@ -1,9 +1,9 @@
 {
  "schema": "o38s_status/1",
- "generated_utc": "2026-11-17T19:32:37Z",
+ "generated_utc": "2026-11-17T23:10:48Z",
  "source": {
-  "sha": "568e659a9e6d1f810b6ad05bf070f659d86bbba0",
-  "branch": "_temp_o38s-status",
+  "sha": "520d5fb4c249e66cd8a69177b4581a6a28e6f2a0",
+  "branch": "dev",
   "dirty_tracked": false,
   "repo_url": "https://github.com/HNXJ/jomission"
  },
@@ -11,7 +11,7 @@
   "name": "Jomission / LANSA (OPEN-38)",
   "objective": "Test, in the LANSA E-PV-SOM model, whether the laminar spectral motif depends on the SST/PV composition profile when composition is set to the profile observed in monkey #1 (spec SPEC_OPEN38_SPECTRUM_SENSITIVITY_2026-11-16.md, H-mech)"
  },
- "current_stage": "stage 1",
+ "current_stage": "stage 2",
  "stage1": {
   "status": "PASS",
   "public_status": "PASS",
@@ -38,7 +38,7 @@
  },
  "stage2": {
   "runs_expected": 30,
-  "log_sha256": null,
+  "log_sha256": "084911bfc608094d2448cb12e46ca630da695c0230bd3f170865e76cd04db6a5",
   "attempts": [
    {
     "attempt": 1,
@@ -49,23 +49,59 @@
    }
   ],
   "construction_gate": {
-   "verdict": "UNKNOWN",
-   "family": null
+   "verdict": "PASS",
+   "family": {
+    "alpha": 0.05,
+    "n_tests": 780,
+    "per_test_level": 0.9999358974358974,
+    "ruling": "owner 2026-11-17, option B (Bonferroni); was 0.999 per test"
+   }
   },
-  "status": "UNKNOWN",
-  "public_status": "UNKNOWN",
-  "reason": "no stage-2 log",
-  "phases": []
+  "status": "PASS",
+  "public_status": "PASS",
+  "committed": true,
+  "reason": "rest DONE; integrity PASS",
+  "phases": [
+   {
+    "mode": "smoke",
+    "status": "PASS",
+    "reason": "DONE; checks PASS",
+    "head": "0d7162210553127482659d758b102f3b8f5ea71c",
+    "started": 1,
+    "exit0": 1,
+    "construction": "PASS",
+    "integrity": "PASS",
+    "last_line_utc": "2026-11-17T17:33:21Z"
+   },
+   {
+    "mode": "rest",
+    "status": "PASS",
+    "reason": "DONE; checks PASS",
+    "head": "0d7162210553127482659d758b102f3b8f5ea71c",
+    "started": 29,
+    "exit0": 29,
+    "construction": "PASS",
+    "integrity": "PASS",
+    "last_line_utc": "2026-11-17T19:14:36Z"
+   }
+  ],
+  "runs_exit0": 30,
+  "consistency": {
+   "ok": true,
+   "execution_sha": "0d7162210553127482659d758b102f3b8f5ea71c",
+   "problems": [],
+   "compatible": []
+  }
  },
  "tests": {
-  "files": 7,
-  "defined": 57,
+  "files": 9,
+  "defined": 70,
   "status": "UNKNOWN",
   "reason": "not run (--run-tests not given)"
  },
  "latest_verified_milestone": {
-  "what": "stage 1 positive controls: 15/15 runs, frozen checker, integrity and construction (frozen and ruling-B) receipts PASS",
-  "evidence": "docs/laminar_motif/STAGE1_O38S_PC_2026-11-17.md"
+  "what": "stage 2: 30/30 runs, integrity PASS",
+  "evidence": "docs/laminar_motif/STAGE2_O38S_2026-11-17.md"
  },
  "blockers": [],
  "evidence": {
@@ -79,7 +115,7 @@
   },
   "stage2_receipt": {
    "path": "docs/laminar_motif/STAGE2_O38S_2026-11-17.md",
-   "sha256": "8ccbcc792dbc2079d2af78590746a131969486b4c9f5d206737f3fdc59e49523"
+   "sha256": "c0f6f07f02d2445b2e2c42f8d245241371a8cdbb792a3bfbc1a8a2797aab3381"
   },
   "gate_ruling": {
    "path": "docs/laminar_motif/GATE_RULING_REQUEST_O38S_S2_2026-11-17.md",

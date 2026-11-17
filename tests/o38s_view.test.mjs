@@ -121,8 +121,9 @@ test("the view does not second-guess a verified snapshot", () => {
 test("a contradictory snapshot swapped in under a genuine verification record shows nothing", () => {
   const cases = JSON.parse(readFileSync(new URL("./fixtures/o38s_contradictions.json", import.meta.url), "utf8")).cases;
   assert.ok(cases.length >= 11);
-  // The committed, genuine snapshot under its own verification record, as the gate builds it.
-  const genuine = readFileSync(new URL("../data/o38s/status.json", import.meta.url), "utf8");
+  // A frozen genuine snapshot (stage 1 PASS, stage 2 UNKNOWN) under its own verification record, as the gate
+  // builds it; frozen so the cases and the clock below do not depend on the live snapshot.
+  const genuine = readFileSync(new URL("./fixtures/o38s_genuine.json", import.meta.url), "utf8");
   const sealed = () => artifact(null, (a) => {
     a.snapshot_text = genuine;
     a.verification.snapshot_sha256 = sha256(genuine);
