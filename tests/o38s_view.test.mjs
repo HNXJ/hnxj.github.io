@@ -52,14 +52,59 @@ test("trusted snapshot shows the generator's public statuses", () => {
 
 for (const status of ["PASS", "FAIL", "RUNNING", "BLOCKED", "UNKNOWN"]) {
   test(`stage 2 public status ${status} is shown as ${status}`, () => {
-    const v = view((s) => { s.stage2.status = status; s.stage2.public_status = status; });
+    const v = view((s) => { s.stage2.status = status; s.stage2.public_status = status; s.stage2.committed = true; });
     assert.equal(v.stages[1].status, status);
     assert.equal(v.stages[1].verified, true);
   });
-  test(`tests status ${status} is shown as ${status}`, () => {
-    assert.equal(view((s) => { s.tests.status = status; }).tests.status, status);
+  test(`tests status ${status} is shown as ${status} only when the generator publishes it`, () => {
+    const published = view((s) => { s.tests.status = status; s.tests.public_status = status; s.tests.passed = 53; });
+    assert.equal(published.tests.status, status);
+    assert.equal(published.tests.passed, 53);
+    const local = view((s) => { s.tests.status = status; s.tests.passed = 53; s.tests.failed = 0; });
+    assert.equal(local.tests.status, "UNKNOWN");
+    assert.equal(local.tests.passed, null);
+    assert.equal(local.tests.failed, null);
+    assert.equal(local.tests.defined, 53);
   });
 }
+
+// The generator's output for a stage whose receipts exist on its machine but are not committed
+// (open38_status.py: public_status UNKNOWN, committed false, checks read from local files).
+test("a stage without committed receipts shows no detail, even when both statuses are UNKNOWN", () => {
+  for (const committed of [false, null, undefined, "true", 1]) {
+    const v = view((s) => {
+      s.stage1 = { status: "UNKNOWN", public_status: "UNKNOWN", committed, reason: "DONE; checks PASS",
+        runs_exit0: 15, runs_expected: 15, checks: { stage_check: "PASS", integrity: "PASS" } };
+      s.stage2 = { status: "UNKNOWN", public_status: "UNKNOWN", committed, reason: "DONE; checks PASS",
+        construction_gate: { verdict: "PASS", family: { alpha: 0.05 } },
+        phases: [{ mode: "full", status: "PASS" }], attempts: [{ attempt: 2, construction: "PASS" }] };
+    });
+    assert.equal(v.trusted, true);
+    assert.deepEqual(v.stages.map((s) => s.verified), [false, false]);
+    assert.equal(v.gate.status, "UNKNOWN");
+    assert.equal(hasPass({ stages: v.stages, gate: v.gate, phases: v.phases, attempts: v.attempts, milestone: v.milestone }), false,
+      `committed ${String(committed)}`);
+  }
+});
+
+test("a stage with no status fields, or a published verdict without committed receipts, is UNKNOWN with no detail", () => {
+  const bare = view((s) => { s.stage1 = { committed: true, checks: { stage_check: "PASS" }, reason: "checks PASS" }; });
+  assert.equal(bare.stages[0].status, "UNKNOWN");
+  assert.equal(bare.stages[0].verified, false);
+  assert.equal(hasPass(bare.stages[0]), false);
+  const uncommitted = view((s) => { s.stage1.committed = false; });
+  assert.equal(uncommitted.stages[0].status, "UNKNOWN");
+  assert.equal(uncommitted.milestone, null);
+  assert.equal(hasPass({ stage: uncommitted.stages[0], milestone: uncommitted.milestone }), false);
+});
+
+test("a source sha that is not a string, and a staleness limit that is not a positive number, are not accepted", () => {
+  assert.equal(view((s) => { s.source.sha = [SHA]; }).trusted, false);
+  const stale = (s) => { s.generated_utc = "2026-10-01T00:00:00Z"; };
+  for (const limit of [NaN, Infinity, 0, -1]) {
+    assert.equal(view(stale, NOW, limit).trusted, false, `limit ${limit}`);
+  }
+});
 
 test("a local PASS that is not the public status is UNKNOWN, with no detail", () => {
   const v = view((s) => {
@@ -94,12 +139,13 @@ test("the milestone is shown only with the receipt of a stage shown as PASS", ()
   // Stage 2 passed, stage 1 did not: a stage-1 milestone is not carried by the stage-2 PASS.
   const crossed = view((s) => {
     s.stage1.status = "FAIL"; s.stage1.public_status = "FAIL";
-    s.stage2.status = "PASS"; s.stage2.public_status = "PASS";
+    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true;
     s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
   });
+  assert.equal(crossed.stages[1].status, "PASS");
   assert.equal(crossed.milestone, null);
   const stage2 = view((s) => {
-    s.stage2.status = "PASS"; s.stage2.public_status = "PASS";
+    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true;
     s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
     s.latest_verified_milestone = { what: "stage 2: 30/30 runs", evidence: "docs/laminar_motif/S2.md" };
   });
@@ -112,10 +158,10 @@ test("a local RUNNING is never shown as repository-verified", () => {
 });
 
 test("gate verdict is shown only with a verified stage 2", () => {
-  const ok = view((s) => { s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05, n_tests: 780 } }; });
+  const ok = view((s) => { s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true; s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05, n_tests: 780 } }; });
   assert.equal(ok.gate.status, "PASS");
   assert.equal(ok.gate.family.n_tests, 780);
-  const fail = view((s) => { s.stage2.status = "FAIL"; s.stage2.public_status = "FAIL"; s.stage2.construction_gate = { verdict: "FAIL", family: null }; });
+  const fail = view((s) => { s.stage2.status = "FAIL"; s.stage2.public_status = "FAIL"; s.stage2.committed = true; s.stage2.construction_gate = { verdict: "FAIL", family: null }; });
   assert.equal(fail.gate.status, "FAIL");
 });
 

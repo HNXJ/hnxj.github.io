@@ -35,13 +35,17 @@
     return typeof x === "number" && isFinite(x) && x >= 0 ? x : null;
   }
 
+  function isSha(x) {
+    return typeof x === "string" && /^[0-9a-f]{40}$/.test(x);
+  }
+
   // Why the snapshot cannot be trusted; an empty list means it can.
   function distrust(status, nowMs, maxAgeHours) {
     if (!isObject(status)) return ["no status snapshot"];
     var why = [];
     if (status.schema !== SCHEMA) why.push("unknown schema");
     var source = isObject(status.source) ? status.source : {};
-    if (!/^[0-9a-f]{40}$/.test(String(source.sha))) why.push("no source commit");
+    if (!isSha(source.sha)) why.push("no source commit");
     if (source.dirty_tracked !== false) why.push("source tree had uncommitted changes");
     var t = text(status.generated_utc) ? Date.parse(status.generated_utc) : NaN;
     if (isNaN(t)) {
@@ -62,9 +66,14 @@
 
   function stageView(label, stage, trusted) {
     stage = isObject(stage) ? stage : {};
-    var status = shown(stage.public_status, trusted);
-    // Detail (reason, checks, run counts) is repository-verified only when the public status is the local one.
-    var verified = trusted && stage.public_status === stage.status;
+    // The generator publishes a verdict other than UNKNOWN only for committed receipts; one without them is a
+    // contradiction and is not shown.
+    var status = stage.committed === true ? shown(stage.public_status, trusted) : "UNKNOWN";
+    // Detail (reason, checks, run counts, gate, attempts) is repository-verified only when the generator marks
+    // the stage's receipts committed and its public status is the local one. A stage without receipts in the
+    // repository shows its status alone: its checks can read PASS from machine-local files.
+    var verified = trusted && stage.committed === true && STATUSES.indexOf(stage.status) !== -1 &&
+      stage.public_status === stage.status;
     var checks = [];
     if (verified && isObject(stage.checks)) {
       Object.keys(stage.checks).forEach(function (name) {
@@ -89,7 +98,7 @@
     var links = [];
     Object.keys(status.evidence).forEach(function (key) {
       var path = isObject(status.evidence[key]) ? text(status.evidence[key].path) : null;
-      if (!path || path.indexOf("..") !== -1 || path.charAt(0) === "/" || /[\s"'<>\\]/.test(path)) return;
+      if (!path || path.indexOf("..") !== -1 || path.charAt(0) === "/" || /[\s"'<>\\?#]/.test(path)) return;
       links.push({ label: EVIDENCE_LABELS[key] || key, url: base + "/blob/" + source.sha + "/" + path });
     });
     return links;
@@ -109,7 +118,7 @@
   }
 
   function view(status, nowMs, maxAgeHours) {
-    var hours = typeof maxAgeHours === "number" ? maxAgeHours : MAX_AGE_HOURS;
+    var hours = typeof maxAgeHours === "number" && isFinite(maxAgeHours) && maxAgeHours > 0 ? maxAgeHours : MAX_AGE_HOURS;
     var why = distrust(status, nowMs, hours);
     var trusted = why.length === 0;
     var s = isObject(status) ? status : {};
@@ -133,10 +142,12 @@
         status: shown(stage2.verified ? gate.verdict : null, trusted),
         family: stage2.verified && isObject(gate.family) ? gate.family : null
       },
+      // The generator gives the test run no public status (it is a run on the generating machine, with no
+      // committed receipt), so its verdict is shown only if a later generator publishes one as `public_status`.
       tests: {
-        status: shown(tests.status, trusted),
-        passed: trusted ? count(tests.passed) : null,
-        failed: trusted ? count(tests.failed) : null,
+        status: shown(tests.public_status === tests.status ? tests.status : null, trusted),
+        passed: trusted && tests.public_status === tests.status ? count(tests.passed) : null,
+        failed: trusted && tests.public_status === tests.status ? count(tests.failed) : null,
         defined: trusted ? count(tests.defined) : null,
         reason: trusted ? text(tests.reason) : null
       },
@@ -147,7 +158,7 @@
       milestone: trusted ? milestoneText(s, [stage1, stage2]) : null,
       links: trusted ? evidenceLinks(s) : [],
       provenance: {
-        sha: /^[0-9a-f]{40}$/.test(String(source.sha)) ? source.sha : null,
+        sha: isSha(source.sha) ? source.sha : null,
         branch: text(source.branch),
         generated_utc: text(s.generated_utc)
       }
