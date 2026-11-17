@@ -28,8 +28,16 @@ import o38s_status as gate  # noqa: E402
 
 built = (SITE / gate.ARTIFACT).read_text(encoding="ascii")
 real = json.loads(built[built.index("window.O38S_ARTIFACT = ") + len("window.O38S_ARTIFACT = "):].rstrip().rstrip(";"))
-GENUINE = json.loads(real["snapshot_text"])
+LIVE = json.loads(real["snapshot_text"])
+# The synthetic cases start from a frozen generator output (stage 1 PASS, stage 2 UNKNOWN), not the live snapshot.
+GENUINE = json.loads((SITE / "tests" / "fixtures" / "o38s_genuine.json").read_text(encoding="ascii"))
+GENUINE["source"] = LIVE["source"]  # the view requires the snapshot's source to be the verification record's
 NOW = gate.now_utc()
+# The "real" case shows what the built snapshot says: both stages committed, so no detail is hidden.
+assert all(LIVE[s]["status"] == LIVE[s]["public_status"] for s in ("stage1", "stage2")), "the built snapshot hides a stage"
+REAL_PILLS = [LIVE["stage1"]["public_status"], LIVE["stage2"]["public_status"],
+              LIVE["stage2"]["construction_gate"]["verdict"], LIVE["tests"]["status"]]
+assert REAL_PILLS[0] == "PASS", "the real case must hold a known PASS"
 
 
 def sealed(status, **record):
@@ -68,7 +76,7 @@ assert tampered != sealed(GENUINE), "the tampered case must change the snapshot 
 # name -> (artifact body, or None to fail the request; the four pills expected; whether PASS may appear at all)
 U4 = ["UNKNOWN"] * 4
 CASES = {
-    "real": ("as built", ["PASS", "UNKNOWN", "UNKNOWN", "UNKNOWN"], True),
+    "real": ("as built", REAL_PILLS, True),
     "stale": (sealed(GENUINE, verified_utc="2026-10-01T00:00:00Z"), U4, False),
     "dirty": (sealed(changed(source__dirty_tracked=True)), U4, False),
     "future": (sealed(GENUINE, verified_utc="2027-06-01T00:00:00Z"), U4, False),
