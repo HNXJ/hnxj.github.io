@@ -86,7 +86,7 @@ for (const file of o38sFiles) {
 // escapes this scan; review of the default branch is the control for that.
 const repo = join(root, "..");
 const ARTIFACT_FILE = "assets/data/o38s_status.js";
-const MAY_NAME_ARTIFACT = /^(assets\/o38s_(view|card)\.js|labyrinth\/scan-static\.mjs|tests\/|tools\/)/;
+const MAY_NAME_ARTIFACT = /^(assets\/o38s_(view|card)\.js|labyrinth\/scan-static\.mjs)$/;
 let tracked = null;
 try {
   tracked = execFileSync("git", ["-C", repo, "ls-files", "-z"], { encoding: "utf8" }).split("\0").filter(Boolean);
@@ -98,7 +98,7 @@ for (const file of tracked || []) {
   if (file === ARTIFACT_FILE) {
     console.error(`SCAN FAIL ${file}: the status artifact is committed (it is built by the gate only)`);
     failed = true;
-  } else if (/\.(html?|m?js)$/.test(file) && !MAY_NAME_ARTIFACT.test(file) && existsSync(join(repo, file)) &&
+  } else if (/\.(x?html?|[cm]?js|svg)$/.test(file) && !MAY_NAME_ARTIFACT.test(file) && existsSync(join(repo, file)) &&
              /O38S_ARTIFACT/.test(readFileSync(join(repo, file), "utf8"))) {
     console.error(`SCAN FAIL ${file}: names O38S_ARTIFACT (only the built artifact defines it)`);
     failed = true;

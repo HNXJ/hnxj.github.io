@@ -72,7 +72,10 @@ def canonical(status):
 
 
 def epoch(utc):
-    return datetime.strptime(utc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc).timestamp()
+    try:
+        return datetime.strptime(utc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc).timestamp()
+    except ValueError:
+        raise Refused(f"{utc} is not a time that exists")
 
 
 def differing(a, b, path=""):
@@ -235,12 +238,12 @@ def build(site, run_tests=False):
         raw, verification = verify(site, run_tests)
         if (site / SNAPSHOT).read_bytes() != raw or site_commit(site) != head:
             raise Refused("the site changed during verification")
+        verification["site_sha"] = head
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_bytes(artifact_text(raw, verification).encode("ascii"))
     except BaseException:  # a refusal, a crash or an interrupt: fail closed, so the pages show UNKNOWN
         out.unlink(missing_ok=True)
         raise
-    verification["site_sha"] = head
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_bytes(artifact_text(raw, verification).encode("ascii"))
     return verification
 
 

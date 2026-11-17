@@ -206,10 +206,12 @@ class GateTest(unittest.TestCase):
         self.assert_refused("the order of its keys")
 
     def test_generation_time_outside_its_bounds_is_refused(self):
-        for when in ("2020-01-01T00:00:00Z", "2099-01-01T00:00:00Z"):
+        bounds = "is before the pinned commit or after this verification"
+        for when, expect in (("2020-01-01T00:00:00Z", bounds), ("2099-01-01T00:00:00Z", bounds),
+                             ("2026-02-30T00:00:00Z", "is not a time that exists")):
             with self.subTest(when):
                 self.write_snapshot(dict(self.snapshot(), generated_utc=when))
-                self.assert_refused("is before the pinned commit or after this verification")
+                self.assert_refused(expect)
 
     def test_a_crashed_build_leaves_no_artifact(self):
         self.assertEqual(gate.main(["build", "--site", str(self.site)]), 0)
@@ -218,6 +220,11 @@ class GateTest(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 gate.build(self.site)
         self.assertFalse((self.site / gate.ARTIFACT).exists(), "a crashed build must leave no artifact")
+        self.assertEqual(gate.main(["build", "--site", str(self.site)]), 0)
+        with mock.patch.object(gate, "artifact_text", side_effect=RuntimeError("crash while writing")):
+            with self.assertRaises(RuntimeError):
+                gate.build(self.site)
+        self.assertFalse((self.site / gate.ARTIFACT).exists(), "a failed write must leave no artifact")
 
     def test_snapshot_that_is_not_in_the_committed_form_is_refused(self):
         raw = (self.site / gate.SNAPSHOT).read_bytes()

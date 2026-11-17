@@ -203,6 +203,9 @@ const UNTRUSTED = {
   "generation time with trailing text": [() => artifact((s) => { s.generated_utc += " (Stage 2 PASS)"; }), "generation time"],
   "generated after its verification": [() => artifact((s) => { s.generated_utc = "2026-11-17T20:10:00Z"; }), "after its verification"],
   "stale: verified more than the limit ago": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-11-10T20:59:59Z"; }), "stale"],
+  "verification time that does not exist": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-13-99T99:99:99Z"; }), "not verified"],
+  "verification on 30 February": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-02-30T00:00:00Z"; }), "not verified"],
+  "generation time that does not exist": [() => artifact((s) => { s.generated_utc = "2026-02-30T00:00:00Z"; }), "generation time"],
   "verification time in the future": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-11-17T21:06:00Z"; }), "future"],
 };
 

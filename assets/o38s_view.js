@@ -47,8 +47,12 @@
   }
 
   // The generator's and the gate's time format, exactly: Date.parse alone accepts trailing text.
+  // A real UTC instant in the generator's form: a time that does not exist (month 13, 30 February) is refused,
+  // since comparisons with an unparsable time are all false and would let the freshness checks pass.
   function isUtc(x) {
-    return typeof x === "string" && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x);
+    if (typeof x !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x)) return false;
+    var ms = Date.parse(x);
+    return !isNaN(ms) && new Date(ms).toISOString().slice(0, 19) + "Z" === x;
   }
 
   function isStatus(x) {
