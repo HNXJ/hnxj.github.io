@@ -14,7 +14,7 @@ Commands:
   verify    clone the pinned repository, check the pinned commit out, run the generator, compare. Exit 1 on
             any mismatch, failure, missing source or unreadable provenance.
   build     verify, then write the artifact, bound to the snapshot's sha256 and the site commit. On a refusal
-            the artifact is removed, so the pages show UNKNOWN.
+            or a crash the artifact is removed, so the pages show UNKNOWN.
   refresh   regenerate the snapshot at the pinned commit (`--to-tip` first moves the pin to the tip of its ref).
 
 Equality with the generator is consistency, not scientific correctness, and it says nothing about whether the
@@ -38,6 +38,7 @@ SNAPSHOT = Path("data/o38s/status.json")
 PIN = Path("data/o38s/source.json")
 ARTIFACT = Path("assets/data/o38s_status.js")
 VOLATILE = ("generated_utc",)  # the only field that differs between two runs at one commit
+CLOCK_SKEW_S = 300
 SHA = re.compile(r"[0-9a-f]{40}")
 UTC = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ")
 HEADER = (
@@ -70,9 +71,8 @@ def canonical(status):
     return (json.dumps(status, indent=1, ensure_ascii=True) + "\n").encode("ascii")
 
 
-def comparable(status):
-    """A snapshot as text for comparison: every field and type, without the generation time."""
-    return json.dumps({k: v for k, v in status.items() if k not in VOLATILE}, sort_keys=True, separators=(",", ":"))
+def epoch(utc):
+    return datetime.strptime(utc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc).timestamp()
 
 
 def differing(a, b, path=""):
@@ -132,10 +132,11 @@ def fetch_source(pin, workdir):
 
 
 def regenerate(pin, run_tests=False):
-    """The generator's JSON at the pinned commit, from a fresh clone, or Refused."""
+    """The generator's JSON at the pinned commit, from a fresh clone, and that commit's time; or Refused."""
     check_python(pin)
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         src = fetch_source(pin, tmp)
+        committed = int(git(src, "show", "-s", "--format=%ct", pin["sha"]))
         out = Path(tmp) / "status.json"
         cmd = [sys.executable, "-B", src / "scripts" / "open38_status.py", out, "--repo", src]
         if run_tests:
@@ -145,10 +146,10 @@ def regenerate(pin, run_tests=False):
             raise Refused(f"the generator failed (exit {r.returncode}): {r.stderr.strip()[-300:]}")
         try:
             status = json.loads(out.read_text(encoding="utf-8"))
-        except ValueError as exc:
+        except (ValueError, RecursionError) as exc:
             raise Refused(f"the generator's output is not JSON: {exc}")
     check_provenance(status, pin, "the generator's output")
-    return status
+    return status, committed
 
 
 def check_provenance(status, pin, what):
@@ -172,7 +173,7 @@ def read_snapshot(path):
         raise Refused(f"the snapshot is unreadable: {exc}")
     try:
         status = json.loads(raw.decode("ascii"))
-    except ValueError as exc:
+    except (ValueError, RecursionError) as exc:
         raise Refused(f"the snapshot is not ASCII JSON: {exc}")
     if not isinstance(status, dict) or canonical(status) != raw:
         raise Refused("the snapshot is not in the committed form (rewrite it with `refresh`, never by hand)")
@@ -185,10 +186,16 @@ def verify(site, run_tests=False):
     pin = read_pin(site / PIN)
     raw, status = read_snapshot(site / SNAPSHOT)
     check_provenance(status, pin, "the snapshot")
-    fresh = regenerate(pin, run_tests)
-    if comparable(status) != comparable(fresh):
+    fresh, committed = regenerate(pin, run_tests)
+    # Byte for byte the generator's output, key order included, once the generation time is set aside.
+    if canonical({**fresh, **{k: status.get(k) for k in VOLATILE}}) != raw:
         where = [p for p in differing(status, fresh) if p.strip("/") not in VOLATILE][:8]
-        raise Refused("the snapshot is not the generator's output at the pinned commit; differs at " + ", ".join(where))
+        raise Refused("the snapshot is not the generator's output at the pinned commit; differs at "
+                      + (", ".join(where) or "the order of its keys"))
+    # The generation time cannot be regenerated, so it is bounded: after the source commit, before this run.
+    made = epoch(status["generated_utc"])
+    if made < committed - CLOCK_SKEW_S or made > epoch(fresh["generated_utc"]) + CLOCK_SKEW_S:
+        raise Refused(f"generated_utc {status['generated_utc']} is before the pinned commit or after this verification")
     return raw, {
         "schema": VERIFICATION_SCHEMA,
         "snapshot_sha256": hashlib.sha256(raw).hexdigest(),
@@ -228,8 +235,8 @@ def build(site, run_tests=False):
         raw, verification = verify(site, run_tests)
         if (site / SNAPSHOT).read_bytes() != raw or site_commit(site) != head:
             raise Refused("the site changed during verification")
-    except Refused:
-        out.unlink(missing_ok=True)  # fail closed: no artifact, so the pages show UNKNOWN
+    except BaseException:  # a refusal, a crash or an interrupt: fail closed, so the pages show UNKNOWN
+        out.unlink(missing_ok=True)
         raise
     verification["site_sha"] = head
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -245,7 +252,7 @@ def refresh(site, to_tip=False, run_tests=False):
         if len(listed) != 2 or not SHA.fullmatch(listed[0]):
             raise Refused(f"{pin['ref']} is not readable on the pinned repository")
         pin["sha"] = listed[0]
-    status = regenerate(pin, run_tests)
+    status, _ = regenerate(pin, run_tests)
     if to_tip:
         (site / PIN).write_bytes((json.dumps(pin, indent=1) + "\n").encode("ascii"))
     (site / SNAPSHOT).parent.mkdir(parents=True, exist_ok=True)

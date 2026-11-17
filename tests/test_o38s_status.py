@@ -13,8 +13,11 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -22,6 +25,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import o38s_status as gate  # noqa: E402
 
 GENERATOR = '''import json, subprocess, sys
+from datetime import datetime, timezone
 from pathlib import Path
 out, repo = sys.argv[1], Path(sys.argv[sys.argv.index("--repo") + 1])
 def g(*a):
@@ -32,7 +36,8 @@ if rc.exists():
 raw = (repo / "template.json").read_text(encoding="utf-8")
 if raw.startswith("{"):
     status = json.loads(raw)
-    status["generated_utc"] = (repo / "now.txt").read_text().strip() if (repo / "now.txt").exists() else "2026-11-17T20:00:00Z"
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    status["generated_utc"] = (repo / "now.txt").read_text().strip() if (repo / "now.txt").exists() else now
     status["source"] = {"sha": g("rev-parse", "HEAD"), "branch": g("rev-parse", "--abbrev-ref", "HEAD"),
                         "dirty_tracked": bool(g("status", "--porcelain", "--untracked-files=no")),
                         "repo_url": (repo / "repo_url.txt").read_text().strip()}
@@ -149,8 +154,9 @@ class GateTest(unittest.TestCase):
         self.assertEqual(json.loads(built["snapshot_text"])["stage1"]["public_status"], "PASS", "fixture must hold a PASS")
 
     def test_generation_time_alone_may_differ(self):
-        self.assertNotEqual(self.snapshot()["generated_utc"], "2026-11-18T09:00:00Z")
-        self.source_sha = self.commit_source(**{"now.txt": "2026-11-18T09:00:00Z"})
+        later = datetime.fromtimestamp(time.time() + 3600, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        self.assertNotEqual(self.snapshot()["generated_utc"], later)
+        self.source_sha = self.commit_source(**{"now.txt": later})
         self.write_pin()
         status = self.snapshot()
         status["source"]["sha"] = self.source_sha  # the pin moved by a reviewed commit; the time was not regenerated
@@ -177,7 +183,7 @@ class GateTest(unittest.TestCase):
             with self.subTest(case["name"]):
                 genuine = self.snapshot()
                 changed = mutate(genuine, case)
-                self.assertNotEqual(gate.comparable(changed), gate.comparable(genuine), "the case must change the snapshot")
+                self.assertNotEqual(changed, genuine, "the case must change the snapshot")
                 self.write_snapshot(changed)
                 self.assert_refused("not the generator's output")
                 self.write_snapshot(genuine)
@@ -191,11 +197,35 @@ class GateTest(unittest.TestCase):
         self.write_snapshot(status)
         self.assert_refused("not the generator's output")
 
+    def test_reordered_keys_are_a_mismatch(self):
+        status = self.snapshot()
+        reordered = dict(reversed(list(status.items())))
+        self.assertEqual(reordered, status)
+        self.assertNotEqual(gate.canonical(reordered), gate.canonical(status), "the case must change the bytes")
+        self.write_snapshot(reordered)
+        self.assert_refused("the order of its keys")
+
+    def test_generation_time_outside_its_bounds_is_refused(self):
+        for when in ("2020-01-01T00:00:00Z", "2099-01-01T00:00:00Z"):
+            with self.subTest(when):
+                self.write_snapshot(dict(self.snapshot(), generated_utc=when))
+                self.assert_refused("is before the pinned commit or after this verification")
+
+    def test_a_crashed_build_leaves_no_artifact(self):
+        self.assertEqual(gate.main(["build", "--site", str(self.site)]), 0)
+        self.assertTrue((self.site / gate.ARTIFACT).exists(), "fixture must hold an earlier artifact")
+        with mock.patch.object(gate, "regenerate", side_effect=RuntimeError("crash")):
+            with self.assertRaises(RuntimeError):
+                gate.build(self.site)
+        self.assertFalse((self.site / gate.ARTIFACT).exists(), "a crashed build must leave no artifact")
+
     def test_snapshot_that_is_not_in_the_committed_form_is_refused(self):
         raw = (self.site / gate.SNAPSHOT).read_bytes()
         (self.site / gate.SNAPSHOT).write_bytes(raw.replace(b'"schema"', b'"stage1": {"public_status": "FAIL"},\n "schema"', 1))
         self.assert_refused("committed form")  # a duplicate key a parser would drop
         (self.site / gate.SNAPSHOT).write_bytes(b"not json")
+        self.assert_refused("not ASCII JSON")
+        (self.site / gate.SNAPSHOT).write_bytes(b"[" * 200000)  # too deep to parse
         self.assert_refused("not ASCII JSON")
         (self.site / gate.SNAPSHOT).unlink()
         self.assert_refused("unreadable", commit=False)
@@ -308,11 +338,12 @@ class LiveGateTest(unittest.TestCase):
 
     def test_committed_snapshot_is_verified_and_each_contradiction_refused(self):
         pin = gate.read_pin(ROOT / gate.PIN)
-        fresh = gate.regenerate(pin)
-        self.assertEqual(gate.comparable(fresh), gate.comparable(GENUINE))
-        for case in CASES:
+        raw, verification = gate.verify(ROOT)  # the gate itself, on this checkout
+        self.assertEqual(raw, (ROOT / gate.SNAPSHOT).read_bytes())
+        self.assertEqual(verification["source_sha"], pin["sha"])
+        for case in CASES:  # the gate compares bytes with the generator's output, which `raw` equals
             with self.subTest(case["name"]):
-                self.assertNotEqual(gate.comparable(mutate(GENUINE, case)), gate.comparable(fresh))
+                self.assertNotEqual(gate.canonical(mutate(GENUINE, case)), raw)
 
 
 if __name__ == "__main__":

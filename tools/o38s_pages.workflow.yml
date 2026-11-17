@@ -4,11 +4,20 @@
 #
 # The deploy job needs the build job, and the build job fails unless the regeneration gate passes for the exact
 # commit being deployed: a refused gate deploys nothing.
+#
+# The gate is the only route to a visible PASS only when the owner also (1) protects `main` with a ruleset (no
+# direct push, review required), (2) restricts the `github-pages` environment to `main`, and (3) keeps this the
+# only workflow with `pages: write`. Without those, another branch or workflow can deploy an artifact of its own.
+#
+# The schedule rebuilds daily: the pages distrust a verification older than 168 h (provisional), so without a
+# rebuild the cards fall back to UNKNOWN a week after the last push.
 name: pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 5 * * *"
   workflow_dispatch:
 
 permissions:

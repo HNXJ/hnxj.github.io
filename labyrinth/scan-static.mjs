@@ -2,7 +2,8 @@
 /**
  * Static observation-plane scan for labyrinth/ — no secrets, localhost, or mutation handlers.
  */
-import { readFileSync, readdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -76,6 +77,30 @@ for (const file of o38sFiles) {
   ].filter(([pattern]) => pattern.test(text));
   for (const [, what] of found) {
     console.error(`SCAN FAIL ${file}: ${what}`);
+    failed = true;
+  }
+}
+
+// The status artifact is built by the regeneration gate, never committed, and nothing committed may define it:
+// a committed artifact or an inline definition would be shown without the gate. A name assembled at run time
+// escapes this scan; review of the default branch is the control for that.
+const repo = join(root, "..");
+const ARTIFACT_FILE = "assets/data/o38s_status.js";
+const MAY_NAME_ARTIFACT = /^(assets\/o38s_(view|card)\.js|labyrinth\/scan-static\.mjs|tests\/|tools\/)/;
+let tracked = null;
+try {
+  tracked = execFileSync("git", ["-C", repo, "ls-files", "-z"], { encoding: "utf8" }).split("\0").filter(Boolean);
+} catch (err) {
+  console.error("SCAN FAIL: the tracked files are unreadable (git ls-files), so the artifact rule is unchecked");
+  failed = true;
+}
+for (const file of tracked || []) {
+  if (file === ARTIFACT_FILE) {
+    console.error(`SCAN FAIL ${file}: the status artifact is committed (it is built by the gate only)`);
+    failed = true;
+  } else if (/\.(html?|m?js)$/.test(file) && !MAY_NAME_ARTIFACT.test(file) && existsSync(join(repo, file)) &&
+             /O38S_ARTIFACT/.test(readFileSync(join(repo, file), "utf8"))) {
+    console.error(`SCAN FAIL ${file}: names O38S_ARTIFACT (only the built artifact defines it)`);
     failed = true;
   }
 }

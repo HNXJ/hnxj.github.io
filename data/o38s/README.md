@@ -14,10 +14,13 @@ for a status. This site holds no status logic. It owns provenance, freshness and
 | `assets/o38s_view.js`, `assets/o38s_card.js` | View model and renderer. |
 
 **Gate.** `python tools/o38s_status.py verify` clones the pinned repository, requires the pinned commit on the
-pinned ref, checks it out, runs the generator and compares its output with the committed snapshot, every field
-except `generated_utc`. Any mismatch, generator failure, missing source or unreadable provenance exits 1.
-`build` runs `verify` on a clean site commit and writes the artifact with the snapshot's sha256, the source
-commit, the site commit and the verification time. A refused build removes the artifact.
+pinned ref, checks it out, runs the generator and compares its output with the committed snapshot byte for
+byte, key order included, with `generated_utc` set aside. `generated_utc` cannot be regenerated, so it is
+bounded: no earlier than the pinned commit and no later than the verification (300 s tolerance). Any mismatch,
+generator failure, missing source or unreadable provenance exits 1. `build` runs `verify` on a clean site
+commit and writes the artifact with the snapshot's sha256, the source commit, the site commit and the
+verification time. A refused or crashed build removes the artifact. `labyrinth/scan-static.mjs` fails when the
+artifact is committed or when a committed page or script outside the view and the card names `O38S_ARTIFACT`.
 
 **Display.** A status is shown only from an artifact whose snapshot bytes hash to its verification record.
 Without the artifact, or with one that is unsealed, altered, malformed, or verified more than 168 h ago, every
@@ -28,9 +31,15 @@ the pinned commit deserves trust. The record in the artifact is a statement by t
 guarantee holds only where deployment runs `build` and nothing else writes the artifact. Under a deployment
 that serves the committed tree as is, no artifact exists and every status is UNKNOWN.
 
+The view hides a stage's detail when `status` differs from `public_status` (receipts not committed); that is
+the one presentation rule that reads two status fields, and it can only hide.
+
 **Deployment (not active).** `tools/o38s_pages.workflow.yml` is a proposed GitHub Pages workflow: tests, the
-gate, then deploy. It takes effect only when the owner moves it to `.github/workflows/` and sets the Pages
-source to GitHub Actions.
+gate, then deploy, on a push to `main` and daily (a verification older than 168 h is distrusted). It takes
+effect only when the owner moves it to `.github/workflows/` and sets the Pages source to GitHub Actions. The
+gate is the only route to a visible PASS only when the owner also protects `main` with a ruleset, restricts the
+`github-pages` environment to `main`, and keeps that workflow the only one with `pages: write`. Until then the
+false-PASS criterion is not closed: a hand-written artifact committed to the served branch would be displayed.
 
 **Commands.**
 
