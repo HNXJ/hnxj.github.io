@@ -39,6 +39,11 @@
     return typeof x === "string" && /^[0-9a-f]{40}$/.test(x);
   }
 
+  // The generator's time format, exactly: Date.parse alone accepts trailing text.
+  function isUtc(x) {
+    return typeof x === "string" && /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x);
+  }
+
   // Why the snapshot cannot be trusted; an empty list means it can.
   function distrust(status, nowMs, maxAgeHours) {
     if (!isObject(status)) return ["no status snapshot"];
@@ -47,7 +52,7 @@
     var source = isObject(status.source) ? status.source : {};
     if (!isSha(source.sha)) why.push("no source commit");
     if (source.dirty_tracked !== false) why.push("source tree had uncommitted changes");
-    var t = text(status.generated_utc) ? Date.parse(status.generated_utc) : NaN;
+    var t = isUtc(status.generated_utc) ? Date.parse(status.generated_utc) : NaN;
     if (isNaN(t)) {
       why.push("no generation time");
     } else if (typeof nowMs !== "number" || isNaN(nowMs)) {
@@ -64,13 +69,39 @@
     return trusted && STATUSES.indexOf(value) !== -1 ? value : "UNKNOWN";
   }
 
-  // A stage published as PASS whose own fields say otherwise: a check that is not PASS, runs that did not all
-  // exit 0, or a failed consistency block.
+  // A stage published as PASS whose own fields say otherwise: a check that is not PASS, run counts that are
+  // missing or unequal, a failed consistency block, a failed phase or a failed construction gate.
   function contradictsPass(stage) {
     var checks = isObject(stage.checks) ? stage.checks : {};
     var bad = Object.keys(checks).some(function (name) { return checks[name] !== "PASS"; });
-    var runs = count(stage.runs_exit0) !== null && count(stage.runs_expected) !== null && stage.runs_exit0 !== stage.runs_expected;
-    return bad || runs || (isObject(stage.consistency) && stage.consistency.ok === false);
+    var runs = count(stage.runs_exit0) === null || stage.runs_exit0 !== stage.runs_expected;
+    var phase = Array.isArray(stage.phases) && stage.phases.some(function (p) { return !isObject(p) || p.status === "FAIL"; });
+    var gate = isObject(stage.construction_gate) && stage.construction_gate.verdict === "FAIL";
+    return bad || runs || phase || gate || (isObject(stage.consistency) && stage.consistency.ok === false);
+  }
+
+  // Rows of generator records (phases, attempts) with the contract's keys only.
+  function rows(list, keys) {
+    if (!Array.isArray(list)) return [];
+    return list.filter(isObject).map(function (item) {
+      var out = {};
+      keys.forEach(function (k) {
+        if (typeof item[k] === "string" || typeof item[k] === "number") out[k] = item[k];
+      });
+      return out;
+    });
+  }
+
+  var PHASE_KEYS = ["mode", "status", "reason", "started", "exit0", "construction", "integrity", "last_line_utc"];
+  var ATTEMPT_KEYS = ["attempt", "mode", "head", "construction", "stop"];
+
+  // The gate's multiple-comparison family: numbers only.
+  function numbers(obj) {
+    var out = {};
+    Object.keys(obj).forEach(function (k) {
+      if (typeof obj[k] === "number" && isFinite(obj[k])) out[k] = obj[k];
+    });
+    return out;
   }
 
   // The generator writes a blocker as "stage N: <reason>" for a stage that is BLOCKED or FAIL. One is shown only
@@ -119,8 +150,8 @@
     var links = [];
     Object.keys(status.evidence).forEach(function (key) {
       var path = isObject(status.evidence[key]) ? text(status.evidence[key].path) : null;
-      if (!path || path.indexOf("..") !== -1 || path.charAt(0) === "/" || /[\s"'<>\\?#]/.test(path)) return;
-      links.push({ label: EVIDENCE_LABELS[key] || key, url: base + "/blob/" + source.sha + "/" + path });
+      if (!Object.prototype.hasOwnProperty.call(EVIDENCE_LABELS, key) || !path || path.indexOf("..") !== -1 || path.charAt(0) === "/" || /[\s"'<>\\?#]/.test(path)) return;
+      links.push({ label: EVIDENCE_LABELS[key], url: base + "/blob/" + source.sha + "/" + path });
     });
     return links;
   }
@@ -133,7 +164,10 @@
     var keys = ["stage1_receipt", "stage2_receipt"];
     for (var i = 0; i < stages.length; i++) {
       var receipt = isObject(evidence[keys[i]]) ? text(evidence[keys[i]].path) : null;
-      if (stages[i].status === "PASS" && receipt && m.evidence === receipt) return text(m.what);
+      var what = text(m.what);
+      // The text must also name that stage first ("stage 1 ...", "stage 2: ...").
+      if (stages[i].status === "PASS" && receipt && m.evidence === receipt && what &&
+          what.indexOf("stage " + (i + 1)) === 0 && !/\d/.test(what.charAt(7))) return what;
     }
     return null;
   }
@@ -150,7 +184,8 @@
     var raw2 = isObject(s.stage2) ? s.stage2 : {};
     var gate = isObject(raw2.construction_gate) ? raw2.construction_gate : {};
     var tests = isObject(s.tests) ? s.tests : {};
-    var testsPublic = trusted && STATUSES.indexOf(tests.status) !== -1 && tests.public_status === tests.status;
+    var testsPublic = trusted && STATUSES.indexOf(tests.status) !== -1 && tests.public_status === tests.status &&
+      !(tests.status === "PASS" && !(count(tests.passed) > 0 && tests.failed === 0));
     var blockers = trusted ? blockerViews(s, [stage1, stage2]) : { items: [], known: false };
 
     return {
@@ -163,7 +198,7 @@
       // The gate verdict is a stage-2 detail: shown only when stage 2 is repository-verified.
       gate: {
         status: shown(stage2.verified ? gate.verdict : null, trusted),
-        family: stage2.verified && isObject(gate.family) ? gate.family : null
+        family: stage2.verified && isObject(gate.family) ? numbers(gate.family) : null
       },
       // The generator gives the test run no public status (it is a run on the generating machine, with no
       // committed receipt), so its verdict is shown only if a later generator publishes one as `public_status`.
@@ -174,16 +209,14 @@
         defined: trusted ? count(tests.defined) : null,
         reason: testsPublic ? text(tests.reason) : null
       },
-      phases: stage2.verified && Array.isArray(raw2.phases) ? raw2.phases.filter(isObject) : [],
-      attempts: stage2.verified && Array.isArray(raw2.attempts) ? raw2.attempts.filter(isObject) : [],
+      phases: stage2.verified ? rows(raw2.phases, PHASE_KEYS) : [],
+      attempts: stage2.verified ? rows(raw2.attempts, ATTEMPT_KEYS) : [],
       blockers: blockers.items,
       blockers_known: blockers.known,
       milestone: trusted ? milestoneText(s, [stage1, stage2]) : null,
       links: trusted ? evidenceLinks(s) : [],
       provenance: {
-        sha: isSha(source.sha) ? source.sha : null,
-        branch: text(source.branch),
-        generated_utc: text(s.generated_utc)
+        sha: isSha(source.sha) ? source.sha : null,        generated_utc: isUtc(s.generated_utc) ? s.generated_utc : null
       }
     };
   }

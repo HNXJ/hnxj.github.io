@@ -52,13 +52,13 @@ test("trusted snapshot shows the generator's public statuses", () => {
 
 for (const status of ["PASS", "FAIL", "RUNNING", "BLOCKED", "UNKNOWN"]) {
   test(`stage 2 public status ${status} is shown as ${status}`, () => {
-    const v = view((s) => { s.stage2.status = status; s.stage2.public_status = status; s.stage2.committed = true; });
+    const v = view((s) => { s.stage2.status = status; s.stage2.public_status = status; s.stage2.committed = true; s.stage2.runs_exit0 = 30; });
     assert.equal(v.stages[1].status, status);
     assert.equal(v.stages[1].verified, status !== "UNKNOWN");
     assert.equal(v.stages[1].reason, status !== "UNKNOWN" ? "no stage-2 log" : null);
   });
   test(`tests status ${status} is shown as ${status} only when the generator publishes it`, () => {
-    const published = view((s) => { s.tests.status = status; s.tests.public_status = status; s.tests.passed = 53; });
+    const published = view((s) => { s.tests.status = status; s.tests.public_status = status; s.tests.passed = 53; s.tests.failed = 0; });
     assert.equal(published.tests.status, status);
     assert.equal(published.tests.passed, 53);
     const local = view((s) => { s.tests.status = status; s.tests.passed = 53; s.tests.failed = 0; });
@@ -140,13 +140,13 @@ test("the milestone is shown only with the receipt of a stage shown as PASS", ()
   // Stage 2 passed, stage 1 did not: a stage-1 milestone is not carried by the stage-2 PASS.
   const crossed = view((s) => {
     s.stage1.status = "FAIL"; s.stage1.public_status = "FAIL";
-    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true;
+    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true; s.stage2.runs_exit0 = 30;
     s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
   });
   assert.equal(crossed.stages[1].status, "PASS");
   assert.equal(crossed.milestone, null);
   const stage2 = view((s) => {
-    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true;
+    s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true; s.stage2.runs_exit0 = 30;
     s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
     s.latest_verified_milestone = { what: "stage 2: 30/30 runs", evidence: "docs/laminar_motif/S2.md" };
   });
@@ -159,7 +159,7 @@ test("a local RUNNING is never shown as repository-verified", () => {
 });
 
 test("gate verdict is shown only with a verified stage 2", () => {
-  const ok = view((s) => { s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true; s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05, n_tests: 780 } }; });
+  const ok = view((s) => { s.stage2.status = "PASS"; s.stage2.public_status = "PASS"; s.stage2.committed = true; s.stage2.runs_exit0 = 30; s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05, n_tests: 780 } }; });
   assert.equal(ok.gate.status, "PASS");
   assert.equal(ok.gate.family.n_tests, 780);
   const fail = view((s) => { s.stage2.status = "FAIL"; s.stage2.public_status = "FAIL"; s.stage2.committed = true; s.stage2.construction_gate = { verdict: "FAIL", family: null }; });
@@ -299,6 +299,59 @@ test("a published PASS that the stage's own fields contradict is UNKNOWN", () =>
     assert.equal(v.milestone, null, name);
     assert.equal(hasPass(v), false, name);
   }
+});
+
+const stage2Pass = (s) => {
+  s.stage2 = { status: "PASS", public_status: "PASS", committed: true, reason: "rest DONE; integrity PASS",
+    runs_exit0: 30, runs_expected: 30, construction_gate: { verdict: "PASS", family: { alpha: 0.05, note: "x PASS" } },
+    phases: [{ mode: "smoke", status: "PASS", extra: "y PASS" }, { mode: "rest", status: "PASS" }], attempts: [] };
+  s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
+};
+
+test("a published stage-2 PASS with a failed phase, a failed gate or missing run counts is UNKNOWN", () => {
+  assert.equal(view(stage2Pass).stages[1].status, "PASS");
+  for (const [name, change] of Object.entries({
+    "a failed phase": (s) => { s.stage2.phases[0].status = "FAIL"; },
+    "a failed gate": (s) => { s.stage2.construction_gate.verdict = "FAIL"; },
+    "no run count": (s) => { delete s.stage2.runs_exit0; },
+    "a run count that is a string": (s) => { s.stage2.runs_exit0 = "30"; },
+    "no expected count": (s) => { delete s.stage2.runs_expected; },
+  })) {
+    const v = view((s) => { stage2Pass(s); change(s); });
+    assert.equal(v.stages[1].status, "UNKNOWN", name);
+    assert.equal(v.gate.status, "UNKNOWN", name);
+    assert.deepEqual(v.phases, [], name);
+  }
+});
+
+test("records carry the contract's keys only, and the gate family numbers only", () => {
+  const v = view(stage2Pass);
+  assert.deepEqual(v.phases, [{ mode: "smoke", status: "PASS" }, { mode: "rest", status: "PASS" }]);
+  assert.deepEqual(v.gate.family, { alpha: 0.05 });
+});
+
+test("the milestone text must name the stage whose receipt it cites", () => {
+  const crossed = view((s) => { s.latest_verified_milestone.what = "stage 2: 30/30 runs, integrity PASS"; });
+  assert.equal(crossed.stages[1].status, "UNKNOWN");
+  assert.equal(crossed.milestone, null);
+  assert.equal(view((s) => { s.latest_verified_milestone.what = "stage 12 PASS"; }).milestone, null);
+  assert.equal(view((s) => { s.latest_verified_milestone.what = "all stages PASS"; }).milestone, null);
+});
+
+test("provenance shows a 40-hex commit and the generator's exact time format, nothing else", () => {
+  const v = view((s) => { s.generated_utc = "2026-11-17T18:30:34Z (Stage 2 PASS)"; s.source.branch = "Stage 2 PASS"; });
+  assert.equal(v.trusted, false);
+  assert.equal(v.provenance.generated_utc, null);
+  assert.equal(hasPass(v), false);
+  assert.deepEqual(Object.keys(view().provenance).sort(), ["generated_utc", "sha"]);
+  assert.equal(view((s) => { s.generated_utc = "2026-11-17"; }).trusted, false, "date only");
+});
+
+test("evidence links use known keys only, and a tests PASS needs passed > 0 and failed 0", () => {
+  const v = view((s) => { s.evidence["Stage 2 PASS"] = { path: "a.md" }; });
+  assert.deepEqual(v.links.map((l) => l.label), ["Specification", "Stage 1 receipt"]);
+  const t = view((s) => { s.tests = { status: "PASS", public_status: "PASS", passed: 0, failed: 9, defined: 9 }; });
+  assert.equal(t.tests.status, "UNKNOWN");
 });
 
 test("free text outside a shown verdict is not carried: objective, current stage, test reason, project name", () => {

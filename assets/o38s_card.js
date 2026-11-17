@@ -25,8 +25,7 @@
 
   function provenanceText(v) {
     var p = v.provenance;
-    return "Source " + (p.sha ? p.sha.slice(0, 10) : "unknown") + (p.branch ? " (" + p.branch + ")" : "") +
-      " · generated " + (p.generated_utc || "unknown");
+    return "Source " + (p.sha ? p.sha.slice(0, 10) : "unknown") + " · generated " + (p.generated_utc || "unknown");
   }
 
   // Lines for the Labyrinth gallery card: status, latest verified milestone, provenance.
