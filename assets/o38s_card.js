@@ -107,7 +107,7 @@
 
     root.appendChild(el("h3", "o38s-h", "Latest verified milestone"));
     root.appendChild(el("p", "o38s-note", v.milestone || "unknown"));
-    list(root, "Running attempts", v.phases, v.trusted ? "none shown: a running stage is visible only where it runs, until its log is committed" : "unknown");
+    list(root, "Stage 2 phases", v.phases, v.trusted ? "none recorded: a running stage is visible only where it runs, until its log is committed" : "unknown");
     list(root, "Earlier attempts", v.attempts, v.trusted ? "none" : "unknown");
     list(root, "Blockers", v.blockers, v.blockers_known ? "none recorded" : "unknown");
 

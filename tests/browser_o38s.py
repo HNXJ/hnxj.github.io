@@ -156,7 +156,12 @@ with sync_playwright() as pw:
             failures.append(f"{name}: page errors {errors}")
         if overflow:
             failures.append(f"{name}: horizontal overflow")
+        if "RUNNING ATTEMPTS" in board_text.upper():  # the phase list holds finished phases too (review 2026-11-17)
+            failures.append(f"{name}: stage-2 phases are listed under a 'Running attempts' heading")
         if name == "real":
+            assert any(p.get("status") == "PASS" for p in LIVE["stage2"]["phases"]), "the built snapshot must hold a finished phase"
+            if "STAGE 2 PHASES" not in board_text.upper():
+                failures.append("real: no 'Stage 2 phases' heading")
             phone = browser.new_context(viewport={"width": 390, "height": 800})
             pp = phone.new_page()
             pp.route(OFF_SITE, lambda route: route.abort())

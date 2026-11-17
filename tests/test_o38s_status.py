@@ -351,9 +351,10 @@ class LiveGateTest(unittest.TestCase):
         self.assertEqual(verification["source_sha"], pin["sha"])
         live = json.loads(raw)
         # The gate compares bytes with the generator's output, which `raw` equals. A case that restates what the
-        # live snapshot already says (stage 2 PASS once stage 2 passed) changes nothing, so it is not counted.
-        changed = [c["name"] for c in CASES if gate.canonical(mutate(live, c)) != raw]
-        self.assertGreaterEqual(len(changed), 10, f"cases that change the live snapshot: {changed}")
+        # live snapshot already says changes nothing: once stage 2 passed, that is the stage 2 PASS case and no other.
+        same = {c["name"] for c in CASES if gate.canonical(mutate(live, c)) == raw}
+        restated = {"modified verdict, unchanged source sha: stage 2 PASS"} if live["stage2"]["status"] == "PASS" else set()
+        self.assertEqual(same, restated)
 
 
 if __name__ == "__main__":
