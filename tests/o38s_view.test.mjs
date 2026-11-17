@@ -54,7 +54,8 @@ for (const status of ["PASS", "FAIL", "RUNNING", "BLOCKED", "UNKNOWN"]) {
   test(`stage 2 public status ${status} is shown as ${status}`, () => {
     const v = view((s) => { s.stage2.status = status; s.stage2.public_status = status; s.stage2.committed = true; });
     assert.equal(v.stages[1].status, status);
-    assert.equal(v.stages[1].verified, true);
+    assert.equal(v.stages[1].verified, status !== "UNKNOWN");
+    assert.equal(v.stages[1].reason, status !== "UNKNOWN" ? "no stage-2 log" : null);
   });
   test(`tests status ${status} is shown as ${status} only when the generator publishes it`, () => {
     const published = view((s) => { s.tests.status = status; s.tests.public_status = status; s.tests.passed = 53; });
@@ -246,11 +247,69 @@ test("evidence links point at the source commit, and unsafe paths or hosts are d
   assert.deepEqual(unsafe.links, []);
 });
 
-test("blockers are passed through when trusted and marked unknown otherwise", () => {
-  const v = view((s) => { s.blockers = ["construction gate ruling pending"]; });
-  assert.deepEqual(v.blockers, ["construction gate ruling pending"]);
+test("a blocker is shown only as the generator's line for a stage shown as BLOCKED or FAIL", () => {
+  const blocked = (s) => {
+    s.stage2 = { status: "BLOCKED", public_status: "BLOCKED", committed: true, reason: "construction gate ruling pending" };
+    s.blockers = ["stage 2: construction gate ruling pending"];
+  };
+  const v = view(blocked);
+  assert.deepEqual(v.blockers, ["stage 2: construction gate ruling pending"]);
   assert.equal(v.blockers_known, true);
-  const stale = view((s) => { s.blockers = ["x"]; s.source.dirty_tracked = true; });
+  assert.equal(view().blockers_known, true, "an empty list is known");
+  // The generator builds blockers from the local status: a stage that is not committed must not leak its reason.
+  const local = view((s) => {
+    s.stage2 = { status: "BLOCKED", public_status: "UNKNOWN", committed: false, reason: "smoke PASS; rest phase not launched" };
+    s.blockers = ["stage 2: smoke PASS; rest phase not launched"];
+  });
+  assert.deepEqual(local.blockers, []);
+  assert.equal(local.blockers_known, false);
+  assert.equal(hasPass({ b: local.blockers, s: local.stages[1] }), false);
+  const other = view((s) => { blocked(s); s.blockers.push("all stages PASS"); });
+  assert.deepEqual(other.blockers, ["stage 2: construction gate ruling pending"]);
+  assert.equal(other.blockers_known, false);
+  const stale = view((s) => { blocked(s); s.source.dirty_tracked = true; });
   assert.deepEqual(stale.blockers, []);
   assert.equal(stale.blockers_known, false);
+});
+
+// Committed receipts with both statuses UNKNOWN (e.g. an integrity receipt that reads UNKNOWN): no verdict is
+// shown, so no detail is either.
+test("a committed stage whose verdict is UNKNOWN shows no detail and no gate verdict", () => {
+  const v = view((s) => {
+    s.stage1 = { status: "UNKNOWN", public_status: "UNKNOWN", committed: true, reason: "DONE; checks PASS",
+      runs_exit0: 15, runs_expected: 15, checks: { stage_check: "PASS" } };
+    s.stage2 = { status: "UNKNOWN", public_status: "UNKNOWN", committed: true, reason: "checks PASS",
+      construction_gate: { verdict: "PASS", family: { ruling: "PASS" } },
+      phases: [{ mode: "smoke", status: "PASS" }], attempts: [{ construction: "PASS" }] };
+  });
+  assert.equal(v.trusted, true);
+  assert.deepEqual(v.stages.map((s) => s.verified), [false, false]);
+  assert.equal(v.gate.status, "UNKNOWN");
+  assert.equal(hasPass(v), false);
+});
+
+test("a published PASS that the stage's own fields contradict is UNKNOWN", () => {
+  for (const [name, change] of Object.entries({
+    "a check that is not PASS": (s) => { s.stage1.checks.integrity = "FAIL"; },
+    "runs that did not all exit 0": (s) => { s.stage1.runs_exit0 = 3; },
+    "a failed consistency block": (s) => { s.stage1.consistency = { ok: false }; },
+  })) {
+    const v = view(change);
+    assert.equal(v.stages[0].status, "UNKNOWN", name);
+    assert.equal(v.milestone, null, name);
+    assert.equal(hasPass(v), false, name);
+  }
+});
+
+test("free text outside a shown verdict is not carried: objective, current stage, test reason, project name", () => {
+  const untrusted = view((s) => { s.source.dirty_tracked = true; s.project.objective = "all stages PASS"; });
+  assert.equal(untrusted.objective, null);
+  const v = view((s) => {
+    s.project.name = "PASS"; s.current_stage = "stage 2 PASS"; s.tests.status = "PASS"; s.tests.reason = "all PASS";
+  });
+  assert.equal(v.name, "Jomission / LANSA (OPEN-38)");
+  assert.equal(v.current_stage, null);
+  assert.equal(v.tests.reason, null);
+  assert.equal(view().current_stage, "stage 1");
+  assert.equal(view().objective, "objective text");
 });

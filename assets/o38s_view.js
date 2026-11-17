@@ -64,16 +64,37 @@
     return trusted && STATUSES.indexOf(value) !== -1 ? value : "UNKNOWN";
   }
 
+  // A stage published as PASS whose own fields say otherwise: a check that is not PASS, runs that did not all
+  // exit 0, or a failed consistency block.
+  function contradictsPass(stage) {
+    var checks = isObject(stage.checks) ? stage.checks : {};
+    var bad = Object.keys(checks).some(function (name) { return checks[name] !== "PASS"; });
+    var runs = count(stage.runs_exit0) !== null && count(stage.runs_expected) !== null && stage.runs_exit0 !== stage.runs_expected;
+    return bad || runs || (isObject(stage.consistency) && stage.consistency.ok === false);
+  }
+
+  // The generator writes a blocker as "stage N: <reason>" for a stage that is BLOCKED or FAIL. One is shown only
+  // when it is that line for a stage this view shows as BLOCKED or FAIL.
+  function blockerViews(s, stages) {
+    var listed = Array.isArray(s.blockers) ? s.blockers : null;
+    if (!listed) return { items: [], known: false };
+    var allowed = [];
+    stages.forEach(function (st) {
+      if ((st.status === "BLOCKED" || st.status === "FAIL") && st.reason) allowed.push(st.label.toLowerCase() + ": " + st.reason);
+    });
+    var items = listed.filter(function (b) { return allowed.indexOf(b) !== -1; });
+    return { items: items, known: items.length === listed.length };
+  }
+
   function stageView(label, stage, trusted) {
     stage = isObject(stage) ? stage : {};
-    // The generator publishes a verdict other than UNKNOWN only for committed receipts; one without them is a
-    // contradiction and is not shown.
-    var status = stage.committed === true ? shown(stage.public_status, trusted) : "UNKNOWN";
-    // Detail (reason, checks, run counts, gate, attempts) is repository-verified only when the generator marks
-    // the stage's receipts committed and its public status is the local one. A stage without receipts in the
-    // repository shows its status alone: its checks can read PASS from machine-local files.
-    var verified = trusted && stage.committed === true && STATUSES.indexOf(stage.status) !== -1 &&
-      stage.public_status === stage.status;
+    // A verdict is shown only as the generator publishes it: receipts committed and the public status equal to
+    // the local one. Anything else, a PASS its own checks contradict included, is UNKNOWN.
+    var status = stage.committed === true && stage.public_status === stage.status ? shown(stage.public_status, trusted) : "UNKNOWN";
+    if (status === "PASS" && contradictsPass(stage)) status = "UNKNOWN";
+    // Detail (reason, checks, run counts, gate, phases, attempts, blockers) belongs to a shown verdict. An
+    // UNKNOWN stage shows no detail: its checks and reason can read PASS from machine-local files.
+    var verified = status !== "UNKNOWN";
     var checks = [];
     if (verified && isObject(stage.checks)) {
       Object.keys(stage.checks).forEach(function (name) {
@@ -129,13 +150,15 @@
     var raw2 = isObject(s.stage2) ? s.stage2 : {};
     var gate = isObject(raw2.construction_gate) ? raw2.construction_gate : {};
     var tests = isObject(s.tests) ? s.tests : {};
+    var testsPublic = trusted && STATUSES.indexOf(tests.status) !== -1 && tests.public_status === tests.status;
+    var blockers = trusted ? blockerViews(s, [stage1, stage2]) : { items: [], known: false };
 
     return {
       trusted: trusted,
       why_unknown: why,
-      name: text(project.name) || "Jomission / LANSA (OPEN-38)",
-      objective: text(project.objective),
-      current_stage: trusted ? text(s.current_stage) : null,
+      name: "Jomission / LANSA (OPEN-38)",
+      objective: trusted ? text(project.objective) : null,
+      current_stage: trusted && (s.current_stage === "stage 1" || s.current_stage === "stage 2") ? s.current_stage : null,
       stages: [stage1, stage2],
       // The gate verdict is a stage-2 detail: shown only when stage 2 is repository-verified.
       gate: {
@@ -145,16 +168,16 @@
       // The generator gives the test run no public status (it is a run on the generating machine, with no
       // committed receipt), so its verdict is shown only if a later generator publishes one as `public_status`.
       tests: {
-        status: shown(tests.public_status === tests.status ? tests.status : null, trusted),
-        passed: trusted && tests.public_status === tests.status ? count(tests.passed) : null,
-        failed: trusted && tests.public_status === tests.status ? count(tests.failed) : null,
+        status: testsPublic ? tests.status : "UNKNOWN",
+        passed: testsPublic ? count(tests.passed) : null,
+        failed: testsPublic ? count(tests.failed) : null,
         defined: trusted ? count(tests.defined) : null,
-        reason: trusted ? text(tests.reason) : null
+        reason: testsPublic ? text(tests.reason) : null
       },
       phases: stage2.verified && Array.isArray(raw2.phases) ? raw2.phases.filter(isObject) : [],
       attempts: stage2.verified && Array.isArray(raw2.attempts) ? raw2.attempts.filter(isObject) : [],
-      blockers: trusted && Array.isArray(s.blockers) ? s.blockers : [],
-      blockers_known: trusted && Array.isArray(s.blockers),
+      blockers: blockers.items,
+      blockers_known: blockers.known,
       milestone: trusted ? milestoneText(s, [stage1, stage2]) : null,
       links: trusted ? evidenceLinks(s) : [],
       provenance: {
