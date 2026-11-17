@@ -1,0 +1,2 @@
+# The regeneration gate compares these byte for byte: no line-ending conversion.
+data/o38s/*.json -text

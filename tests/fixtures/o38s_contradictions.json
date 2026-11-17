@@ -1,0 +1,65 @@
+{
+ "about": "Snapshots the generator does not write: each is a genuine snapshot with the changes below. The regeneration gate must refuse every one (tests/test_o38s_status.py); the view holds no rule that would catch them.",
+ "cases": [
+  {
+   "name": "stage 2 PASS with only a smoke phase",
+   "set": {
+    "stage2/status": "PASS", "stage2/public_status": "PASS", "stage2/committed": true, "stage2/runs_exit0": 30,
+    "stage2/phases": [{"mode": "smoke", "status": "PASS", "started": 30, "exit0": 30}],
+    "stage2/construction_gate/verdict": "PASS"
+   }
+  },
+  {"name": "stage 1 PASS with no consistency block", "delete": ["stage1/consistency"]},
+  {"name": "stage 1 PASS with consistency ok null", "set": {"stage1/consistency/ok": null}},
+  {"name": "stage 1 PASS with a consistency problem listed", "set": {"stage1/consistency/problems": ["head mismatch"]}},
+  {
+   "name": "stage 1 PASS with an execution sha that is not its head",
+   "set": {"stage1/consistency/execution_sha": "0000000000000000000000000000000000000000"}
+  },
+  {
+   "name": "stage 2 PASS with a phase whose runs did not all exit 0",
+   "set": {
+    "stage2/status": "PASS", "stage2/public_status": "PASS", "stage2/committed": true, "stage2/runs_exit0": 30,
+    "stage2/phases": [
+     {"mode": "smoke", "status": "PASS", "started": 15, "exit0": 15},
+     {"mode": "rest", "status": "PASS", "started": 15, "exit0": 3}
+    ],
+    "stage2/construction_gate/verdict": "PASS"
+   }
+  },
+  {
+   "name": "stage 2 PASS with phase run counts that do not sum to the stage count",
+   "set": {
+    "stage2/status": "PASS", "stage2/public_status": "PASS", "stage2/committed": true, "stage2/runs_exit0": 30,
+    "stage2/phases": [
+     {"mode": "smoke", "status": "PASS", "started": 1, "exit0": 1},
+     {"mode": "rest", "status": "PASS", "started": 1, "exit0": 1}
+    ],
+    "stage2/construction_gate/verdict": "PASS"
+   }
+  },
+  {
+   "name": "gate PASS beside a failed construction phase",
+   "set": {
+    "stage2/status": "FAIL", "stage2/public_status": "FAIL", "stage2/committed": true,
+    "stage2/phases": [{"mode": "smoke", "status": "FAIL", "construction": "FAIL"}],
+    "stage2/construction_gate/verdict": "PASS"
+   }
+  },
+  {
+   "name": "modified verdict, unchanged source sha: stage 2 PASS",
+   "set": {"stage2/status": "PASS", "stage2/public_status": "PASS"}
+  },
+  {
+   "name": "modified verdict, unchanged source sha: stage 1 FAIL",
+   "set": {"stage1/status": "FAIL", "stage1/public_status": "FAIL"}
+  },
+  {
+   "name": "tests PASS with a failing pytest exit code",
+   "set": {
+    "tests/status": "PASS", "tests/public_status": "PASS", "tests/passed": 5, "tests/failed": 0,
+    "tests/reason": "pytest rc 3"
+   }
+  }
+ ]
+}

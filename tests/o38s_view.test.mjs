@@ -1,20 +1,24 @@
-// Tests of assets/o38s_view.js: the cards show the generator's public status or UNKNOWN, never a false PASS.
+// Tests of assets/o38s_view.js: provenance, freshness and presentation of a verified artifact.
 // Run: node --test tests/
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const V = require("../assets/o38s_view.js");
 
-const NOW = Date.parse("2026-11-17T19:00:00Z");
-const SHA = "c9b92249d1622a0f6f9d05a60717ab0a912321fa";
+const NOW = Date.parse("2026-11-17T21:00:00Z");
+const SHA = "568e659a9e6d1f810b6ad05bf070f659d86bbba0";
+const SITE = "18c1e229ae3c09f8cff066f1ede567b52fab4c7b";
+const sha256 = (text) => createHash("sha256").update(text, "utf8").digest("hex");
 
-// A snapshot in the generator's shape (o38s_status/1), stage 1 passed and committed, stage 2 not started.
+// A snapshot in the generator's shape (o38s_status/1): stage 1 passed and committed, stage 2 not started.
 function snapshot(change) {
   const s = {
     schema: "o38s_status/1",
-    generated_utc: "2026-11-17T18:30:34Z",
+    generated_utc: "2026-11-17T19:32:37Z",
     source: { sha: SHA, branch: "_temp_o38s-status", dirty_tracked: false, repo_url: "https://github.com/HNXJ/jomission" },
     project: { name: "Jomission / LANSA (OPEN-38)", objective: "objective text" },
     current_stage: "stage 1",
@@ -28,7 +32,7 @@ function snapshot(change) {
       attempts: [{ attempt: 1, mode: "smoke", construction: "FAIL", stop: "STOP: construction invariance failed" }],
       construction_gate: { verdict: "UNKNOWN", family: null }, phases: []
     },
-    tests: { files: 7, defined: 53, status: "UNKNOWN", reason: "not run" },
+    tests: { files: 7, defined: 57, status: "UNKNOWN", reason: "not run (--run-tests not given)" },
     latest_verified_milestone: { what: "stage 1 positive controls: 15/15 runs", evidence: "docs/laminar_motif/S1.md" },
     blockers: [],
     evidence: { spec: { path: "docs/laminar_motif/SPEC.md", sha256: "0" }, stage1_receipt: { path: "docs/laminar_motif/S1.md", sha256: "1" } }
@@ -37,379 +41,229 @@ function snapshot(change) {
   return s;
 }
 
-const view = (change, now = NOW, maxAge) => V.view(snapshot(change), now, maxAge);
-const hasPass = (v) => JSON.stringify(v).includes("PASS");
+// The artifact the gate builds for a snapshot: its text and a verification record bound to that text.
+// `seal` changes the artifact after it was sealed, the way nothing in the pipeline does.
+function artifact(change, seal) {
+  const text = JSON.stringify(snapshot(change), null, 1) + "\n";
+  const a = {
+    snapshot_text: text,
+    verification: {
+      schema: "o38s_verification/1", snapshot_sha256: sha256(text), site_sha: SITE, source_sha: SHA,
+      source_repo: "https://github.com/HNXJ/jomission", source_ref: "refs/heads/_temp_o38s-status",
+      python: "3.14", verified_utc: "2026-11-17T20:00:00Z"
+    }
+  };
+  if (seal) seal(a);
+  return a;
+}
 
-test("trusted snapshot shows the generator's public statuses", () => {
+const view = (change, seal, now = NOW, maxAge) => V.view(artifact(change, seal), now, maxAge);
+const hasPass = (v) => JSON.stringify(v).includes("PASS");
+const stage2Is = (status) => (s) => {
+  s.stage2 = { status, public_status: status, committed: true, reason: "generator reason", runs_exit0: 30, runs_expected: 30,
+    construction_gate: { verdict: status, family: { alpha: 0.05, n_tests: 780, nested: { x: 1 } } },
+    phases: [{ mode: "smoke", status: "PASS", exit0: 15, extra: ["x"] }, { mode: "rest", status, exit0: 15 }], attempts: [] };
+};
+
+test("sha256 matches the reference implementation at block boundaries and on the committed snapshot", () => {
+  assert.equal(V.sha256("abc"), "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+  for (const n of [0, 1, 55, 56, 57, 63, 64, 65, 119, 120, 128, 1000]) {
+    const text = "a".repeat(n);
+    assert.equal(V.sha256(text), sha256(text), `length ${n}`);
+  }
+  assert.equal(V.sha256("é → 🙂"), sha256("é → 🙂"));
+  const committed = readFileSync(new URL("../data/o38s/status.json", import.meta.url), "utf8");
+  assert.ok(committed.length > 3000, "the committed snapshot spans many blocks");
+  assert.equal(V.sha256(committed), sha256(committed));
+});
+
+test("a verified artifact shows the generator's public statuses and detail", () => {
   const v = view();
   assert.equal(v.trusted, true);
+  assert.deepEqual(v.why_unknown, []);
   assert.deepEqual(v.stages.map((s) => s.status), ["PASS", "UNKNOWN"]);
   assert.equal(V.summary(v), "Stage 1 PASS · Stage 2 UNKNOWN");
-  assert.equal(v.milestone, "stage 1 positive controls: 15/15 runs");
+  assert.equal(v.stages[0].reason, "DONE; checks PASS");
   assert.equal(v.stages[0].runs_exit0, 15);
-  assert.equal(v.provenance.sha, SHA);
-  assert.equal(v.provenance.generated_utc, "2026-11-17T18:30:34Z");
+  assert.equal(v.stages[0].checks.length, 4);
+  assert.equal(v.milestone, "stage 1 positive controls: 15/15 runs");
+  assert.equal(v.current_stage, "stage 1");
+  assert.equal(v.objective, "objective text");
+  assert.deepEqual(v.provenance, { source_sha: SHA, generated_utc: "2026-11-17T19:32:37Z", verified_utc: "2026-11-17T20:00:00Z", site_sha: SITE });
 });
 
 for (const status of ["PASS", "FAIL", "RUNNING", "BLOCKED", "UNKNOWN"]) {
-  test(`stage 2 public status ${status} is shown as ${status}`, () => {
-    const v = view((s) => { stage2Pass(s); s.stage2.status = status; s.stage2.public_status = status; });
+  test(`stage 2, gate and tests ${status} are shown as ${status}, without reinterpretation`, () => {
+    const v = view((s) => { stage2Is(status)(s); s.tests.status = status; s.tests.passed = 50; s.tests.failed = 7; });
     assert.equal(v.stages[1].status, status);
-    assert.equal(v.stages[1].verified, status !== "UNKNOWN");
-    assert.equal(v.stages[1].reason, status !== "UNKNOWN" ? "rest DONE; integrity PASS" : null);
-  });
-  test(`tests status ${status} is shown as ${status} only when the generator publishes it`, () => {
-    const published = view((s) => { s.tests.status = status; s.tests.public_status = status; s.tests.passed = 53; s.tests.failed = 0; });
-    assert.equal(published.tests.status, status);
-    assert.equal(published.tests.passed, 53);
-    const local = view((s) => { s.tests.status = status; s.tests.passed = 53; s.tests.failed = 0; });
-    assert.equal(local.tests.status, "UNKNOWN");
-    assert.equal(local.tests.passed, null);
-    assert.equal(local.tests.failed, null);
-    assert.equal(local.tests.defined, 53);
+    assert.equal(v.tests.status, status);
+    assert.equal(v.tests.passed, 50);
+    assert.equal(v.gate.status, status);
+    assert.equal(v.stages[1].reason, status === "UNKNOWN" ? null : "generator reason");
+    assert.equal(v.stages[0].status, "PASS", "stage 1 is not touched");
   });
 }
 
-// The generator's output for a stage whose receipts exist on its machine but are not committed
-// (open38_status.py: public_status UNKNOWN, committed false, checks read from local files).
-test("a stage without committed receipts shows no detail, even when both statuses are UNKNOWN", () => {
-  for (const committed of [false, null, undefined, "true", 1]) {
-    const v = view((s) => {
-      s.stage1 = { status: "UNKNOWN", public_status: "UNKNOWN", committed, reason: "DONE; checks PASS",
-        runs_exit0: 15, runs_expected: 15, checks: { stage_check: "PASS", integrity: "PASS" } };
-      s.stage2 = { status: "UNKNOWN", public_status: "UNKNOWN", committed, reason: "DONE; checks PASS",
-        construction_gate: { verdict: "PASS", family: { alpha: 0.05 } },
-        phases: [{ mode: "full", status: "PASS" }], attempts: [{ attempt: 2, construction: "PASS" }] };
-    });
-    assert.equal(v.trusted, true);
-    assert.deepEqual(v.stages.map((s) => s.verified), [false, false]);
-    assert.equal(v.gate.status, "UNKNOWN");
-    assert.equal(hasPass({ stages: v.stages, gate: v.gate, phases: v.phases, attempts: v.attempts, milestone: v.milestone }), false,
-      `committed ${String(committed)}`);
-  }
-});
-
-test("a stage with no status fields, or a published verdict without committed receipts, is UNKNOWN with no detail", () => {
-  const bare = view((s) => { s.stage1 = { committed: true, checks: { stage_check: "PASS" }, reason: "checks PASS" }; });
-  assert.equal(bare.stages[0].status, "UNKNOWN");
-  assert.equal(bare.stages[0].verified, false);
-  assert.equal(hasPass(bare.stages[0]), false);
-  const uncommitted = view((s) => { s.stage1.committed = false; });
-  assert.equal(uncommitted.stages[0].status, "UNKNOWN");
-  assert.equal(uncommitted.milestone, null);
-  assert.equal(hasPass({ stage: uncommitted.stages[0], milestone: uncommitted.milestone }), false);
-});
-
-test("a source sha that is not a string, and a staleness limit that is not a positive number, are not accepted", () => {
-  assert.equal(view((s) => { s.source.sha = [SHA]; }).trusted, false);
-  const stale = (s) => { s.generated_utc = "2026-10-01T00:00:00Z"; };
-  for (const limit of [NaN, Infinity, 0, -1]) {
-    assert.equal(view(stale, NOW, limit).trusted, false, `limit ${limit}`);
-  }
-});
-
-test("a local PASS that is not the public status is UNKNOWN, with no detail", () => {
+// The view holds no verdict rules: a snapshot the gate verified is shown as the generator wrote it. The gate,
+// not this file, refuses the contradictory fixtures (tests/test_o38s_status.py).
+test("the view does not second-guess a verified snapshot", () => {
+  const cases = JSON.parse(readFileSync(new URL("./fixtures/o38s_contradictions.json", import.meta.url), "utf8")).cases;
+  const smokeOnly = cases.find((c) => c.name === "stage 2 PASS with only a smoke phase");
   const v = view((s) => {
-    s.stage2.status = "PASS"; s.stage2.public_status = "UNKNOWN"; s.stage2.reason = "DONE; checks PASS";
-    s.stage2.checks = { stage_check: "PASS" }; s.stage2.runs_exit0 = 30;
-    s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05 } };
-    s.stage2.phases = [{ mode: "full", status: "PASS" }];
-    s.stage2.attempts = [{ attempt: 2, construction: "PASS" }];
+    for (const [path, value] of Object.entries(smokeOnly.set)) {
+      const parts = path.split("/");
+      parts.slice(0, -1).reduce((node, key) => node[key], s)[parts.at(-1)] = value;
+    }
   });
-  const stage2 = v.stages[1];
-  assert.equal(stage2.status, "UNKNOWN");
-  assert.equal(stage2.reason, null);
-  assert.deepEqual(stage2.checks, []);
-  assert.equal(stage2.runs_exit0, null);
+  assert.equal(v.stages[1].status, "PASS");
+});
+
+test("a contradictory snapshot swapped in under a genuine verification record shows nothing", () => {
+  const cases = JSON.parse(readFileSync(new URL("./fixtures/o38s_contradictions.json", import.meta.url), "utf8")).cases;
+  assert.ok(cases.length >= 11);
+  // The committed, genuine snapshot under its own verification record, as the gate builds it.
+  const genuine = readFileSync(new URL("../data/o38s/status.json", import.meta.url), "utf8");
+  const sealed = () => artifact(null, (a) => {
+    a.snapshot_text = genuine;
+    a.verification.snapshot_sha256 = sha256(genuine);
+    a.verification.source_sha = JSON.parse(genuine).source.sha;
+  });
+  const at = Date.parse("2026-11-17T20:30:00Z");
+  assert.equal(V.view(sealed(), at).trusted, true, "the genuine artifact is trusted");
+  assert.equal(V.view(sealed(), at).stages[0].status, "PASS", "and shows its PASS");
+  for (const c of cases) {
+    const forged = JSON.parse(genuine);
+    for (const [path, value] of Object.entries(c.set || {})) {
+      const parts = path.split("/");
+      parts.slice(0, -1).reduce((node, key) => (node[key] ??= {}), forged)[parts.at(-1)] = value;
+    }
+    for (const path of c.delete || []) {
+      const parts = path.split("/");
+      delete parts.slice(0, -1).reduce((node, key) => node[key], forged)[parts.at(-1)];
+    }
+    const text = JSON.stringify(forged, null, 1) + "\n";
+    const a = sealed();
+    a.snapshot_text = text;
+    const v = V.view(a, at);
+    assert.notEqual(text, genuine, c.name);
+    assert.equal(v.trusted, false, c.name);
+    assert.deepEqual(v.why_unknown, ["the snapshot is not the verified one"], c.name);
+    assert.equal(hasPass(v), false, c.name);
+  }
+});
+
+test("a local status that is not the public one is UNKNOWN, with no detail", () => {
+  const v = view((s) => {
+    stage2Is("PASS")(s);
+    s.stage2.public_status = "UNKNOWN";
+  });
+  assert.equal(v.stages[1].status, "UNKNOWN");
+  assert.equal(v.stages[1].reason, null);
+  assert.deepEqual(v.stages[1].checks, []);
+  assert.equal(v.stages[1].runs_exit0, null);
   assert.equal(v.gate.status, "UNKNOWN");
   assert.equal(v.gate.family, null);
   assert.deepEqual(v.phases, []);
   assert.deepEqual(v.attempts, []);
-  assert.equal(hasPass({ stage2, gate: v.gate, phases: v.phases, attempts: v.attempts }), false);
+  assert.equal(hasPass({ stage2: v.stages[1], gate: v.gate, phases: v.phases, attempts: v.attempts }), false);
+  const running = view((s) => { stage2Is("RUNNING")(s); s.stage2.public_status = "UNKNOWN"; });
+  assert.equal(running.stages[1].status, "UNKNOWN");
 });
 
-test("the milestone is shown only with the receipt of a stage shown as PASS", () => {
-  const text = "stage 1 positive controls: 15/15 runs";
-  assert.equal(view().milestone, text);
-  for (const status of ["FAIL", "RUNNING", "BLOCKED", "UNKNOWN"]) {
-    const v = view((s) => { s.stage1.status = status; s.stage1.public_status = status; });
-    assert.equal(v.milestone, null, `stage 1 ${status}`);
-  }
-  assert.equal(view((s) => { s.stage1.public_status = "UNKNOWN"; }).milestone, null, "local-only PASS");
-  assert.equal(view((s) => { s.latest_verified_milestone.evidence = "docs/other.md"; }).milestone, null, "other evidence");
-  assert.equal(view((s) => { delete s.evidence.stage1_receipt; }).milestone, null, "no receipt path");
-  // Stage 2 passed, stage 1 did not: a stage-1 milestone is not carried by the stage-2 PASS.
-  const crossed = view((s) => {
-    s.stage1.status = "FAIL"; s.stage1.public_status = "FAIL";
-    stage2Pass(s);
-  });
-  assert.equal(crossed.stages[1].status, "PASS");
-  assert.equal(crossed.milestone, null);
-  const stage2 = view((s) => {
-    stage2Pass(s);
-    s.latest_verified_milestone = { what: "stage 2: 30/30 runs", evidence: "docs/laminar_motif/S2.md" };
-  });
-  assert.equal(stage2.milestone, "stage 2: 30/30 runs");
-});
-
-test("a local RUNNING is never shown as repository-verified", () => {
-  const v = view((s) => { s.stage2.status = "RUNNING"; s.stage2.public_status = "UNKNOWN"; });
-  assert.equal(v.stages[1].status, "UNKNOWN");
-});
-
-test("gate verdict is shown only with a verified stage 2", () => {
-  const ok = view((s) => { stage2Pass(s); s.stage2.construction_gate = { verdict: "PASS", family: { alpha: 0.05, n_tests: 780 } }; });
-  assert.equal(ok.gate.status, "PASS");
-  assert.equal(ok.gate.family.n_tests, 780);
-  const fail = view((s) => { s.stage2.status = "FAIL"; s.stage2.public_status = "FAIL"; s.stage2.committed = true; s.stage2.construction_gate = { verdict: "FAIL", family: null }; });
-  assert.equal(fail.gate.status, "FAIL");
-});
-
-// Every way a snapshot can be untrustworthy: all statuses UNKNOWN, no milestone, no "PASS" anywhere in the view.
+// Every way an artifact can fail provenance or freshness: all statuses UNKNOWN, no detail, no "PASS" anywhere.
 const UNTRUSTED = {
-  "stale evidence (older than the limit)": [(s) => { s.generated_utc = "2026-11-10T18:59:59Z"; }, "stale"],
-  "generation time in the future": [(s) => { s.generated_utc = "2026-11-17T19:05:01Z"; }, "future"],
-  "no generation time": [(s) => { delete s.generated_utc; }, "generation time"],
-  "unparseable generation time": [(s) => { s.generated_utc = "yesterday"; }, "generation time"],
-  "uncommitted source tree": [(s) => { s.source.dirty_tracked = true; }, "uncommitted"],
-  "dirty flag missing": [(s) => { delete s.source.dirty_tracked; }, "uncommitted"],
-  "no source commit": [(s) => { delete s.source.sha; }, "source commit"],
-  "short source commit": [(s) => { s.source.sha = "c9b9224"; }, "source commit"],
-  "no source block": [(s) => { delete s.source; }, "source commit"],
-  "another schema": [(s) => { s.schema = "o38s_status/2"; }, "schema"]
+  "no artifact": [() => undefined, "no verified status artifact"],
+  "an artifact that is not an object": [() => "PASS", "no verified status artifact"],
+  "the bare snapshot, as the old page loaded it": [() => snapshot(), "not verified"],
+  "no verification record": [() => artifact(null, (a) => { delete a.verification; }), "not verified"],
+  "another verification schema": [() => artifact(null, (a) => { a.verification.schema = "o38s_verification/2"; }), "not verified"],
+  "no site commit": [() => artifact(null, (a) => { delete a.verification.site_sha; }), "not verified"],
+  "no verification time": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-11-17"; }), "not verified"],
+  "verification time with trailing text": [() => artifact(null, (a) => { a.verification.verified_utc += " (Stage 2 PASS)"; }), "not verified"],
+  "a hash that is not 64 hex": [() => artifact(null, (a) => { a.verification.snapshot_sha256 = "PASS"; }), "not verified"],
+  "a hash given as an array": [() => artifact(null, (a) => { a.verification.snapshot_sha256 = [a.verification.snapshot_sha256]; }), "not verified"],
+  "snapshot text changed after verification": [() => artifact(null, (a) => { a.snapshot_text = a.snapshot_text.replace('"UNKNOWN"', '"PASS"'); }), "not the verified one"],
+  "snapshot text with one more byte": [() => artifact(null, (a) => { a.snapshot_text += " "; }), "not the verified one"],
+  "snapshot given as an object": [() => artifact(null, (a) => { a.snapshot_text = snapshot(); }), "not the verified one"],
+  "snapshot text that is not JSON": [() => artifact(null, (a) => { a.snapshot_text = "PASS"; a.verification.snapshot_sha256 = sha256("PASS"); }), "malformed"],
+  "snapshot that is an array": [() => artifact(null, (a) => { a.snapshot_text = '["PASS"]'; a.verification.snapshot_sha256 = sha256('["PASS"]'); }), "malformed"],
+  "unknown schema": [() => artifact((s) => { s.schema = "o38s_status/2"; }), "schema"],
+  "no schema": [() => artifact((s) => { delete s.schema; }), "schema"],
+  "a missing stage block": [() => artifact((s) => { delete s.stage2; }), "malformed"],
+  "a stage status that is not one of the five": [() => artifact((s) => { s.stage1.public_status = "pass"; }), "malformed"],
+  "a stage status with whitespace": [() => artifact((s) => { s.stage1.status = " PASS"; }), "malformed"],
+  "a stage status given as an array": [() => artifact((s) => { s.stage1.public_status = ["PASS"]; }), "malformed"],
+  "no tests block": [() => artifact((s) => { delete s.tests; }), "malformed"],
+  "source that is not the verified one": [() => artifact(null, (a) => { a.verification.source_sha = "0".repeat(40); }), "not the verified one"],
+  "no source commit": [() => artifact((s) => { s.source.sha = "c9b9224"; }), "source commit"],
+  "source sha given as an array": [() => artifact((s) => { s.source.sha = [SHA]; }), "source commit"],
+  "uncommitted source tree": [() => artifact((s) => { s.source.dirty_tracked = true; }), "uncommitted"],
+  "dirty flag missing": [() => artifact((s) => { delete s.source.dirty_tracked; }), "uncommitted"],
+  "no generation time": [() => artifact((s) => { delete s.generated_utc; }), "generation time"],
+  "generation time with trailing text": [() => artifact((s) => { s.generated_utc += " (Stage 2 PASS)"; }), "generation time"],
+  "generated after its verification": [() => artifact((s) => { s.generated_utc = "2026-11-17T20:10:00Z"; }), "after its verification"],
+  "stale: verified more than the limit ago": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-11-10T20:59:59Z"; }), "stale"],
+  "verification time in the future": [() => artifact(null, (a) => { a.verification.verified_utc = "2026-11-17T21:06:00Z"; }), "future"],
 };
-for (const [name, [change, word]] of Object.entries(UNTRUSTED)) {
-  test(`untrusted snapshot: ${name}`, () => {
-    const s = snapshot((x) => {
-      x.stage2.status = "PASS"; x.stage2.public_status = "PASS";
-      x.stage2.construction_gate = { verdict: "PASS", family: null };
-      x.tests.status = "PASS"; x.tests.passed = 53;
-      change(x);
-    });
-    assert.equal(s.stage1.public_status, "PASS", "fixture must carry a PASS to hide");
-    const v = V.view(s, NOW);
+
+for (const [name, [make, reason]] of Object.entries(UNTRUSTED)) {
+  test(`untrusted artifact: ${name}`, () => {
+    const a = make();
+    assert.ok(JSON.stringify(a ?? "PASS").includes("PASS"), "the fixture must carry a PASS to hide");
+    const v = V.view(a, NOW);
     assert.equal(v.trusted, false);
-    assert.ok(v.why_unknown.some((w) => w.includes(word)), `${v.why_unknown}`);
-    assert.deepEqual(v.stages.map((st) => st.status), ["UNKNOWN", "UNKNOWN"]);
+    assert.ok(v.why_unknown.some((w) => w.includes(reason)), `${JSON.stringify(v.why_unknown)} should mention ${reason}`);
+    assert.deepEqual(v.stages.map((s) => s.status), ["UNKNOWN", "UNKNOWN"]);
     assert.equal(v.gate.status, "UNKNOWN");
     assert.equal(v.tests.status, "UNKNOWN");
     assert.equal(v.milestone, null);
+    assert.equal(v.objective, null);
     assert.equal(v.current_stage, null);
     assert.deepEqual(v.links, []);
-    assert.equal(hasPass(v), false);
+    assert.deepEqual(v.blockers, []);
+    assert.equal(v.blockers_known, false);
+    assert.equal(hasPass(v), false, "no PASS anywhere in the view");
   });
 }
 
-test("the staleness limit is a boundary: just inside is trusted, just outside is not", () => {
-  const generated = Date.parse("2026-11-17T18:30:34Z");
-  const limit = V.MAX_AGE_HOURS * 3600 * 1000;
-  assert.equal(view(null, generated + limit).trusted, true);
-  assert.equal(view(null, generated + limit + 1).trusted, false);
-  assert.equal(view(null, NOW, 0.25).trusted, false);  // 28 minutes old against a 15 minute limit
-  assert.equal(view(null, NaN).trusted, false);
+test("freshness is measured from the verification time, with a boundary at the limit", () => {
+  const at = (utc) => (a) => { a.verification.verified_utc = utc; };
+  assert.equal(view((s) => { s.generated_utc = "2026-11-10T20:00:00Z"; }, at("2026-11-10T21:00:00Z")).trusted, true, "exactly 168 h");
+  assert.equal(view((s) => { s.generated_utc = "2026-11-10T20:00:00Z"; }, at("2026-11-10T20:59:59Z")).trusted, false, "one second over");
+  // An old generation time under a recent verification is fresh: the gate re-proved it against the generator.
+  assert.equal(view((s) => { s.generated_utc = "2026-10-01T00:00:00Z"; }).trusted, true);
+  assert.equal(view(null, null, NOW, 1).trusted, true, "1 h after a 1 h limit");
+  assert.equal(view(null, null, NOW + 1000, 1).trusted, false);
+  for (const limit of [NaN, Infinity, 0, -1, "1"]) {
+    assert.equal(view(null, at("2026-11-01T00:00:00Z"), NOW, limit).trusted, false, `limit ${String(limit)} falls back to the default`);
+  }
+  assert.equal(view(null, null, NaN).trusted, false, "no clock");
+  assert.equal(view(null, at("2026-11-17T21:04:00Z")).trusted, true, "within clock skew");
 });
 
-for (const [name, value] of Object.entries({ null: null, undefined: undefined, string: "PASS", array: ["PASS"], number: 1 })) {
-  test(`no snapshot (${name}) is UNKNOWN`, () => {
-    const v = V.view(value, NOW);
-    assert.equal(v.trusted, false);
-    assert.deepEqual(v.stages.map((s) => s.status), ["UNKNOWN", "UNKNOWN"]);
-    assert.equal(hasPass(v), false);
+test("rows carry plain values only, and blockers strings only", () => {
+  const v = view((s) => {
+    stage2Is("BLOCKED")(s);
+    s.stage2.attempts = [{ attempt: 1, mode: "smoke", nested: { a: 1 }, list: [1], flag: true }, "text", null];
+    s.blockers = ["stage 2: generator reason", { not: "text" }, 3];
   });
-}
-
-for (const bad of ["pass", "PASS ", "Pass", "PASSED", "OK", "", null, 1, true, ["PASS"], { status: "PASS" }]) {
-  test(`a status that is not one of the five (${JSON.stringify(bad)}) is UNKNOWN`, () => {
-    const v = view((s) => { s.stage1.public_status = bad; s.stage1.status = bad; s.tests.status = bad; });
-    assert.equal(v.stages[0].status, "UNKNOWN");
-    assert.equal(v.tests.status, "UNKNOWN");
-  });
-}
-
-test("missing stage blocks are UNKNOWN", () => {
-  const v = view((s) => { delete s.stage1; delete s.stage2; delete s.tests; });
-  assert.deepEqual(v.stages.map((s) => s.status), ["UNKNOWN", "UNKNOWN"]);
-  assert.equal(v.gate.status, "UNKNOWN");
-  assert.equal(v.tests.status, "UNKNOWN");
-});
-
-test("evidence links point at the source commit, and unsafe paths or hosts are dropped", () => {
-  const v = view();
-  assert.deepEqual(v.links.map((l) => l.url), [
-    `https://github.com/HNXJ/jomission/blob/${SHA}/docs/laminar_motif/SPEC.md`,
-    `https://github.com/HNXJ/jomission/blob/${SHA}/docs/laminar_motif/S1.md`
-  ]);
-  assert.equal(v.links[0].label, "Specification");
-  assert.deepEqual(view((s) => { s.source.repo_url = "javascript:alert(1)"; }).links, []);
-  assert.deepEqual(view((s) => { s.source.repo_url = "https://example.org/x"; }).links, []);
-  const unsafe = view((s) => { s.evidence = { a: { path: "../secret" }, b: { path: "/abs" }, c: { path: "x y" }, d: { path: 'x"y' }, e: {} }; });
-  assert.deepEqual(unsafe.links, []);
-});
-
-test("a blocker is shown only as the generator's line for a stage shown as BLOCKED or FAIL", () => {
-  const blocked = (s) => {
-    s.stage2 = { status: "BLOCKED", public_status: "BLOCKED", committed: true, reason: "construction gate ruling pending" };
-    s.blockers = ["stage 2: construction gate ruling pending"];
-  };
-  const v = view(blocked);
-  assert.deepEqual(v.blockers, ["stage 2: construction gate ruling pending"]);
+  assert.deepEqual(v.phases, [{ mode: "smoke", status: "PASS", exit0: 15 }, { mode: "rest", status: "BLOCKED", exit0: 15 }]);
+  assert.deepEqual(v.attempts, [{ attempt: 1, mode: "smoke" }]);
+  assert.deepEqual(v.gate.family, { alpha: 0.05, n_tests: 780 });
+  assert.deepEqual(v.blockers, ["stage 2: generator reason"]);
   assert.equal(v.blockers_known, true);
-  assert.equal(view().blockers_known, true, "an empty list is known");
-  // The generator builds blockers from the local status: a stage that is not committed must not leak its reason.
-  const local = view((s) => {
-    s.stage2 = { status: "BLOCKED", public_status: "UNKNOWN", committed: false, reason: "smoke PASS; rest phase not launched" };
-    s.blockers = ["stage 2: smoke PASS; rest phase not launched"];
-  });
-  assert.deepEqual(local.blockers, []);
-  assert.equal(local.blockers_known, false);
-  assert.equal(hasPass({ b: local.blockers, s: local.stages[1] }), false);
-  const other = view((s) => { blocked(s); s.blockers.push("all stages PASS"); });
-  assert.deepEqual(other.blockers, ["stage 2: construction gate ruling pending"]);
-  assert.equal(other.blockers_known, false);
-  const stale = view((s) => { blocked(s); s.source.dirty_tracked = true; });
-  assert.deepEqual(stale.blockers, []);
-  assert.equal(stale.blockers_known, false);
 });
 
-// Committed receipts with both statuses UNKNOWN (e.g. an integrity receipt that reads UNKNOWN): no verdict is
-// shown, so no detail is either.
-test("a committed stage whose verdict is UNKNOWN shows no detail and no gate verdict", () => {
+test("evidence links point at the verified source commit; unknown keys, unsafe paths and other hosts are dropped", () => {
   const v = view((s) => {
-    s.stage1 = { status: "UNKNOWN", public_status: "UNKNOWN", committed: true, reason: "DONE; checks PASS",
-      runs_exit0: 15, runs_expected: 15, checks: { stage_check: "PASS" } };
-    s.stage2 = { status: "UNKNOWN", public_status: "UNKNOWN", committed: true, reason: "checks PASS",
-      construction_gate: { verdict: "PASS", family: { ruling: "PASS" } },
-      phases: [{ mode: "smoke", status: "PASS" }], attempts: [{ construction: "PASS" }] };
+    s.evidence["Stage 2 PASS"] = { path: "a.md" };
+    s.evidence.stage2_receipt = { path: "../secret.md" };
+    s.evidence.gate_ruling = { path: "docs/x.md?plain=1" };
   });
-  assert.equal(v.trusted, true);
-  assert.deepEqual(v.stages.map((s) => s.verified), [false, false]);
-  assert.equal(v.gate.status, "UNKNOWN");
-  assert.equal(hasPass(v), false);
-});
-
-test("a published PASS that the stage's own fields contradict is UNKNOWN", () => {
-  for (const [name, change] of Object.entries({
-    "a check that is not PASS": (s) => { s.stage1.checks.integrity = "FAIL"; },
-    "runs that did not all exit 0": (s) => { s.stage1.runs_exit0 = 3; },
-    "a failed consistency block": (s) => { s.stage1.consistency = { ok: false }; },
-  })) {
-    const v = view(change);
-    assert.equal(v.stages[0].status, "UNKNOWN", name);
-    assert.equal(v.milestone, null, name);
-    assert.equal(hasPass(v), false, name);
-  }
-});
-
-const stage2Pass = (s) => {
-  s.stage2 = { status: "PASS", public_status: "PASS", committed: true, reason: "rest DONE; integrity PASS",
-    runs_exit0: 30, runs_expected: 30, construction_gate: { verdict: "PASS", family: { alpha: 0.05, note: "x PASS" } },
-    phases: [{ mode: "smoke", status: "PASS", extra: "y PASS" }, { mode: "rest", status: "PASS" }], attempts: [] };
-  s.evidence.stage2_receipt = { path: "docs/laminar_motif/S2.md" };
-};
-
-test("a published stage-2 PASS with a failed phase, a failed gate or missing run counts is UNKNOWN", () => {
-  assert.equal(view(stage2Pass).stages[1].status, "PASS");
-  for (const [name, change] of Object.entries({
-    "a failed phase": (s) => { s.stage2.phases[0].status = "FAIL"; },
-    "a running phase": (s) => { s.stage2.phases[1].status = "RUNNING"; },
-    "a phase with a failed construction check": (s) => { s.stage2.phases[0].construction = "FAIL"; },
-    "a phase with a failed integrity check": (s) => { s.stage2.phases[1].integrity = "FAIL"; },
-    "no phases": (s) => { s.stage2.phases = []; },
-    "a failed gate": (s) => { s.stage2.construction_gate.verdict = "FAIL"; },
-    "a running gate": (s) => { s.stage2.construction_gate.verdict = "RUNNING"; },
-    "an unknown gate": (s) => { s.stage2.construction_gate.verdict = "UNKNOWN"; },
-    "no gate": (s) => { delete s.stage2.construction_gate; },
-    "another run count": (s) => { s.stage2.runs_exit0 = 3; s.stage2.runs_expected = 3; },
-    "no run count": (s) => { delete s.stage2.runs_exit0; },
-    "a run count that is a string": (s) => { s.stage2.runs_exit0 = "30"; },
-    "no expected count": (s) => { delete s.stage2.runs_expected; },
-  })) {
-    const v = view((s) => { stage2Pass(s); change(s); });
-    assert.equal(v.stages[1].status, "UNKNOWN", name);
-    assert.equal(v.gate.status, "UNKNOWN", name);
-    assert.deepEqual(v.phases, [], name);
-  }
-});
-
-test("records carry the contract's keys with their types, and the gate family numbers under plain names", () => {
-  const v = view((s) => {
-    stage2Pass(s);
-    s.stage2.phases.push({ mode: "stage 2 PASS", status: "PASS" });
-    s.stage2.phases[0].construction = "stage 2 PASS";
-  });
-  assert.deepEqual(v.phases, [{ mode: "smoke", status: "PASS" }, { mode: "rest", status: "PASS" }], "unknown mode dropped, untyped value dropped");
-  const ok = view((s) => {
-    stage2Pass(s);
-    s.stage2.construction_gate.family["construction PASS"] = 1;
-    s.stage2.construction_gate.family.pass_rate = 1;
-    s.stage2.attempts = [{ attempt: 1, mode: "smoke", head: "x PASS", construction: "FAIL", stop: "STOP" }, { mode: "all PASS" }];
-  });
-  assert.deepEqual(ok.phases, [{ mode: "smoke", status: "PASS" }, { mode: "rest", status: "PASS" }]);
-  assert.deepEqual(ok.gate.family, { alpha: 0.05 });
-  assert.deepEqual(ok.attempts, [{ mode: "smoke", attempt: 1, construction: "FAIL", stop: "STOP" }]);
-});
-
-test("a stage-1 PASS needs the generator's four checks and its 15 runs; other check names are not shown", () => {
-  for (const [name, change] of Object.entries({
-    "no checks": (s) => { delete s.stage1.checks; },
-    "empty checks": (s) => { s.stage1.checks = {}; },
-    "a missing check": (s) => { delete s.stage1.checks.construction_ruling_b; },
-    "an extra check that is not PASS": (s) => { s.stage1.checks.other = "FAIL"; },
-    "another run count": (s) => { s.stage1.runs_exit0 = 3; s.stage1.runs_expected = 3; },
-    "zero runs": (s) => { s.stage1.runs_exit0 = 0; s.stage1.runs_expected = 0; },
-  })) {
-    assert.equal(view(change).stages[0].status, "UNKNOWN", name);
-  }
-  const fail = view((s) => {
-    s.stage1.status = "FAIL"; s.stage1.public_status = "FAIL"; s.stage1.reason = "checker receipts";
-    s.stage1.checks = { stage_check: "FAIL", "stage 2 PASS": "FAIL" };
-  });
-  assert.deepEqual(fail.stages[0].checks, [{ name: "stage_check", status: "FAIL" }]);
-});
-
-test("a test verdict's reason is the generator's pytest line only", () => {
-  const v = view((s) => { s.tests = { status: "FAIL", public_status: "FAIL", passed: 3, failed: 2, defined: 5, reason: "all PASS" }; });
-  assert.equal(v.tests.status, "FAIL");
-  assert.equal(v.tests.reason, null);
-  const ok = view((s) => { s.tests = { status: "FAIL", public_status: "FAIL", passed: 3, failed: 2, reason: "pytest rc 1" }; });
-  assert.equal(ok.tests.reason, "pytest rc 1");
-});
-
-test("the milestone text must name the stage whose receipt it cites", () => {
-  const crossed = view((s) => { s.latest_verified_milestone.what = "stage 2: 30/30 runs, integrity PASS"; });
-  assert.equal(crossed.stages[1].status, "UNKNOWN");
-  assert.equal(crossed.milestone, null);
-  assert.equal(view((s) => { s.latest_verified_milestone.what = "stage 12 PASS"; }).milestone, null);
-  assert.equal(view((s) => { s.latest_verified_milestone.what = "all stages PASS"; }).milestone, null);
-  assert.equal(view((s) => { s.latest_verified_milestone.what = "stage 1 positive controls; stage 2 PASS"; }).milestone, null);
-  assert.equal(view((s) => { s.latest_verified_milestone.what = "stage 1 done, gate PASS"; }).milestone, null);
-});
-
-test("provenance shows a 40-hex commit and the generator's exact time format, nothing else", () => {
-  const v = view((s) => { s.generated_utc = "2026-11-17T18:30:34Z (Stage 2 PASS)"; s.source.branch = "Stage 2 PASS"; });
-  assert.equal(v.trusted, false);
-  assert.equal(v.provenance.generated_utc, null);
-  assert.equal(hasPass(v), false);
-  assert.deepEqual(Object.keys(view().provenance).sort(), ["generated_utc", "sha"]);
-  assert.equal(view((s) => { s.generated_utc = "2026-11-17"; }).trusted, false, "date only");
-});
-
-test("evidence links use known keys only, and a tests PASS needs passed > 0 and failed 0", () => {
-  const v = view((s) => { s.evidence["Stage 2 PASS"] = { path: "a.md" }; });
-  assert.deepEqual(v.links.map((l) => l.label), ["Specification", "Stage 1 receipt"]);
-  const t = view((s) => { s.tests = { status: "PASS", public_status: "PASS", passed: 0, failed: 9, defined: 9 }; });
-  assert.equal(t.tests.status, "UNKNOWN");
-});
-
-test("free text outside a shown verdict is not carried: objective, current stage, test reason, project name", () => {
-  const untrusted = view((s) => { s.source.dirty_tracked = true; s.project.objective = "all stages PASS"; });
-  assert.equal(untrusted.objective, null);
-  const v = view((s) => {
-    s.project.name = "PASS"; s.current_stage = "stage 2 PASS"; s.tests.status = "PASS"; s.tests.reason = "all PASS";
-  });
-  assert.equal(v.name, "Jomission / LANSA (OPEN-38)");
-  assert.equal(v.current_stage, null);
-  assert.equal(v.tests.reason, null);
-  assert.equal(view().current_stage, "stage 1");
-  assert.equal(view().objective, "objective text");
+  assert.deepEqual(v.links, [
+    { label: "Specification", url: `https://github.com/HNXJ/jomission/blob/${SHA}/docs/laminar_motif/SPEC.md` },
+    { label: "Stage 1 receipt", url: `https://github.com/HNXJ/jomission/blob/${SHA}/docs/laminar_motif/S1.md` },
+  ]);
+  assert.deepEqual(view((s) => { s.source.repo_url = "javascript:alert(1)"; }).links, []);
+  assert.deepEqual(view((s) => { s.source.repo_url = "https://example.com/x"; }).links, []);
 });

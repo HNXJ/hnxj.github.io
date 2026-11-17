@@ -61,9 +61,9 @@ for (const file of jchatFiles) {
   }
 }
 
-// The Jomission/LANSA (OPEN-38) status page, its scripts and its snapshot: render-only, so the labyrinth rules
-// apply, plus no network call and no markup write.
-const o38sFiles = ["o38s/index.html", "../assets/o38s_view.js", "../assets/o38s_card.js", "../assets/data/o38s_status.js"];
+// The Jomission/LANSA (OPEN-38) status page, its scripts and its committed snapshot: render-only, so the
+// labyrinth rules apply, plus no network call and no markup write.
+const o38sFiles = ["o38s/index.html", "../assets/o38s_view.js", "../assets/o38s_card.js", "../data/o38s/status.json"];
 const NETWORK = /\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|\bimport\s*\(/;
 for (const file of o38sFiles) {
   const text = readFileSync(join(root, file), "utf8");

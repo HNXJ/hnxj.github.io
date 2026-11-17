@@ -1,5 +1,6 @@
-// Draws the Jomission/LANSA (OPEN-38) status from window.O38S_STATUS (assets/data/o38s_status.js) through
-// window.O38S_VIEW (assets/o38s_view.js). Read-only: textContent and safe attributes only, no network, no handlers.
+// Draws the Jomission/LANSA (OPEN-38) status from window.O38S_ARTIFACT (assets/data/o38s_status.js, built by the
+// regeneration gate) through window.O38S_VIEW (assets/o38s_view.js). Without the artifact every status is UNKNOWN.
+// Read-only: textContent and safe attributes only, no network, no handlers.
 // window.O38S_CARD.lines() gives the gallery card its status lines; a page with #o38s-dashboard gets the full board.
 (function () {
   "use strict";
@@ -14,7 +15,7 @@
   // Without the view model nothing is shown as a status: the snapshot is never read directly.
   function currentView() {
     if (!window.O38S_VIEW) throw new Error("o38s_view.js did not load");
-    return window.O38S_VIEW.view(window.O38S_STATUS, Date.now());
+    return window.O38S_VIEW.view(window.O38S_ARTIFACT, Date.now());
   }
 
   var UNAVAILABLE = "Status unknown: the status viewer did not load";
@@ -25,7 +26,9 @@
 
   function provenanceText(v) {
     var p = v.provenance;
-    return "Source " + (p.sha ? p.sha.slice(0, 10) : "unknown") + " · generated " + (p.generated_utc || "unknown");
+    return "Source " + (p.source_sha ? p.source_sha.slice(0, 10) : "unknown") +
+      " · generated " + (p.generated_utc || "unknown") +
+      " · verified " + (p.verified_utc || "never") + (p.site_sha ? " at site " + p.site_sha.slice(0, 10) : "");
   }
 
   // Lines for the Labyrinth gallery card: status, latest verified milestone, provenance.

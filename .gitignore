@@ -20,3 +20,5 @@ research_notes.md
 experiment_results.md
 .vercel
 .env*.local
+# Built by tools/o38s_status.py build after the regeneration gate passes; never committed.
+assets/data/o38s_status.js
