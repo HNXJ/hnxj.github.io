@@ -73,7 +73,8 @@ CASES = {
     "dirty": (sealed(changed(source__dirty_tracked=True)), U4, False),
     "future": (sealed(GENUINE, verified_utc="2027-06-01T00:00:00Z"), U4, False),
     "schema": (sealed(changed(schema="o38s_status/2")), U4, False),
-    "local_only_pass": (sealed(changed(stage1__public_status="UNKNOWN")), U4, False),
+    # As the generator writes it for uncommitted receipts: local PASS, public UNKNOWN, and so no milestone.
+    "local_only_pass": (sealed(changed(stage1__public_status="UNKNOWN", latest_verified_milestone=None)), U4, False),
     "missing": (None, U4, False),
     "garbage": ("window.O38S_ARTIFACT = 'PASS';", U4, False),
     "fail": (sealed(all_status("FAIL")), ["FAIL"] * 4, False),
