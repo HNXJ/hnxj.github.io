@@ -45,6 +45,7 @@
     min-width: 44px;
     min-height: 44px;
     padding: 0.35rem 0.7rem;
+    font-size: 1rem;
     line-height: 1.25;
     border-radius: 0.35rem;
   }
@@ -61,7 +62,37 @@
 }
 
 @media (max-width: 767.98px),
-  (max-width: 991.98px) and (max-height: 550px) and (orientation: landscape) {
+  (max-width: 991.98px) and (max-height: 550px) and (orientation: landscape),
+  (max-width: 991.98px) and (orientation: portrait) and (pointer: coarse) {
+  .site-section {
+    font-size: 1.125rem;
+    line-height: 1.65;
+  }
+
+  .site-section .info-stack,
+  .site-section .labyrinth-intro,
+  .site-section .labyrinth-desc,
+  .site-section .labyrinth-view-text {
+    font-size: 1.125rem;
+  }
+
+  .site-section .labyrinth-card-header h3,
+  .site-section .labyrinth-view-title {
+    font-size: 1.125rem;
+  }
+
+  .site-section .labyrinth-kind,
+  .site-section .labyrinth-status,
+  .site-section .labyrinth-view-eyebrow,
+  .site-section .gallery-category {
+    font-size: 0.9rem;
+  }
+
+  .site-section .labyrinth-action,
+  .site-footer .footer-nav-links a {
+    font-size: 1rem;
+  }
+
   /* The shared desktop covers are viewport-sized, even with very little
      content. Let the title or player determine the phone cover's height. */
   .site-blocks-cover,
@@ -134,5 +165,13 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+}
+
+/* A narrow portrait touch viewport still needs readable project cards when
+   the browser reports a tablet-sized layout width. */
+@media (min-width: 641px) and (max-width: 991.98px) and (orientation: portrait) and (pointer: coarse) {
+  .site-section .labyrinth-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
