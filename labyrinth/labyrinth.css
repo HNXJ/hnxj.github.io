@@ -7,6 +7,16 @@
   line-height: 1.7;
 }
 
+.labyrinth-section {
+  padding-top: 3rem;
+}
+
+.labyrinth-section-title {
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .labyrinth-scope-note {
   display: inline-block;
   margin-top: 0.75rem;
@@ -150,12 +160,6 @@
   font-family: "Roboto Mono", ui-monospace, monospace;
   font-size: 0.72rem;
   color: #8f8f8f;
-}
-
-.site-footer .footer-nav-links a {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.85rem;
 }
 
 @media (max-width: 640px) {

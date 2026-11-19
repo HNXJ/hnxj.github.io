@@ -5,7 +5,6 @@
   --vandy-gold-dark: #866D4B;
   --vandy-black: #000000;
   --vandy-dark-gray: #1A1A1A;
-  --vandy-light-gray: #F8F9FA;
 }
 
 body {
@@ -74,6 +73,12 @@ h1, h2, h3, .footer-heading {
   background-color: var(--vandy-black) !important;
   border-top: 1px solid var(--vandy-gold-dark);
   padding: 5em 0;
+}
+
+.site-footer .footer-nav-links a {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
 }
 
 a {

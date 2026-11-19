@@ -4,12 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="/assets/icons/ico1.jpg">
-    <title>MindApp — Archived | Hamed Nejat</title>
+    <title>MindApp (archived) | Hamed Nejat</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/madelane-theme.css">
     <style>
-        body { background: #111; color: #e0e0e0; }
+        :root {
+            --mindapp-bg: #111;
+            --mindapp-text: #e0e0e0;
+            --mindapp-muted: #c8c8c8;
+            --mindapp-gold-light: #f0d58a;
+        }
+        body { background: var(--mindapp-bg); color: var(--mindapp-text); }
         .archive-wrap { max-width: 42rem; margin: 6rem auto; padding: 2rem; }
         .archive-badge {
             display: inline-block;
@@ -19,14 +25,14 @@
             font-size: 0.75rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #f0d58a;
+            color: var(--mindapp-gold-light);
             border: 1px solid rgba(207, 184, 124, 0.45);
             background: rgba(207, 184, 124, 0.08);
         }
-        .archive-wrap h1 { color: #CFB87C; font-size: 1.75rem; margin-bottom: 1rem; }
-        .archive-wrap p { line-height: 1.7; color: #c8c8c8; }
+        .archive-wrap h1 { color: var(--vandy-gold); font-size: 1.75rem; margin-bottom: 1rem; }
+        .archive-wrap p { line-height: 1.7; color: var(--mindapp-muted); }
         .archive-links { margin-top: 2rem; }
-        .archive-links a { color: #CFB87C; margin-right: 1.25rem; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.85rem; }
+        .archive-links a { color: var(--vandy-gold); margin-right: 1.25rem; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.85rem; white-space: nowrap; }
     </style>
 </head>
 <body>

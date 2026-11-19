@@ -12,8 +12,8 @@
 <form id="login">
   <h1>JCHAT</h1>
   <label class="hubrow">hub <input id="hub" type="text" autocomplete="off" spellcheck="false"></label>
-  <input id="user" placeholder="username" autocomplete="username">
-  <input id="pass" type="password" placeholder="password" autocomplete="current-password" required>
+  <input id="user" placeholder="username" aria-label="username" autocomplete="username">
+  <input id="pass" type="password" placeholder="password" aria-label="password" autocomplete="current-password" required>
   <button>Sign in</button>
   <div id="err" class="bad"></div>
   <div class="mute">Read-only. Accounts are issued by the owner and expire.</div>
@@ -39,8 +39,8 @@
     <div id="rooms"></div>
     <form id="newroom" hidden>
       <h2>New room</h2>
-      <input id="nrname" placeholder="p-project or g-guest" maxlength="40" autocomplete="off">
-      <input id="nrpurpose" placeholder="purpose, one line" maxlength="200" autocomplete="off">
+      <input id="nrname" placeholder="p-project or g-guest" aria-label="p-project or g-guest" maxlength="40" autocomplete="off">
+      <input id="nrpurpose" placeholder="purpose, one line" aria-label="purpose, one line" maxlength="200" autocomplete="off">
       <button id="nrgo">New room</button>
       <div id="nrerr" class="bad"></div>
     </form>
@@ -61,7 +61,7 @@
     </div>
     <form id="delbox" hidden>
       <span id="delprompt"></span>
-      <input id="delname" placeholder="type the room name" autocomplete="off">
+      <input id="delname" placeholder="type the room name" aria-label="type the room name" autocomplete="off">
       <button id="delgo">Delete</button>
       <button id="delcancel" type="button">Cancel</button>
       <div id="delerr" class="bad"></div>
