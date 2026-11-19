@@ -1,0 +1,93 @@
+{
+ "schema": "o38s_status/1",
+ "generated_utc": "2026-11-17T19:32:37Z",
+ "source": {
+  "sha": "568e659a9e6d1f810b6ad05bf070f659d86bbba0",
+  "branch": "_temp_o38s-status",
+  "dirty_tracked": false,
+  "repo_url": "https://github.com/HNXJ/jomission"
+ },
+ "project": {
+  "name": "Jomission / LANSA (OPEN-38)",
+  "objective": "Test, in the LANSA E-PV-SOM model, whether the laminar spectral motif depends on the SST/PV composition profile when composition is set to the profile observed in monkey #1 (spec SPEC_OPEN38_SPECTRUM_SENSITIVITY_2026-11-16.md, H-mech)"
+ },
+ "current_stage": "stage 1",
+ "stage1": {
+  "status": "PASS",
+  "public_status": "PASS",
+  "committed": true,
+  "reason": "DONE; checks PASS",
+  "head": "53f8b89fdb1ec4d67e3c972dd24ee4c899a680cc",
+  "runs_exit0": 15,
+  "runs_expected": 15,
+  "checks": {
+   "stage_check": "PASS",
+   "integrity": "PASS",
+   "construction_frozen": "PASS",
+   "construction_ruling_b": "PASS"
+  },
+  "consistency": {
+   "ok": true,
+   "execution_sha": "53f8b89fdb1ec4d67e3c972dd24ee4c899a680cc",
+   "problems": [],
+   "compatible": [
+    "results/laminar_e2/o38s_pc_construction_rulingB.json: 8fed7f2 ~ 53f8b89: identical ['jomission', 'scripts/run_e2_stack.py']; equal to results/laminar_e2/o38s_pc_construction.json except ['family', 'interval', 'ok', 'pass']"
+   ]
+  },
+  "log_sha256": "82a859d5345abe2102f8c6b1bfe6b9bc41d886ef11883cec4c11cca578adfba2"
+ },
+ "stage2": {
+  "runs_expected": 30,
+  "log_sha256": null,
+  "attempts": [
+   {
+    "attempt": 1,
+    "mode": "smoke",
+    "head": "584922c80baa26a573ef90e3186e156b411b05d7",
+    "construction": "FAIL",
+    "stop": "STOP: construction invariance failed; no run started"
+   }
+  ],
+  "construction_gate": {
+   "verdict": "UNKNOWN",
+   "family": null
+  },
+  "status": "UNKNOWN",
+  "public_status": "UNKNOWN",
+  "reason": "no stage-2 log",
+  "phases": []
+ },
+ "tests": {
+  "files": 7,
+  "defined": 57,
+  "status": "UNKNOWN",
+  "reason": "not run (--run-tests not given)"
+ },
+ "latest_verified_milestone": {
+  "what": "stage 1 positive controls: 15/15 runs, frozen checker, integrity and construction (frozen and ruling-B) receipts PASS",
+  "evidence": "docs/laminar_motif/STAGE1_O38S_PC_2026-11-17.md"
+ },
+ "blockers": [],
+ "evidence": {
+  "spec": {
+   "path": "docs/laminar_motif/SPEC_OPEN38_SPECTRUM_SENSITIVITY_2026-11-16.md",
+   "sha256": "df75ddccddff090e68bb5ab0ba71241d6afb4272d80a56c046ecdd0d06c91cbf"
+  },
+  "stage1_receipt": {
+   "path": "docs/laminar_motif/STAGE1_O38S_PC_2026-11-17.md",
+   "sha256": "4cca4f5f55c711ef2547ed74cf24223f3d709c8cd1c5d3a1892fcc56a53e2943"
+  },
+  "stage2_receipt": {
+   "path": "docs/laminar_motif/STAGE2_O38S_2026-11-17.md",
+   "sha256": "8ccbcc792dbc2079d2af78590746a131969486b4c9f5d206737f3fdc59e49523"
+  },
+  "gate_ruling": {
+   "path": "docs/laminar_motif/GATE_RULING_REQUEST_O38S_S2_2026-11-17.md",
+   "sha256": "94b4519483e1bcc982786eee3bb388003f0dd7d7ae410ebdf04452e58d33dcb5"
+  }
+ },
+ "notes": [
+  "milestones are receipt-verified by checkers; owner acceptance and independent review are recorded in the receipts, not here",
+  "a running stage's log is untracked until the stage closes"
+ ]
+}

@@ -53,6 +53,13 @@
       }
 
       body.appendChild(el("p", "labyrinth-desc", p.description));
+      // A card with status: "o38s" shows the status lines that assets/o38s_card.js reads from its snapshot.
+      if (p.status === "o38s") {
+        var statusLines = window.O38S_CARD ? window.O38S_CARD.lines() : ["Status unknown: the status viewer did not load"];
+        statusLines.forEach(function (line) {
+          body.appendChild(el("p", "labyrinth-status", line));
+        });
+      }
       body.appendChild(el("span", "labyrinth-action", isPres ? "View slides →" : "Open →"));
       card.appendChild(body);
 

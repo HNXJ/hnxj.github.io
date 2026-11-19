@@ -1,0 +1,64 @@
+# PROPOSED, NOT ACTIVE. This file does nothing where it is. It takes effect only when the owner moves it to
+# .github/workflows/ and sets the repository's Pages source to "GitHub Actions"; until then Pages serves the
+# committed tree, which holds no status artifact, so the OPEN-38 cards show UNKNOWN.
+#
+# The deploy job needs the build job, and the build job fails unless the regeneration gate passes for the exact
+# commit being deployed: a refused gate deploys nothing.
+#
+# The gate is the only route to a visible PASS only when the owner also (1) protects `main` with a ruleset (no
+# direct push, review required), (2) restricts the `github-pages` environment to `main`, and (3) keeps this the
+# only workflow with `pages: write`. Without those, another branch or workflow can deploy an artifact of its own.
+#
+# The schedule rebuilds daily: the pages distrust a verification older than 168 h (provisional), so without a
+# rebuild the cards fall back to UNKNOWN a week after the last push.
+name: pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"   # data/o38s/source.json pins the same version; the gate refuses another
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: View-model tests
+        run: node --test tests/
+      - name: Gate tests
+        run: python -B -m unittest discover -s tests -p "test_*.py"
+      - name: Static scan
+        run: node labyrinth/scan-static.mjs
+      - name: Regeneration gate and artifact
+        run: python -B tools/o38s_status.py build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
