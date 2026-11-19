@@ -1,0 +1,138 @@
+/* Keep the public navigation visible at the same breakpoint where it used
+   to become a JavaScript-dependent drawer (or disappear on the gallery). */
+@media (max-width: 991.98px) {
+  .site-navbar {
+    position: relative;
+    margin-top: 0 !important;
+  }
+
+  .site-navbar .row > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .site-navbar h1 a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: normal;
+  }
+
+  .site-navbar .site-menu-toggle,
+  .site-navbar .site-navigation > .d-lg-none,
+  .site-mobile-menu {
+    display: none !important;
+  }
+
+  .site-navbar .site-navigation .site-menu {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .site-navbar .site-navigation .site-menu > li {
+    padding: 0;
+  }
+
+  .site-navbar .site-navigation .site-menu > li > a,
+  .site-navbar .site-navigation .site-menu > li:last-child > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.35rem 0.7rem;
+    line-height: 1.25;
+    border-radius: 0.35rem;
+  }
+
+  .site-navbar .site-navigation .site-menu .active > a {
+    background: rgba(207, 184, 124, 0.1);
+  }
+
+  .site-navbar a:focus-visible,
+  .site-footer a:focus-visible {
+    outline: 2px solid var(--vandy-gold);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 767.98px),
+  (max-width: 991.98px) and (max-height: 550px) and (orientation: landscape) {
+  /* The shared desktop covers are viewport-sized, even with very little
+     content. Let the title or player determine the phone cover's height. */
+  .site-blocks-cover,
+  .site-blocks-cover .row {
+    height: auto;
+    min-height: 0;
+  }
+
+  .site-blocks-cover {
+    padding: 2rem 0;
+    background-position: center top;
+  }
+
+  .site-blocks-cover[data-aos],
+  .site-blocks-cover [data-aos] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .site-blocks-cover h2,
+  .site-section-heading h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .site-section {
+    padding-block: 2rem;
+  }
+
+  .site-blocks-cover iframe,
+  .site-section-heading iframe {
+    display: block;
+    width: 100%;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .site-section .info-section {
+    margin-bottom: 2rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .site-section .labyrinth-grid {
+    padding-inline: 0;
+    gap: 1rem;
+  }
+
+  .site-section .labyrinth-card {
+    display: flex;
+    min-height: 0;
+    padding: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .labyrinth-card .labyrinth-card-preview {
+    height: clamp(6.5rem, 28vw, 9rem);
+  }
+
+  .site-section #gallery-grid {
+    margin-top: 0;
+  }
+
+  .site-footer {
+    padding-block: 2.5rem 1rem;
+  }
+
+  .site-footer .footer-nav-links a,
+  .site-footer a[aria-label] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
