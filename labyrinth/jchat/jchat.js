@@ -71,6 +71,7 @@ function rosterNode(p, status, seen, mk) {  // the note shows only while the sta
   b.append(mk("span", "dot " + statusClass(status)), mk("span", "", `${p.name} · ${statusLabel(status)} · ${seen}${note}`), ...tagChips(extraTags(p), mk));
   return b;
 }
+const isOwn = (from, me) => from === "hamm" || (!!me && from === me);  // hamm is the account that posts
 function msgNode(m, stamp, mk, me) {  // one bubble: kind and tag chips above the text, time and a check (or via) under it
   const tg = tagOf(m.text), d = mk("div", "m" + (MENTION.test(m.text) ? " tag" : "") + (tg ? " t-" + tg : ""));
   const chips = [];
@@ -80,7 +81,7 @@ function msgNode(m, stamp, mk, me) {  // one bubble: kind and tag chips above th
   if (hw) chips.push(mk("span", "w", hw));
   if (chips.length) { const c = mk("div", "chips"); chips.forEach(x => c.append(x)); d.append(c); }
   d.append(mk("div", "tx", m.text));
-  const meta = mk("div", "meta"), own = m.from === "hamm" || (!!me && m.from === me);  // hamm is the account that posts
+  const meta = mk("div", "meta"), own = isOwn(m.from, me);
   meta.append(mk("span", "ts", `#${m.id} ${stamp}`));
   if (m.via) meta.append(mk("span", "via", "via " + m.via));  // a send-box post is marked, not a check
   else if (own) meta.append(mk("span", "ck", "✓"));
@@ -107,10 +108,10 @@ function threadNodes(msgs, now, me, mk, freshFrom) {  // the conversation: day s
   const out = [], groups = groupMsgs(msgs);
   let day = "", idx = 0;
   for (const g of groups) {
-    const start = idx; idx += g.msgs.length;
+    idx += g.msgs.length;
     const dk = dayOf(g.msgs[0].ts);
     if (dk && dk !== day) { day = dk; out.push(mk("div", "daysep", dayLabel(g.msgs[0].ts, now))); }
-    const own = g.from === "hamm" || (!!me && g.from === me);
+    const own = isOwn(g.from, me);
     const b = mk("div", "grp " + (own ? "out" : "in") + (freshFrom != null && idx > freshFrom ? " fresh" : ""));
     const h = mk("h3", "ghead");
     h.append(mk("span", "av " + avatarClass(g.from), initialsOf(g.from)), mk("span", "gname", g.from));

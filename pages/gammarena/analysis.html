@@ -31,8 +31,11 @@
         }
 
         .section-title {
+            font-family: Inter, sans-serif;
             font-size: 1.5rem;
             font-weight: 900;
+            letter-spacing: normal;
+            text-transform: none;
             color: var(--accent-gold);
             display: flex;
             align-items: center;
@@ -98,24 +101,6 @@
             background: rgba(6, 182, 212, 0.1);
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
-        }
-
-        .disclaimer-banner {
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid var(--accent-purple);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .disclaimer-label {
-            color: var(--accent-purple);
-            display: block;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.1em;
         }
 
         .plot-frame-container {
@@ -192,12 +177,12 @@
 
         .methodology-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .m-item h4 {
+        .m-item h3 {
             color: var(--accent-cyan);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
@@ -303,7 +288,7 @@
         <!-- SECTION 1: HYPOTHESIS SPACE -->
         <section class="report-section">
             <div class="section-header">
-                <div class="section-title">HPC Hypothesis Space</div>
+                <h2 class="section-title">HPC Hypothesis Space</h2>
                 <div class="section-desc">Literature Alignment Mapping</div>
             </div>
             <div class="report-grid">
@@ -353,7 +338,7 @@
         <!-- SECTION 2: CONSENSUS & AGREEMENT -->
         <section class="report-section">
             <div class="section-header">
-                <div class="section-title">Agent Consensus Summary</div>
+                <h2 class="section-title">Agent Consensus Summary</h2>
                 <div class="section-desc">Multi-Model Agreement Metrics</div>
             </div>
             <div class="report-grid">
@@ -383,7 +368,7 @@
         <!-- SECTION 3: HIERARCHICAL DECODING -->
         <section class="report-section">
             <div class="section-header">
-                <div class="section-title">Hierarchical Evidence Extraction</div>
+                <h2 class="section-title">Hierarchical Evidence Extraction</h2>
                 <div class="section-desc">Laminar Alignment Proof</div>
             </div>
             <div class="report-grid">
@@ -438,15 +423,15 @@
                 
                 <div class="methodology-grid">
                     <div class="m-item">
-                        <h4>Hierarchical Ingestion</h4>
+                        <h3>Hierarchical Ingestion</h3>
                         <p>Manuscripts are processed using a multi-locus MLLM pipeline that extracts evidence across 36 distinct biophysical and cognitive factors, ranging from laminar connectivity to spectral asymmetry.</p>
                     </div>
                     <div class="m-item">
-                        <h4>Cross-Model Critique</h4>
+                        <h3>Cross-Model Critique</h3>
                         <p>Evidence is scored by a diverse council of models (Gemma-4, Qwen-3.5, etc.). Disagreement is not treated as error, but as "Epistemic Uncertainty" surfaced in the Hypothesis Space vectors.</p>
                     </div>
                     <div class="m-item">
-                        <h4>Ontology Mapping</h4>
+                        <h3>Ontology Mapping</h3>
                         <p>We compare <strong>Gene Ontology (GO)</strong>—the structural/biological constraints—against <strong>Label Ontology (LO)</strong>—the terminological/descriptive consensus—to identify "Ontology Gaps" in modern neuroscience.</p>
                     </div>
                 </div>

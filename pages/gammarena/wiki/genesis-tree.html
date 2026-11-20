@@ -90,6 +90,19 @@
             border-color: var(--accent-gold);
         }
 
+        /* Chips are buttons: reset UA chrome to match the old div chips */
+        button.filter-chip {
+            margin: 0;
+            font-family: inherit;
+            line-height: inherit;
+            letter-spacing: inherit;
+            text-align: inherit;
+        }
+
+        @media (max-width: 600px) {
+            .filter-chip { min-height: 44px; }
+        }
+
         /* Side Panel */
         .side-panel {
             width: 400px;
@@ -254,19 +267,20 @@
         </div>
     </nav>
 
+    <main>
     <div class="main-wrapper">
         <div class="graph-controls">
             <div class="filter-group">
                 <span class="filter-title">Filter Ontology</span>
                 <div class="filter-chips">
-                    <div class="filter-chip active" onclick="applyFilter('all', this)">All</div>
-                    <div class="filter-chip" onclick="applyFilter('world', this)">Worlds</div>
-                    <div class="filter-chip" onclick="applyFilter('concept', this)">Concepts</div>
-                    <div class="filter-chip" onclick="applyFilter('substrate', this)">Substrates</div>
-                    <div class="filter-chip" onclick="applyFilter('circuit', this)">Circuits</div>
-                    <div class="filter-chip" onclick="applyFilter('mission', this)">Missions</div>
-                    <div class="filter-chip" onclick="applyFilter('paper', this)">Papers</div>
-                    <div class="filter-chip" onclick="applyFilter('tool', this)">Tools</div>
+                    <button type="button" class="filter-chip active" onclick="applyFilter('all', this)">All</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('world', this)">Worlds</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('concept', this)">Concepts</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('substrate', this)">Substrates</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('circuit', this)">Circuits</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('mission', this)">Missions</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('paper', this)">Papers</button>
+                    <button type="button" class="filter-chip" onclick="applyFilter('tool', this)">Tools</button>
                 </div>
             </div>
         </div>
@@ -277,12 +291,12 @@
             <div class="panel-header">
                 <div class="panel-type" id="panel-type">Node Type</div>
                 <h2 id="panel-title">Node Title</h2>
-                <button class="close-panel" onclick="closePanel()">&times;</button>
+                <button class="close-panel" aria-label="Close panel" onclick="closePanel()">&times;</button>
             </div>
             <div class="panel-body">
                 <div class="panel-section">
                     <label>Description</label>
-                    <p id="panel-desc">Select a node to view details.</p>
+                    <p id="panel-desc" class="panel-desc">Select a node to view details.</p>
                 </div>
                 <div id="panel-evidence" class="panel-section">
                     <label>Credibility Anchors</label>
@@ -298,6 +312,7 @@
             </div>
         </div>
     </div>
+    </main>
 
     <script>
         let cy;
